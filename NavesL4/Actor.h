@@ -10,6 +10,12 @@ public:
 	virtual void draw();
 	bool isOverlap(Actor* actor);
 	bool isInRender();
+
+	bool collisionUp;
+	bool collisionDown;
+	bool outRight;
+	bool outLeft;
+
 	SDL_Texture* texture;
 	int x;
 	int y;

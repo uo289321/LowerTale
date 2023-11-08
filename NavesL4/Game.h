@@ -27,6 +27,7 @@ public:
 	TTF_Font* font;
 	bool scaledToMax = false;
 	float scaleLower = 1;
+	int currentLevel = 0;
 	SDL_Window* window; // ventana
 	SDL_Renderer* renderer; // renderizador
 	bool loopActive; // Juego activo
