@@ -15,14 +15,15 @@ void GameLayer::init() {
 	textPoints->content = to_string(points);
 
 	player = new Player(50, 50, game);
-	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, -1, game);
+	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 	backgroundPoints = new Actor("res/icono_puntos.png",
 		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 
 
-	loadMap("res/" + to_string(game->currentLevel) + ".txt");
+	// loadMap("res/" + to_string(game->currentLevel) + ".txt");
+	loadMap("res/test0.txt");
 }
 
 void GameLayer::loadMap(string name) {
@@ -137,11 +138,12 @@ void GameLayer::processControls() {
 }
 
 void GameLayer::update() {
+	space->update();
 	background->update();
 	player->update();
-	for (auto const& enemy : enemies) {
+	/*for (auto const& enemy : enemies) {
 		enemy->update();
-	}
+	}*/
 
 
 
