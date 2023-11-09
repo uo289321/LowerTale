@@ -7,9 +7,10 @@ class Animation
 public:
 	Animation(string filename, float actorWidth, float actorHeight,
 		float fileWidth, float fileHeight,
-		int updateFrecuence, int totalFrames, Game* game);
+		int updateFrecuence, int totalFrames, bool loop, Game* game);
 	bool update();
 	void draw(float x, float y);
+	bool loop;
 	int actorWidth; // Actor Width
 	int actorHeight; // Actor height
 	int fileWidth; // Sprite Sheet width
@@ -26,4 +27,3 @@ public:
 	int updateFrecuence = 0;
 	int updateTime = 0;
 };
-

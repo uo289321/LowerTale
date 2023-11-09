@@ -2,11 +2,12 @@
 
 Animation::Animation(string filename, float actorWidth, float actorHeight,
 	float fileWidth, float fileHeight,
-	int updateFrecuence, int totalFrames, Game* game) {
+	int updateFrecuence, int totalFrames, bool loop, Game* game) {
 
 	// Cargar textura
 	texture = game->getTexture(filename);
 
+	this->loop = loop;
 	this->actorWidth = actorWidth;
 	this->actorHeight = actorHeight;
 	this->fileWidth = fileWidth;
@@ -38,7 +39,15 @@ bool Animation::update() {
 		// Si lleva al ultimo frame vuelve al primero
 		if (currentFrame >= totalFrames) {
 			// Reiniciar es infinita
-			currentFrame = 0;
+			if (loop == false) {
+				// No es infinita
+				// Indicar que finalizó 
+				return true;
+			}
+			else {
+				currentFrame = 0;
+			}
+
 		}
 	}
 	//Actualizar el rectangulo del source (siguiente frame)
@@ -59,6 +68,7 @@ void Animation::draw(float x, float y) {
 	SDL_RenderCopyEx(game->renderer,
 		texture, &source, &destination, 0, NULL, SDL_FLIP_NONE);
 }
+
 
 
 
