@@ -46,7 +46,7 @@ public:
 	list<Enemy*> enemies;
 	list<CheckPoint*> checkPoints;
 
-	bool controlShoot = false;
+	bool controlInteract = false;
 	int controlMoveY = 0;
 	int controlMoveX = 0;
 

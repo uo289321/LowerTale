@@ -16,9 +16,7 @@ void GameLayer::init() {
 	textPoints->content = to_string(points);
 
 	player = new Player(50, 50, game);
-	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, game);
-	backgroundPoints = new Actor("res/icono_puntos.png",
-		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
+	background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 
@@ -133,9 +131,6 @@ void GameLayer::processControls() {
 	else {
 		player->moveY(0);
 	}
-
-
-
 }
 
 void GameLayer::update() {
@@ -153,6 +148,13 @@ void GameLayer::update() {
 		if (player->isOverlap(enemy)) {
 			init();
 			return; // Cortar el for
+		}
+	}
+
+	for (auto const& cp : checkPoints) {
+		if (player->isOverlap(cp) && controlInteract) {
+			// guardar
+			return;
 		}
 	}
 
@@ -219,17 +221,12 @@ void GameLayer::update() {
 
 void GameLayer::draw() {
 	background->draw();
-	/*for (auto const& projectile : projectiles) {
-		projectile->draw();
-	}*/
 
 	player->draw();
+
 	for (auto const& enemy : enemies) {
 		enemy->draw();
 	}
-
-	backgroundPoints->draw();
-	textPoints->draw();
 	SDL_RenderPresent(game->renderer); // Renderiza
 }
 
@@ -257,7 +254,7 @@ void GameLayer::keysToControls(SDL_Event event) {
 			controlMoveY = 1;
 			break;
 		case SDLK_SPACE: // dispara
-			controlShoot = true;
+			controlInteract = true;
 			break;
 		}
 
@@ -287,12 +284,34 @@ void GameLayer::keysToControls(SDL_Event event) {
 				controlMoveY = 0;
 			}
 			break;
-		case SDLK_SPACE: // dispara
-			controlShoot = false;
+		case SDLK_SPACE:
+			controlInteract = false;
 			break;
 		}
 
 	}
 
+}
+
+void GameLayer::calculateScroll() {
+	// limite izquierda
+	if (player->x - scrollX < WIDTH * 0.3) {
+		scrollX = player->x - WIDTH * 0.3;
+	}
+
+
+	// limite derecha
+	if (player->x - scrollX > WIDTH * 0.7) {
+		scrollX = player->x - WIDTH * 0.7;
+	}
+
+
+	if (player->y - scrollY > HEIGHT * 0.7) {
+		scrollY = player->y - HEIGHT * 0.7;
+	}
+
+	if (player->y - scrollY < HEIGHT * 0.3) {
+		scrollY = player->y - HEIGHT * 0.3;
+	}
 }
 

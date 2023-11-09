@@ -29,6 +29,10 @@ Player::Player(float x, float y, Game* game)
 
 }
 
+void Player::heal(int amount) {
+	hp += amount;
+}
+
 void Player::update() {
 
 	bool endAnimation = animation->update();
@@ -99,3 +103,4 @@ void Player::draw(float scrollX, float scrollY) {
 	animation->draw(x - scrollX, y - scrollY);
 
 }
+
