@@ -7,6 +7,7 @@ GameLayer::GameLayer(Game* game)
 }
 
 void GameLayer::init() {
+	space = new Space(0);
 	audioBackground = new Audio("res/musica_ambiente.mp3", true);
 	// audioBackground->play();
 

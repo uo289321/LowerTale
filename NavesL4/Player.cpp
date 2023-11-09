@@ -9,14 +9,14 @@ Player::Player(float x, float y, Game* game)
 
 
 	
-	aIdleRight = new Animation("res/player_idle_right.png", width, height,
-		66, 40, 6, 3, true, game);
-	aIdleLeft = new Animation("res/player_idle_left.png", width, height,
-		66, 40, 6, 3, true, game);
-	aIdleDown = new Animation("res/player_idle_down.png", width, height,
-		66, 40, 6, 3, true, game);
-	aIdleUp = new Animation("res/player_idle_up.png", width, height,
-		66, 32, 6, 3, true, game);
+	aIdleRight = new Animation("res/player_moving_right.png", width, height,
+		22, 32, 6, 1, true, game);
+	aIdleLeft = new Animation("res/player_moving_left.png", width, height,
+		22, 32, 6, 1, true, game);
+	aIdleDown = new Animation("res/player_moving_down.png", width, height,
+		22, 32, 6, 1, true, game);
+	aIdleUp = new Animation("res/player_moving_up.png", width, height,
+		22, 32, 6, 1, true, game);
 
 	aMovingRight = new Animation("res/player_moving_right.png", width, height,
 		66, 32, 6, 3, true, game);
@@ -28,7 +28,7 @@ Player::Player(float x, float y, Game* game)
 		66, 32, 6, 3, true, game);
 	
 
-	animation = aMovingDown;
+	animation = aIdleDown;
 
 }
 
@@ -44,12 +44,18 @@ void Player::update() {
 	if (vx < 0) {
 		orientation = game->orientationLeft;
 	}
+	if (vy > 0) {
+		orientation = game->orientationDown;
+	}
+	if (vy < 0) {
+		orientation = game->orientationUp;
+	}
 
 
 	// Selección de animación basada en estados
 	
 	if (state == game->stateMoving) {
-		if (vx != 0) {
+		if (vx != 0 && vy == 0) {
 			if (orientation == game->orientationRight) {
 				animation = aMovingRight;
 			}
@@ -57,15 +63,21 @@ void Player::update() {
 				animation = aMovingLeft;
 			}
 		}
-		if (vx == 0) {
+		if (vx == 0 && vy == 0) {
 			if (orientation == game->orientationRight) {
 				animation = aIdleRight;
 			}
 			if (orientation == game->orientationLeft) {
 				animation = aIdleLeft;
 			}
+			if (orientation == game->orientationDown) {
+				animation = aIdleDown;
+			}
+			if (orientation == game->orientationUp) {
+				animation = aIdleUp;
+			}
 		}
-		if (vy != 0) {
+		if (vy != 0 && vx == 0) {
 			if (orientation == game->orientationUp) {
 				animation = aMovingUp;
 			}
