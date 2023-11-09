@@ -5,9 +5,6 @@ Player::Player(float x, float y, Game* game)
 
 	orientation = game->orientationDown;
 	state = game->stateMoving;
-
-
-
 	
 	aIdleRight = new Animation("res/player_moving_right.png", width, height,
 		22, 32, 6, 1, true, game);

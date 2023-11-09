@@ -10,6 +10,7 @@
 #include "Audio.h" 
 #include "Tile.h"
 #include "Space.h"
+#include "CheckPoint.h"
 #include <list>
 
 #include <fstream> // Leer ficheros
@@ -43,6 +44,7 @@ public:
 	Actor* backgroundPoints;
 	list<Tile*> tiles;
 	list<Enemy*> enemies;
+	list<CheckPoint*> checkPoints;
 
 	bool controlShoot = false;
 	int controlMoveY = 0;

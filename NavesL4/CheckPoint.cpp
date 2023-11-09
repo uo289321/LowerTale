@@ -5,3 +5,5 @@ CheckPoint::CheckPoint(float x, float y, Game* game)
 }
 
 
+
+

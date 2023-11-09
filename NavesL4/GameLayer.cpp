@@ -73,13 +73,13 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		space->addDynamicActor(player);
 		break;
 	}
-	//case 'A': {
-	//	CheckPoint* cp = new CheckPoint(x, y, game);
-	//	cp->y = cp->y - cp->height / 2;
-	//	checkPoints.push_back(cp);
-	//	space->addDynamicActor(cp);
-	//	break;
-	//}
+	case 'A': {
+		CheckPoint* cp = new CheckPoint(x, y, game);
+		cp->y = cp->y - cp->height / 2;
+		checkPoints.push_back(cp);
+		space->addDynamicActor(cp);
+		break;
+	}
 	//case 'P': {
 	//	Collectable* c = new Collectable(x, y, game);
 	//	c->y = c->y - c->height / 2;
