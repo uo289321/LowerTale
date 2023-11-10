@@ -32,7 +32,7 @@ Player::Player(float x, float y, Game* game)
 void Player::update() {
 
 	bool endAnimation = animation->update();
-
+	
 
 	// Establecer orientación
 	if (vx > 0) {
@@ -86,11 +86,36 @@ void Player::update() {
 }
 
 void Player::moveX(float axis) {
-	vx = axis * 3;
+	if (axis != 0) {
+		moving = true;
+		movingTime++;
+	}
+	printf("MovingTime %d\n", movingTime);
+	vx = axis * 4;
+	
+	if (movingTime == TILE_WIDTH / 4 && (orientation == game->orientationLeft || orientation == game->orientationRight)) {
+		moving = false;
+		movingTime = 0;
+		printf("El movimiento x terminó");
+		vx = 0;
+	}
+	
 }
 
 void Player::moveY(float axis) {
-	vy = axis * 3;
+	if (axis != 0) {
+		moving = true;
+		movingTime++;
+	}
+	printf("MovingTime %d\n", movingTime);
+	vy = axis * 4;
+
+	if (movingTime == TILE_HEIGHT / 4 && (orientation == game->orientationDown || orientation == game->orientationUp)) {
+		moving = false;
+		movingTime = 0;
+		printf("El movimiento y terminó");
+		vy = 0;
+	}
 }
 
 void Player::draw(float scrollX, float scrollY) {

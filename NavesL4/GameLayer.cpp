@@ -111,7 +111,6 @@ void GameLayer::processControls() {
 	while (SDL_PollEvent(&event)) {
 		keysToControls(event);
 	}
-
 	// Eje X
 	if (controlMoveX > 0) {
 		player->moveX(1);
@@ -133,6 +132,13 @@ void GameLayer::processControls() {
 	else {
 		player->moveY(0);
 	}
+
+	if (!player->moving) {
+		controlMoveX = 0;
+		controlMoveY = 0;
+	}
+	
+	
 
 
 
@@ -232,7 +238,7 @@ void GameLayer::draw() {
 	textPoints->draw();
 	SDL_RenderPresent(game->renderer); // Renderiza
 }
-
+// Si el jugador está en movimiento no permitimos acciones
 void GameLayer::keysToControls(SDL_Event event) {
 	if (event.type == SDL_KEYDOWN) {
 		int code = event.key.keysym.sym;
@@ -245,54 +251,62 @@ void GameLayer::keysToControls(SDL_Event event) {
 			game->scale();
 			break;
 		case SDLK_d: // derecha
-			controlMoveX = 1;
+			if(!player->moving)
+				controlMoveX = 1;
 			break;
 		case SDLK_a: // izquierda
-			controlMoveX = -1;
+			if (!player->moving)
+				controlMoveX = -1;
 			break;
 		case SDLK_w: // arriba
-			controlMoveY = -1;
+			if (!player->moving)
+				controlMoveY = -1;
 			break;
 		case SDLK_s: // abajo
-			controlMoveY = 1;
+			if (!player->moving)
+				controlMoveY = 1;
 			break;
 		case SDLK_SPACE: // dispara
-			controlShoot = true;
+			if (!player->moving)
+				controlShoot = true;
 			break;
 		}
 
 
 	}
-	if (event.type == SDL_KEYUP) {
-		int code = event.key.keysym.sym;
-		// Levantada
-		switch (code) {
-		case SDLK_d: // derecha
-			if (controlMoveX == 1) {
-				controlMoveX = 0;
-			}
-			break;
-		case SDLK_a: // izquierda
-			if (controlMoveX == -1) {
-				controlMoveX = 0;
-			}
-			break;
-		case SDLK_w: // arriba
-			if (controlMoveY == -1) {
-				controlMoveY = 0;
-			}
-			break;
-		case SDLK_s: // abajo
-			if (controlMoveY == 1) {
-				controlMoveY = 0;
-			}
-			break;
-		case SDLK_SPACE: // dispara
-			controlShoot = false;
-			break;
-		}
+	//if (event.type == SDL_KEYUP) {
+	//	int code = event.key.keysym.sym;
+	//	// Levantada
+	//	if (!player->moving) {
+	//		switch (code) {
+	//		case SDLK_d: // derecha
+	//			if (controlMoveX == 1) {
+	//				controlMoveX = 0;
+	//			}
+	//			break;
+	//		case SDLK_a: // izquierda
+	//			if (controlMoveX == -1) {
+	//				controlMoveX = 0;
+	//			}
+	//			break;
+	//		case SDLK_w: // arriba
+	//			if (controlMoveY == -1) {
+	//				controlMoveY = 0;
+	//			}
+	//			break;
+	//		case SDLK_s: // abajo
+	//			if (controlMoveY == 1) {
+	//				controlMoveY = 0;
+	//			}
+	//			break;
+	//		case SDLK_SPACE: // dispara
+	//			controlShoot = false;
+	//			break;
+	//		}
+	//	}
+	//	
 
-	}
+	//}
 
 }
 

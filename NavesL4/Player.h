@@ -4,6 +4,7 @@
 #include "Projectile.h" 
 #include "Audio.h"
 #include "Animation.h"
+#include "Tile.h"
 
 class Player : public Actor
 {

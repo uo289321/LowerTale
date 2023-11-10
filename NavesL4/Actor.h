@@ -25,6 +25,8 @@ public:
 	int height;
 	int fileWidth;
 	int fileHeight;
+	int movingTime = 0;
+	bool moving = false;
 	Game* game; // referencia al juego
 };
 
