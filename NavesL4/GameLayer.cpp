@@ -16,7 +16,7 @@ void GameLayer::init() {
 	textPoints->content = to_string(points);
 
 	player = new Player(50, 50, game);
-	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 	backgroundPoints = new Actor("res/icono_puntos.png",
 		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
 
@@ -39,13 +39,13 @@ void GameLayer::loadMap(string name) {
 		// Por línea
 		for (int i = 0; getline(streamFile, line); i++) {
 			istringstream streamLine(line);
-			mapWidth = line.length() * 40; // Ancho del mapa en pixels
+			mapWidth = line.length() * 32; // Ancho del mapa en pixels
 			// Por carácter (en cada línea)
 			for (int j = 0; !streamLine.eof(); j++) {
 				streamLine >> character; // Leer character 
 				cout << character;
-				float x = 40 / 2 + j * 40; // x central
-				float y = 32 + i * 32; // y suelo
+				float x = 32 / 2 + j * 32; // x central
+				float y = 40 + i * 40; // y suelo
 				loadMapObject(character, x, y);
 			}
 
@@ -94,6 +94,13 @@ void GameLayer::loadMapObject(char character, float x, float y)
 	//	space->addDynamicActor(j);
 	//	break;
 	//}
+	case 'B': {
+		Tile* tile = new Tile("res/black.png", x, y, game);
+		tile->y = tile->y - tile->height / 2;
+		tiles.push_back(tile);
+		space->addStaticActor(tile);
+		break;
+	}
 	case '#': {
 		Tile* tile = new Tile("res/bloque_tierra.png", x, y, game);
 		// modificación para empezar a contar desde el suelo.
@@ -228,11 +235,15 @@ void GameLayer::draw() {
 	/*for (auto const& projectile : projectiles) {
 		projectile->draw();
 	}*/
-
+	for (auto const& tile : tiles) {
+		tile->draw();
+	}
 	player->draw();
 	for (auto const& enemy : enemies) {
 		enemy->draw();
 	}
+
+	
 
 	backgroundPoints->draw();
 	textPoints->draw();

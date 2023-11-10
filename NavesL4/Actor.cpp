@@ -57,4 +57,9 @@ bool Actor::isInRender() {
 	return false;
 }
 
+void Actor::stopMovement() {
+	moving = false;
+	movingTime = 0;
+}
+
 

@@ -108,7 +108,7 @@ void Player::moveY(float axis) {
 		movingTime++;
 	}
 	printf("MovingTime %d\n", movingTime);
-	vy = axis * 4;
+	vy = axis * 2;
 
 	if (movingTime == TILE_HEIGHT / 4 && (orientation == game->orientationDown || orientation == game->orientationUp)) {
 		moving = false;
