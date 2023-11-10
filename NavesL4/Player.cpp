@@ -6,17 +6,15 @@ Player::Player(float x, float y, Game* game)
 	orientation = game->orientationDown;
 	state = game->stateMoving;
 
-
-
 	
-	aIdleRight = new Animation("res/player_idle_right.png", width, height,
-		66, 40, 6, 3, true, game);
-	aIdleLeft = new Animation("res/player_idle_left.png", width, height,
-		66, 40, 6, 3, true, game);
-	aIdleDown = new Animation("res/player_idle_down.png", width, height,
-		66, 40, 6, 3, true, game);
-	aIdleUp = new Animation("res/player_idle_up.png", width, height,
-		66, 32, 6, 3, true, game);
+	aIdleRight = new Animation("res/player_moving_right.png", width, height,
+		22, 32, 6, 1, true, game);
+	aIdleLeft = new Animation("res/player_moving_left.png", width, height,
+		22, 32, 6, 1, true, game);
+	aIdleDown = new Animation("res/player_moving_down.png", width, height,
+		22, 32, 6, 1, true, game);
+	aIdleUp = new Animation("res/player_moving_up.png", width, height,
+		22, 32, 6, 1, true, game);
 
 	aMovingRight = new Animation("res/player_moving_right.png", width, height,
 		66, 32, 6, 3, true, game);
@@ -33,6 +31,8 @@ Player::Player(float x, float y, Game* game)
 }
 
 void Player::update() {
+	timeTillNextXMove--;
+	timeTillNextYMove--;
 
 	bool endAnimation = animation->update();
 
@@ -43,6 +43,12 @@ void Player::update() {
 	}
 	if (vx < 0) {
 		orientation = game->orientationLeft;
+	}
+	if (vy > 0) {
+		orientation = game->orientationDown;
+	}
+	if (vy < 0) {
+		orientation = game->orientationUp;
 	}
 
 
@@ -73,6 +79,14 @@ void Player::update() {
 				animation = aMovingDown;
 			}
 		}
+		if (vy == 0) {
+			if (orientation == game->orientationUp) {
+				animation = aIdleUp;
+			}
+			if (orientation == game->orientationDown) {
+				animation = aIdleDown;
+			}
+		}
 	}
 }
 
@@ -80,12 +94,32 @@ void Player::moveX(float axis) {
 	vx = axis * 3;
 }
 
+void Player::moveTileX(float axis) {
+	if (timeTillNextXMove <= 0) {
+		vx = axis * 32;
+		timeTillNextXMove = 5;
+	}
+	else {
+		vx = 0;
+	}
+	
+}
+
 void Player::moveY(float axis) {
 	vy = axis * 3;
 }
 
-void Player::draw(float scrollX, float scrollY) {
+void Player::moveTileY(float axis) {
+	if (timeTillNextYMove <= 0) {
+		vy = axis * 40;
+		timeTillNextYMove = 5;
+	}
+	else {
+		vy = 0;
+	}
+}
 
+void Player::draw(float scrollX, float scrollY) {
 
 	animation->draw(x - scrollX, y - scrollY);
 

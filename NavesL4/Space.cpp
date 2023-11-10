@@ -1,6 +1,7 @@
 #include "Space.h"
 
 Space::Space(float gravity) {
+    this->gravity = gravity;
     dynamicActors.clear();
     staticActors.clear();
 }

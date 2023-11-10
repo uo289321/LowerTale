@@ -13,6 +13,8 @@ public:
 	void update();
 	void moveX(float axis);
 	void moveY(float axis);
+	void moveTileX(float axis);
+	void moveTileY(float axis);
 	void draw(float scrollX = 0, float scrollY = 0) override; // Va a sobrescribir
 	int state;
 	int orientation;
@@ -29,5 +31,8 @@ public:
 	Animation* aMovingRight;
 
 	Animation* animation; // Referencia a la animación mostrada
+
+	int timeTillNextXMove = 0;
+	int timeTillNextYMove = 0;
 };
 

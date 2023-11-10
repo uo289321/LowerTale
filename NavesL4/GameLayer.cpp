@@ -7,6 +7,7 @@ GameLayer::GameLayer(Game* game)
 }
 
 void GameLayer::init() {
+	space = new Space(0);
 	audioBackground = new Audio("res/musica_ambiente.mp3", true);
 	// audioBackground->play();
 
@@ -15,11 +16,12 @@ void GameLayer::init() {
 	textPoints->content = to_string(points);
 
 	player = new Player(50, 50, game);
-	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 	backgroundPoints = new Actor("res/icono_puntos.png",
 		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
+	tiles.clear();
 
 
 	// loadMap("res/" + to_string(game->currentLevel) + ".txt");
@@ -38,13 +40,13 @@ void GameLayer::loadMap(string name) {
 		// Por línea
 		for (int i = 0; getline(streamFile, line); i++) {
 			istringstream streamLine(line);
-			mapWidth = line.length() * 40; // Ancho del mapa en pixels
+			mapWidth = line.length() * 32; // Ancho del mapa en pixels
 			// Por carácter (en cada línea)
 			for (int j = 0; !streamLine.eof(); j++) {
 				streamLine >> character; // Leer character 
 				cout << character;
-				float x = 40 / 2 + j * 40; // x central
-				float y = 32 + i * 32; // y suelo
+				float x = 32 / 2 + j * 32; // x central
+				float y = 40 + i * 40; // y suelo
 				loadMapObject(character, x, y);
 			}
 
@@ -113,24 +115,24 @@ void GameLayer::processControls() {
 
 	// Eje X
 	if (controlMoveX > 0) {
-		player->moveX(1);
+		player->moveTileX(1);
 	}
 	else if (controlMoveX < 0) {
-		player->moveX(-1);
+		player->moveTileX(-1);
 	}
 	else {
-		player->moveX(0);
+		player->moveTileX(0);
 	}
 
 	// Eje Y
 	if (controlMoveY > 0) {
-		player->moveY(1);
+		player->moveTileY(1);
 	}
 	else if (controlMoveY < 0) {
-		player->moveY(-1);
+		player->moveTileY(-1);
 	}
 	else {
-		player->moveY(0);
+		player->moveTileY(0);
 	}
 
 
