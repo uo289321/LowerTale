@@ -60,6 +60,7 @@ bool Actor::isInRender() {
 void Actor::stopMovement() {
 	moving = false;
 	movingTime = 0;
+	
 }
 
 

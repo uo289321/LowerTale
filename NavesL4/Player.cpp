@@ -16,13 +16,13 @@ Player::Player(float x, float y, Game* game)
 		22, 32, 6, 1, true, game);
 
 	aMovingRight = new Animation("res/player_moving_right.png", width, height,
-		66, 32, 6, 3, true, game);
+		88, 32, 6, 4, true, game);
 	aMovingLeft = new Animation("res/player_moving_left.png", width, height,
-		66, 32, 6, 3, true, game);
+		88, 32, 6, 4, true, game);
 	aMovingUp = new Animation("res/player_moving_up.png", width, height,
-		66, 32, 6, 3, true, game);
+		66, 32, 8, 3, true, game);
 	aMovingDown = new Animation("res/player_moving_down.png", width, height,
-		66, 32, 6, 3, true, game);
+		66, 32, 8, 3, true, game);
 	
 
 	animation = aIdleDown;
@@ -90,13 +90,13 @@ void Player::moveX(float axis) {
 		moving = true;
 		movingTime++;
 	}
-	printf("MovingTime %d\n", movingTime);
+	// printf("MovingTime %d\n", movingTime);
 	vx = axis * 4;
 	
 	if (movingTime == TILE_WIDTH / 4 && (orientation == game->orientationLeft || orientation == game->orientationRight)) {
 		moving = false;
 		movingTime = 0;
-		printf("El movimiento x terminó");
+		// printf("El movimiento x terminó");
 		vx = 0;
 	}
 	
@@ -107,13 +107,13 @@ void Player::moveY(float axis) {
 		moving = true;
 		movingTime++;
 	}
-	printf("MovingTime %d\n", movingTime);
-	vy = axis * 2;
+	// printf("MovingTime %d\n", movingTime);
+	vy = axis * 4;
 
 	if (movingTime == TILE_HEIGHT / 4 && (orientation == game->orientationDown || orientation == game->orientationUp)) {
 		moving = false;
 		movingTime = 0;
-		printf("El movimiento y terminó");
+		// printf("El movimiento y terminó");
 		vy = 0;
 	}
 }

@@ -231,16 +231,18 @@ void GameLayer::update() {
 }
 
 void GameLayer::draw() {
-	background->draw();
+	calculateScroll();
+
+	background->draw(scrollX, scrollY);
 	/*for (auto const& projectile : projectiles) {
 		projectile->draw();
 	}*/
 	for (auto const& tile : tiles) {
-		tile->draw();
+		tile->draw(scrollX, scrollY);
 	}
-	player->draw();
+	player->draw(scrollX, scrollY);
 	for (auto const& enemy : enemies) {
-		enemy->draw();
+		enemy->draw(scrollX, scrollY);
 	}
 
 	
@@ -318,6 +320,32 @@ void GameLayer::keysToControls(SDL_Event event) {
 	//	
 
 	//}
+
+}
+
+void GameLayer::calculateScroll() {
+	// limite izquierda
+	if (player->x > WIDTH * 0.3) {
+		if (player->x - scrollX < WIDTH * 0.3) {
+			scrollX = player->x - WIDTH * 0.3;
+		}
+	}
+
+	// limite derecha
+	if (player->x < mapWidth - WIDTH * 0.3) {
+		if (player->x - scrollX > WIDTH * 0.7) {
+			scrollX = player->x - WIDTH * 0.7;
+		}
+	}
+
+
+	if (player->y - scrollY > HEIGHT * 0.7) {
+		scrollY = player->y - HEIGHT * 0.7;
+	}
+
+	if (player->y - scrollY < HEIGHT * 0.3) {
+		scrollY = player->y - HEIGHT * 0.3;
+	}
 
 }
 
