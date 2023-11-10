@@ -45,6 +45,7 @@ public:
 	list<Tile*> tiles;
 	list<Enemy*> enemies;
 	list<CheckPoint*> checkPoints;
+	list<Tile*> cajas;
 
 	bool controlShoot = false;
 	int controlMoveY = 0;
