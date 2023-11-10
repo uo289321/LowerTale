@@ -7,18 +7,18 @@ Player::Player(float x, float y, Game* game)
 	state = game->stateMoving;
 	
 	aIdleRight = new Animation("res/player_moving_right.png", width, height,
-		22, 32, 6, 1, true, game);
+		32, 40, 6, 1, true, game);
 	aIdleLeft = new Animation("res/player_moving_left.png", width, height,
-		22, 32, 6, 1, true, game);
+		32, 40, 6, 1, true, game);
 	aIdleDown = new Animation("res/player_moving_down.png", width, height,
-		22, 32, 6, 1, true, game);
+		32, 40, 6, 1, true, game);
 	aIdleUp = new Animation("res/player_moving_up.png", width, height,
-		22, 32, 6, 1, true, game);
+		32, 40, 6, 1, true, game);
 
 	aMovingRight = new Animation("res/player_moving_right.png", width, height,
-		88, 32, 6, 4, true, game);
+		128, 40, 6, 4, true, game);
 	aMovingLeft = new Animation("res/player_moving_left.png", width, height,
-		88, 32, 6, 4, true, game);
+		128, 40, 6, 4, true, game);
 	aMovingUp = new Animation("res/player_moving_up.png", width, height,
 		66, 32, 8, 3, true, game);
 	aMovingDown = new Animation("res/player_moving_down.png", width, height,
@@ -85,6 +85,19 @@ void Player::update() {
 	}
 }
 
+bool Player::isInRange(Actor* actor) {
+	if ((actor->containsPoint(x + TILE_WIDTH, y) && orientation == game->orientationRight)
+		|| (actor->containsPoint(x - TILE_WIDTH, y) && orientation == game->orientationLeft)
+		|| (actor->containsPoint(x, y + TILE_HEIGHT) && orientation == game->orientationDown)
+		|| (actor->containsPoint(x, y - TILE_HEIGHT) && orientation == game-> orientationUp)) {
+		return true;
+
+	}
+	else {
+		return false;
+	}
+}
+
 void Player::moveX(float axis) {
 	if (axis != 0) {
 		moving = true;
@@ -124,3 +137,5 @@ void Player::draw(float scrollX, float scrollY) {
 	animation->draw(x - scrollX, y - scrollY);
 
 }
+
+

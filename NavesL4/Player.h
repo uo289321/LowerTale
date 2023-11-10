@@ -15,6 +15,7 @@ public:
 	void moveX(float axis);
 	void moveY(float axis);
 	void draw(float scrollX = 0, float scrollY = 0) override; // Va a sobrescribir
+	bool isInRange(Actor* actor);
 	int state;
 	int orientation;
 	Audio* audioShoot;

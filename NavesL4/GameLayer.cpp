@@ -244,11 +244,11 @@ void GameLayer::draw() {
 	for (auto const& enemy : enemies) {
 		enemy->draw(scrollX, scrollY);
 	}
+	for (auto const& cp : checkPoints) {
+		cp->draw(scrollX, scrollY);
+	}
 
 	
-
-	backgroundPoints->draw();
-	textPoints->draw();
 	SDL_RenderPresent(game->renderer); // Renderiza
 }
 // Si el jugador está en movimiento no permitimos acciones
