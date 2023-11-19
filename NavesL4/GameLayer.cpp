@@ -16,7 +16,8 @@ void GameLayer::init() {
 	textPoints->content = to_string(points);
 
 	player = new Player(50, 50, game);
-	background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	// background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	background = new Background("res/bgoutline.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 	backgroundPoints = new Actor("res/icono_puntos.png",
 		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
 
@@ -102,7 +103,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		break;
 	}
 	case '#': {
-		Tile* tile = new Tile("res/bloque_tierra.png", x, y, game);
+		Tile* tile = new Tile("res/pared.png", x, y, game);
 		// modificación para empezar a contar desde el suelo.
 		tile->y = tile->y - tile->height / 2;
 		tiles.push_back(tile);
@@ -264,62 +265,53 @@ void GameLayer::keysToControls(SDL_Event event) {
 			game->scale();
 			break;
 		case SDLK_d: // derecha
-			if(!player->moving)
-				controlMoveX = 1;
+			controlMoveX = 1;
 			break;
 		case SDLK_a: // izquierda
-			if (!player->moving)
-				controlMoveX = -1;
+			controlMoveX = -1;
 			break;
 		case SDLK_w: // arriba
-			if (!player->moving)
-				controlMoveY = -1;
+			controlMoveY = -1;
 			break;
 		case SDLK_s: // abajo
-			if (!player->moving)
-				controlMoveY = 1;
+			controlMoveY = 1;
 			break;
 		case SDLK_SPACE: // dispara
-			if (!player->moving)
-				controlShoot = true;
+			controlShoot = true;
 			break;
 		}
 
 
 	}
-	//if (event.type == SDL_KEYUP) {
-	//	int code = event.key.keysym.sym;
-	//	// Levantada
-	//	if (!player->moving) {
-	//		switch (code) {
-	//		case SDLK_d: // derecha
-	//			if (controlMoveX == 1) {
-	//				controlMoveX = 0;
-	//			}
-	//			break;
-	//		case SDLK_a: // izquierda
-	//			if (controlMoveX == -1) {
-	//				controlMoveX = 0;
-	//			}
-	//			break;
-	//		case SDLK_w: // arriba
-	//			if (controlMoveY == -1) {
-	//				controlMoveY = 0;
-	//			}
-	//			break;
-	//		case SDLK_s: // abajo
-	//			if (controlMoveY == 1) {
-	//				controlMoveY = 0;
-	//			}
-	//			break;
-	//		case SDLK_SPACE: // dispara
-	//			controlShoot = false;
-	//			break;
-	//		}
-	//	}
-	//	
-
-	//}
+	if (event.type == SDL_KEYUP) {
+		int code = event.key.keysym.sym;
+		// Levantada
+			switch (code) {
+			case SDLK_d: // derecha
+				if (controlMoveX == 1) {
+					controlMoveX = 0;
+				}
+				break;
+			case SDLK_a: // izquierda
+				if (controlMoveX == -1) {
+					controlMoveX = 0;
+				}
+				break;
+			case SDLK_w: // arriba
+				if (controlMoveY == -1) {
+					controlMoveY = 0;
+				}
+				break;
+			case SDLK_s: // abajo
+				if (controlMoveY == 1) {
+					controlMoveY = 0;
+				}
+				break;
+			case SDLK_SPACE: // dispara
+				controlShoot = false;
+				break;
+			}
+		}
 
 }
 

@@ -1,7 +1,7 @@
 #include "Player.h"
 
 Player::Player(float x, float y, Game* game)
-	: Actor("res/player.png", x, y, 22, 32, game) {
+	: Actor("res/player.png", x, y, 32, 40, game) {
 
 	orientation = game->orientationDown;
 	state = game->stateMoving;
@@ -23,6 +23,18 @@ Player::Player(float x, float y, Game* game)
 		66, 32, 8, 3, true, game);
 	aMovingDown = new Animation("res/player_moving_down.png", width, height,
 		66, 32, 8, 3, true, game);
+
+	/*aIdleRight = new Animation("res/outline.png", width, height,
+		32, 40, 6, 1, true, game);
+	aIdleLeft = aIdleRight;
+	aIdleDown = aIdleRight;
+	aIdleUp = aIdleRight;
+
+	aMovingRight = aIdleRight;
+	aMovingLeft = aIdleRight;
+	aMovingUp = aIdleRight;
+	aMovingDown = aIdleRight;*/
+
 	
 
 	animation = aIdleDown;
@@ -99,36 +111,25 @@ bool Player::isInRange(Actor* actor) {
 }
 
 void Player::moveX(float axis) {
-	if (axis != 0) {
-		moving = true;
-		movingTime++;
+	printf("x:%d", x);
+	int tileCenterX = (x / TILE_WIDTH) * TILE_WIDTH + TILE_WIDTH / 2;
+	if (axis == 0) {
+		if (abs(x - tileCenterX) == 0)	// sólo permitimos parar si se ha cruzado de casilla
+			vx = 0;
 	}
-	// printf("MovingTime %d\n", movingTime);
-	vx = axis * 4;
-	
-	if (movingTime == TILE_WIDTH / 4 && (orientation == game->orientationLeft || orientation == game->orientationRight)) {
-		moving = false;
-		movingTime = 0;
-		// printf("El movimiento x terminó");
-		vx = 0;
-	}
-	
+	else
+		vx = axis * 4;
+
 }
 
 void Player::moveY(float axis) {
-	if (axis != 0) {
-		moving = true;
-		movingTime++;
-	}
-	// printf("MovingTime %d\n", movingTime);
-	vy = axis * 4;
-
-	if (movingTime == TILE_HEIGHT / 4 && (orientation == game->orientationDown || orientation == game->orientationUp)) {
-		moving = false;
-		movingTime = 0;
-		// printf("El movimiento y terminó");
-		vy = 0;
-	}
+	int tileCenterY = (y / TILE_HEIGHT) * TILE_HEIGHT + TILE_HEIGHT / 2;
+	if (axis == 0) {
+		if (abs(y - tileCenterY) == 0)	// sólo permitimos parar si se ha cruzado de casilla
+			vy = 0;
+	} 
+	else 	
+		vy = axis * 4;
 }
 
 void Player::draw(float scrollX, float scrollY) {
