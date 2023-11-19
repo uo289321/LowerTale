@@ -11,6 +11,7 @@
 #include "Tile.h"
 #include "Space.h"
 #include "CheckPoint.h"
+#include "DialogBox.h"
 #include <list>
 
 #include <fstream> // Leer ficheros
@@ -41,14 +42,21 @@ public:
 	int points;
 	Player* player;
 	Background* background;
-	Actor* backgroundPoints;
+	DialogBox* dialogBox;
+
+
+
 	list<Tile*> tiles;
 	list<Enemy*> enemies;
 	list<CheckPoint*> checkPoints;
 
+
 	bool controlShoot = false;
 	int controlMoveY = 0;
 	int controlMoveX = 0;
+
+	int spawnX = -1;
+	int spawnY = -1;
 
 
 };

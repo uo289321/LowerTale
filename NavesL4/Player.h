@@ -20,6 +20,9 @@ public:
 	int orientation;
 	Audio* audioShoot;
 
+
+	int movingCd = 0;
+
 	Animation* aIdleRight;
 	Animation* aIdleLeft;
 	Animation* aIdleUp;

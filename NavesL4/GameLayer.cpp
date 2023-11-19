@@ -17,9 +17,7 @@ void GameLayer::init() {
 
 	player = new Player(50, 50, game);
 	// background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
-	background = new Background("res/bgoutline.png", WIDTH * 0.5, HEIGHT * 0.5, game);
-	backgroundPoints = new Actor("res/icono_puntos.png",
-		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
+	background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 
@@ -120,31 +118,31 @@ void GameLayer::processControls() {
 		keysToControls(event);
 	}
 	// Eje X
-	if (controlMoveX > 0) {
-		player->moveX(1);
-	}
-	else if (controlMoveX < 0) {
-		player->moveX(-1);
-	}
-	else {
-		player->moveX(0);
+	if (player->state == game->stateMoving) {
+		if (controlMoveX > 0) {
+			player->moveX(1);
+		}
+		else if (controlMoveX < 0) {
+			player->moveX(-1);
+		}
+		else {
+			player->moveX(0);
+		}
+
+		// Eje Y
+		if (controlMoveY > 0) {
+			player->moveY(1);
+		}
+		else if (controlMoveY < 0) {
+			player->moveY(-1);
+		}
+		else {
+			player->moveY(0);
+		}
 	}
 
-	// Eje Y
-	if (controlMoveY > 0) {
-		player->moveY(1);
-	}
-	else if (controlMoveY < 0) {
-		player->moveY(-1);
-	}
-	else {
-		player->moveY(0);
-	}
-
-	if (!player->moving) {
-		controlMoveX = 0;
-		controlMoveY = 0;
-	}
+	
+	
 	
 	
 
@@ -160,15 +158,16 @@ void GameLayer::update() {
 		enemy->update();
 	}*/
 
+	for (auto const& cp : checkPoints) {
+		if (player->isInRange(cp) && controlShoot) {
+			this->dialogBox = new DialogBox("Has llegado a un punto de guardado.");
 
-
-	// Colisiones
-	for (auto const& enemy : enemies) {
-		if (player->isOverlap(enemy)) {
-			init();
-			return; // Cortar el for
+			spawnY = player->y;
+			spawnX = player->x;
 		}
 	}
+
+	
 
 	// Colisiones , Enemy - Projectile
 
