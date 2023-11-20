@@ -52,7 +52,8 @@ public:
 	list<CheckPoint*> checkPoints;
 
 
-	bool controlShoot = false;
+	bool controlInteract = false;
+	bool controlCancel = false;
 	int controlMoveY = 0;
 	int controlMoveX = 0;
 

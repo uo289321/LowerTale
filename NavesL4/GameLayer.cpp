@@ -139,7 +139,7 @@ void GameLayer::processControls() {
 	}
 
 	if (player->state == game->stateBlocked) {
-		if (controlShoot && dialogBox->finished) {
+		if (controlCancel && dialogBox->finished) {
 			dialogBox = NULL;
 			player->state = game->stateMoving;
 		}
@@ -160,7 +160,7 @@ void GameLayer::update() {
 	}*/
 
 	for (auto const& cp : checkPoints) {
-		if (player->isInRange(cp) && controlShoot) {
+		if (player->isInRange(cp) && controlInteract && player->state == game->stateMoving) {
 			this->dialogBox = new DialogBox("Has llegado a un punto de guardado.", game);
 
 			spawnY = player->y;
@@ -285,10 +285,14 @@ void GameLayer::keysToControls(SDL_Event event) {
 		case SDLK_s: // abajo
 			controlMoveY = 1;
 			break;
-		case SDLK_SPACE: // dispara
-			controlShoot = true;
+		case SDLK_z: // interaccion
+			controlInteract = true;
+			break;
+		case SDLK_x:
+			controlCancel = true;
 			break;
 		}
+
 
 
 	}
@@ -316,10 +320,13 @@ void GameLayer::keysToControls(SDL_Event event) {
 					controlMoveY = 0;
 				}
 				break;
-			case SDLK_SPACE: // dispara
-				controlShoot = false;
+			case SDLK_z:
+				controlInteract = false;
 				break;
+			case SDLK_x:
+				controlCancel = false;
 			}
+
 		}
 
 }
