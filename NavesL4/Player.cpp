@@ -24,19 +24,6 @@ Player::Player(float x, float y, Game* game)
 	aMovingDown = new Animation("res/player_moving_down.png", width, height,
 		66, 32, 8, 3, true, game);
 
-	/*aIdleRight = new Animation("res/outline.png", width, height,
-		32, 40, 6, 1, true, game);
-	aIdleLeft = aIdleRight;
-	aIdleDown = aIdleRight;
-	aIdleUp = aIdleRight;
-
-	aMovingRight = aIdleRight;
-	aMovingLeft = aIdleRight;
-	aMovingUp = aIdleRight;
-	aMovingDown = aIdleRight;*/
-
-	
-
 	animation = aIdleDown;
 
 }
@@ -111,47 +98,59 @@ bool Player::isInRange(Actor* actor) {
 }
 
 void Player::moveX(float axis) {
-	if (axis == 1 && orientation != game->orientationRight) {
-		orientation = game->orientationRight;
-		movingCd = 20;
-	}
-	if (axis == -1 && orientation != game->orientationLeft) {
-		orientation = game->orientationLeft;
-		movingCd = 20;
-	}
-	else if(movingCd <= 0) {
-		int tileCenterX = (x / TILE_WIDTH) * TILE_WIDTH + TILE_WIDTH / 2;
-		if (axis == 0) {
-			if (abs(x - tileCenterX) == 0)	// sólo permitimos parar si se ha cruzado de casilla
+	if (vy == 0) {
+		if (vx == 0) {
+			if (axis == 1 && orientation != game->orientationRight) {
+				orientation = game->orientationRight;
+				movingCd = 20;
+
+			}
+			if (axis == -1 && orientation != game->orientationLeft && vx == 0) {
+				orientation = game->orientationLeft;
+				movingCd = 20;
+			}
+		}
+
+		if (movingCd <= 0) {
+			int tileCenterX = (x / TILE_WIDTH) * TILE_WIDTH + TILE_WIDTH / 2;
+			if (axis == 0) {
+				if (abs(x - tileCenterX) == 0)	// sólo permitimos parar si se ha cruzado de casilla
+					vx = axis * 4;
+			}
+			else
 				vx = axis * 4;
 		}
-		else
-			vx = axis * 4;
+
+		movingCd--;
 	}
-	movingCd--;
 	
 
 }
 
 void Player::moveY(float axis) {
-	if (axis == -1 && orientation != game->orientationUp) {
-		orientation = game->orientationUp;
-		movingCd = 20;
-	}
-	if (axis == 1 && orientation != game->orientationDown) {
-		orientation = game->orientationDown;
-		movingCd = 20;
-	}
-	else if(movingCd <= 0) {
-		int tileCenterY = (y / TILE_HEIGHT) * TILE_HEIGHT + TILE_HEIGHT / 2;
-		if (axis == 0) {
-			if (abs(y - tileCenterY) == 0)	// sólo permitimos parar si se ha cruzado de casilla
+	if (vx == 0) { 
+		if (vy == 0) {
+			if (axis == -1 && orientation != game->orientationUp) {
+				orientation = game->orientationUp;
+				movingCd = 20;
+			}
+			if (axis == 1 && orientation != game->orientationDown) {
+				orientation = game->orientationDown;
+				movingCd = 20;
+			}
+		}
+		if (movingCd <= 0) {
+			int tileCenterY = (y / TILE_HEIGHT) * TILE_HEIGHT + TILE_HEIGHT / 2;
+			if (axis == 0) {
+				if (abs(y - tileCenterY) == 0)	// sólo permitimos parar si se ha cruzado de casilla
+					vy = axis * 4;
+			}
+			else
 				vy = axis * 4;
 		}
-		else
-			vy = axis * 4;
+		movingCd--;
 	}
-	movingCd--;	
+	
 }
 
 void Player::draw(float scrollX, float scrollY) {

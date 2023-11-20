@@ -5,8 +5,11 @@
 class DialogBox : public Actor
 {
 public:
-	DialogBox(string text);
+	DialogBox(string text, Game* game);
 	AnimatedText* text;
-	bool update();
+	void update();
+	void draw(float scrollX = 0, float scrollY = 0) override;
+
+	bool finished;
 };
 

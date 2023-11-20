@@ -1,17 +1,19 @@
 #include "DialogBox.h"
 
-DialogBox::DialogBox(string text)
-	: Actor("res/dialogbox.png", 0, HEIGHT - 100, 480, 100, game) {
+DialogBox::DialogBox(string text, Game* game)
+	: Actor("res/dialogbox.png", WIDTH / 2, HEIGHT - 50, 480, 100, game) {
 	this->text = new AnimatedText(text, x, y, game);
+	this->finished = false;
 }
 
-bool DialogBox::update() {
-	if (this->text->update()) {
-		SDL_Delay(1000);
-		return true;
-	}
-	return false;
+void DialogBox::update() {
+	finished = this->text->update();
+	
 
+}
 
+void DialogBox::draw(float scrollX, float scrollY) {
+	Actor::draw();
+	text->draw();
 }
 

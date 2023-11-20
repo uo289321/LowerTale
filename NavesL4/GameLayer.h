@@ -29,6 +29,7 @@ public:
 	void loadMapObject(char character, float x, float y);
 	void keysToControls(SDL_Event event);
 	void calculateScroll();
+	void showDialog(string text);
 	
 	Space* space;
 	float scrollX;

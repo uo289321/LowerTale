@@ -10,7 +10,6 @@ class Player : public Actor
 {
 public:
 	Player(float x, float y, Game* game);
-	Projectile* shoot();
 	void update();
 	void moveX(float axis);
 	void moveY(float axis);
@@ -18,6 +17,7 @@ public:
 	bool isInRange(Actor* actor);
 	int state;
 	int orientation;
+	bool moving = false;
 	Audio* audioShoot;
 
 

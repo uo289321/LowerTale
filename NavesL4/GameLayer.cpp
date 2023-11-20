@@ -11,10 +11,6 @@ void GameLayer::init() {
 	audioBackground = new Audio("res/musica_ambiente.mp3", true);
 	// audioBackground->play();
 
-	points = 0;
-	textPoints = new Text("hola", WIDTH * 0.92, HEIGHT * 0.04, game);
-	textPoints->content = to_string(points);
-
 	player = new Player(50, 50, game);
 	// background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 	background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
@@ -24,6 +20,7 @@ void GameLayer::init() {
 
 	// loadMap("res/" + to_string(game->currentLevel) + ".txt");
 	loadMap("res/test0.txt");
+	showDialog("Texto de ejemplo");
 }
 
 void GameLayer::loadMap(string name) {
@@ -141,12 +138,12 @@ void GameLayer::processControls() {
 		}
 	}
 
-	
-	
-	
-	
-
-
+	if (player->state == game->stateBlocked) {
+		if (controlShoot && dialogBox->finished) {
+			dialogBox = NULL;
+			player->state = game->stateMoving;
+		}
+	}
 
 }
 
@@ -154,13 +151,17 @@ void GameLayer::update() {
 	space->update();
 	background->update();
 	player->update();
+
+	if (dialogBox != NULL)
+		dialogBox->update();
+
 	/*for (auto const& enemy : enemies) {
 		enemy->update();
 	}*/
 
 	for (auto const& cp : checkPoints) {
 		if (player->isInRange(cp) && controlShoot) {
-			this->dialogBox = new DialogBox("Has llegado a un punto de guardado.");
+			this->dialogBox = new DialogBox("Has llegado a un punto de guardado.", game);
 
 			spawnY = player->y;
 			spawnX = player->x;
@@ -230,10 +231,16 @@ void GameLayer::update() {
 	cout << "update GameLayer" << endl;
 }
 
+void GameLayer::showDialog(string content) {
+	player->state = game->stateBlocked;
+	dialogBox = new DialogBox(content, game);
+}
+
 void GameLayer::draw() {
 	calculateScroll();
 
 	background->draw(scrollX, scrollY);
+
 	/*for (auto const& projectile : projectiles) {
 		projectile->draw();
 	}*/
@@ -247,6 +254,9 @@ void GameLayer::draw() {
 	for (auto const& cp : checkPoints) {
 		cp->draw(scrollX, scrollY);
 	}
+
+	if (dialogBox != NULL)
+		dialogBox->draw(scrollX, scrollY);
 
 	
 	SDL_RenderPresent(game->renderer); // Renderiza

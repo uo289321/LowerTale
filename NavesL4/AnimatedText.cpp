@@ -12,7 +12,7 @@ AnimatedText::AnimatedText(string content, float x, float y, Game* game) {
 bool AnimatedText::update() {
 	this->n++;
 	this->shown = content.substr(0, n);
-	if (n == content.length())
+	if (n >= content.length())
 		return true;
 	return false;
 }
