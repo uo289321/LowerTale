@@ -161,7 +161,7 @@ void GameLayer::update() {
 
 	for (auto const& cp : checkPoints) {
 		if (player->isInRange(cp) && controlInteract && player->state == game->stateMoving) {
-			this->dialogBox = new DialogBox("Has llegado a un punto de guardado.", game);
+			showDialog("Tus fuerzas se han renovado.");
 
 			spawnY = player->y;
 			spawnX = player->x;
