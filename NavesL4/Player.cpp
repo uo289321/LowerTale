@@ -30,6 +30,10 @@ Player::Player(float x, float y, Game* game)
 
 void Player::update() {
 
+	if (throwTime > 0) {
+		throwTime--;
+	}
+
 	bool endAnimation = animation->update();
 	
 
@@ -89,6 +93,19 @@ bool Player::isInRange(Actor* actor) {
 		|| (actor->containsPoint(x - TILE_WIDTH, y) && orientation == game->orientationLeft)
 		|| (actor->containsPoint(x, y + TILE_HEIGHT) && orientation == game->orientationDown)
 		|| (actor->containsPoint(x, y - TILE_HEIGHT) && orientation == game-> orientationUp)) {
+		return true;
+
+	}
+	else {
+		return false;
+	}
+}
+
+bool Player::isTouching(Actor* actor) {
+	if ((actor->containsPoint(x + TILE_WIDTH/2, y) && orientation == game->orientationRight)
+		|| (actor->containsPoint(x - TILE_WIDTH/2, y) && orientation == game->orientationLeft)
+		|| (actor->containsPoint(x, y + TILE_HEIGHT/2) && orientation == game->orientationDown)
+		|| (actor->containsPoint(x, y - TILE_HEIGHT/2) && orientation == game->orientationUp)) {
 		return true;
 
 	}
@@ -158,6 +175,16 @@ void Player::draw(float scrollX, float scrollY) {
 
 	animation->draw(x - scrollX, y - scrollY);
 
+}
+
+Plank* Player::throwPlank() {
+	if (throwTime == 0) {
+		throwTime = throwCadence;
+		return new Plank(x, y, game);
+	}
+	else {
+		return NULL;
+	}
 }
 
 

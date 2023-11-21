@@ -12,6 +12,7 @@
 #include "Space.h"
 #include "CheckPoint.h"
 #include "DialogBox.h"
+#include "Plank.h"
 #include <list>
 
 #include <fstream> // Leer ficheros
@@ -48,14 +49,17 @@ public:
 
 
 	list<Tile*> tiles;
+	list<Tile*> waters;
 	list<Enemy*> enemies;
 	list<CheckPoint*> checkPoints;
+	list<Plank*> planks;
 
 
 	bool controlInteract = false;
 	bool controlCancel = false;
 	int controlMoveY = 0;
 	int controlMoveX = 0;
+	bool controlThrow = false;
 
 	int spawnX = -1;
 	int spawnY = -1;

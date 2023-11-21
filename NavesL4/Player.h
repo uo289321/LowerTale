@@ -5,6 +5,7 @@
 #include "Audio.h"
 #include "Animation.h"
 #include "Tile.h"
+#include "Plank.h"
 
 class Player : public Actor
 {
@@ -15,6 +16,10 @@ public:
 	void moveY(float axis);
 	void draw(float scrollX = 0, float scrollY = 0) override; // Va a sobrescribir
 	bool isInRange(Actor* actor);
+	bool isTouching(Actor* actor);
+	Plank* throwPlank();
+	int throwCadence = 5;
+	int throwTime = 0;
 	int state;
 	int orientation;
 	bool moving = false;

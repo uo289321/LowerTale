@@ -16,7 +16,7 @@ void GameLayer::init() {
 	background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
-
+	planks.clear();
 
 	// loadMap("res/" + to_string(game->currentLevel) + ".txt");
 	loadMap("res/test0.txt");
@@ -105,6 +105,12 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		space->addStaticActor(tile);
 		break;
 	}
+	case 'W':
+		Tile* water = new Tile("res/water.png", x, y, game);
+		water->y = water->y - water->height / 2;
+		waters.push_back(water);
+		space->addDynamicActor(water);
+		break;
 	}
 }
 
@@ -114,6 +120,15 @@ void GameLayer::processControls() {
 	while (SDL_PollEvent(&event)) {
 		keysToControls(event);
 	}
+
+	if (controlThrow) {
+		Plank* newPlank = player->throwPlank();
+		if (newPlank != NULL) {
+			//&& player->isTouching(water)) {
+			planks.push_back(newPlank);
+		}
+	}
+
 	// Eje X
 	if (player->state == game->stateMoving) {
 		if (controlMoveX > 0) {
@@ -166,6 +181,10 @@ void GameLayer::update() {
 			spawnY = player->y;
 			spawnX = player->x;
 		}
+	}
+
+	for (auto const& plank : planks) {
+		plank->update();
 	}
 
 	
@@ -244,9 +263,19 @@ void GameLayer::draw() {
 	/*for (auto const& projectile : projectiles) {
 		projectile->draw();
 	}*/
+
+	for (auto const& plank : planks) {
+		plank->draw();
+	}
+
 	for (auto const& tile : tiles) {
 		tile->draw(scrollX, scrollY);
 	}
+
+	for (auto const& water : waters) {
+		water->draw(scrollX, scrollY);
+	}
+
 	player->draw(scrollX, scrollY);
 	for (auto const& enemy : enemies) {
 		enemy->draw(scrollX, scrollY);
@@ -291,6 +320,8 @@ void GameLayer::keysToControls(SDL_Event event) {
 		case SDLK_x:
 			controlCancel = true;
 			break;
+		case SDLK_p:
+			controlThrow = true;
 		}
 
 
@@ -299,33 +330,35 @@ void GameLayer::keysToControls(SDL_Event event) {
 	if (event.type == SDL_KEYUP) {
 		int code = event.key.keysym.sym;
 		// Levantada
-			switch (code) {
-			case SDLK_d: // derecha
-				if (controlMoveX == 1) {
-					controlMoveX = 0;
-				}
-				break;
-			case SDLK_a: // izquierda
-				if (controlMoveX == -1) {
-					controlMoveX = 0;
-				}
-				break;
-			case SDLK_w: // arriba
-				if (controlMoveY == -1) {
-					controlMoveY = 0;
-				}
-				break;
-			case SDLK_s: // abajo
-				if (controlMoveY == 1) {
-					controlMoveY = 0;
-				}
-				break;
-			case SDLK_z:
-				controlInteract = false;
-				break;
-			case SDLK_x:
-				controlCancel = false;
+		switch (code) {
+		case SDLK_d: // derecha
+			if (controlMoveX == 1) {
+				controlMoveX = 0;
 			}
+			break;
+		case SDLK_a: // izquierda
+			if (controlMoveX == -1) {
+				controlMoveX = 0;
+			}
+			break;
+		case SDLK_w: // arriba
+			if (controlMoveY == -1) {
+				controlMoveY = 0;
+			}
+			break;
+		case SDLK_s: // abajo
+			if (controlMoveY == 1) {
+				controlMoveY = 0;
+			}
+			break;
+		case SDLK_z:
+			controlInteract = false;
+			break;
+		case SDLK_x:
+			controlCancel = false;
+		case SDLK_p:
+			controlThrow = false;
+		}
 
 		}
 
