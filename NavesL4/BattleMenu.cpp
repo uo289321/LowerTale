@@ -6,8 +6,8 @@ BattleMenu::BattleMenu(Enemy* e, GameLayer* layer, Game* game)
 	t->highlight();
 	this->options.push_back(t);
 	this->options.push_back(new Text("Usar objeto", WIDTH * 2 / 3, HEIGHT * 0.8, game));	
-	health = new Text("", WIDTH * 0.1 ,HEIGHT * 0.9, game);// ESCRIBIR VIDA DEL JUGADOR
 
+	this->health = new Text("", WIDTH * 0.1, HEIGHT * 0.9, game);
 	this->enemy = enemy;
 	this->game = game;
 	this->layer = layer;

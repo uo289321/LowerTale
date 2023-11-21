@@ -11,10 +11,11 @@
 #include "Tile.h"
 #include "Space.h"
 #include "CheckPoint.h"
-#include "DialogBox.h"
-#include "BattleMenu.h"
 #include "Item.h"
 #include <list>
+#include "DialogBox.h"
+#include "BattleMenu.h"
+class BattleMenu;
 
 #include <fstream> // Leer ficheros
 #include <sstream> // Leer líneas / String
@@ -50,7 +51,6 @@ public:
 	Background* backgroundBattle;
 	DialogBox* dialogBox;
 	BattleMenu* battleMenu;
-
 
 	list<Tile*> tiles;
 	list<Enemy*> enemies;

@@ -168,7 +168,7 @@ void GameLayer::update() {
 	}*/
 
 	if (player->state == game->stateBattle)
-		battleMenu->update(player->health);
+		battleMenu->update();
 
 	for (auto const& cp : checkPoints) {
 		if (player->isInRange(cp) && controlInteract && player->state == game->stateMoving) {
@@ -182,6 +182,12 @@ void GameLayer::update() {
 	for (auto const& item : items) {
 		if (player->isInRange(item) && controlInteract && player->state == game->stateMoving) {
 			showDialog("¡Has encontrado el siguiente objeto: " + item->name);
+		}
+	}
+
+	for (auto const& enemy : enemies) {
+		if (player->isInRange(enemy) && controlInteract && player->state == game->stateMoving) {
+			switchToBattle(enemy);
 		}
 	}
 
@@ -291,7 +297,7 @@ void GameLayer::draw() {
 void GameLayer::switchToBattle(Enemy* enemy) {
 
 	player->state = game->stateBattle;
-	battleMenu = new BattleMenu(enemy, this, game);
+	battleMenu = new BattleMenu(enemy, this, game); 
 	background = backgroundBattle;
 }
 // Si el jugador está en movimiento no permitimos acciones

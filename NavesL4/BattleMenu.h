@@ -4,10 +4,15 @@
 #include "Text.h"
 #include "Item.h"
 #include "Enemy.h"
+#include "Game.h"
 #include "GameLayer.h"
+class GameLayer;
+
+
 
 #define ATTACK 0
 #define ITEM 1
+
 class BattleMenu
 {
 public:
@@ -21,11 +26,11 @@ public:
 	void showOptions();
 	int calculateDamage();
 
-	int selected;
+	int selected = 0;
 	list<Text*> options;
 	Text* health;
 	Enemy* enemy;
-	Game* game;
 	GameLayer* layer;
+	Game* game;
 };
 
