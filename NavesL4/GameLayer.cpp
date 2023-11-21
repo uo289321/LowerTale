@@ -22,7 +22,7 @@ void GameLayer::init() {
 
 	// loadMap("res/" + to_string(game->currentLevel) + ".txt");
 	loadMap("res/test0.txt");
-	switchToBattle();
+	// switchToBattle();
 }
 
 void GameLayer::loadMap(string name) {
@@ -148,9 +148,8 @@ void GameLayer::processControls() {
 	}
 
 	if (player->state == game->stateBlocked) {
-		if ((controlCancel || controlInteract) && dialogBox->finished) {
+		if ((controlInteract || controlCancel) && dialogBox->finished) {
 			dialogBox = NULL;
-			player->state = game->stateMoving;
 		}
 	}
 
@@ -245,6 +244,11 @@ void GameLayer::update() {
 	}
 	deleteProjectiles.clear();*/
 
+
+	if (player->state == game->stateBlocked && dialogBox == NULL) {
+		player->state = game->stateMoving;
+		SDL_Delay(100);
+	}
 
 	cout << "update GameLayer" << endl;
 }
