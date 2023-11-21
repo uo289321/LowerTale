@@ -45,6 +45,8 @@ void BattleMenu::select() {
 	switch (selected) {
 	case ATTACK: {
 		int dmg = calculateDamage();
+		enemy->receiveDamage(dmg);
+
 		layer->showDialog("Damage inflicted: " + to_string(dmg));
 	}
 	case ITEM: {
@@ -78,4 +80,8 @@ void BattleMenu::draw() {
 void BattleMenu::update() {
 
 	this->health->content = to_string(layer->player->health) + " / 20";
+}
+
+int BattleMenu::calculateDamage() {
+	return 15;
 }
