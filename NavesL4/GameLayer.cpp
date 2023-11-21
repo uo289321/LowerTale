@@ -12,15 +12,15 @@ void GameLayer::init() {
 	// audioBackground->play();
 
 	player = new Player(50, 50, game);
+	background = new Background("res/bgoutline.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 	// background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
-	background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 	planks.clear();
 
 	// loadMap("res/" + to_string(game->currentLevel) + ".txt");
 	loadMap("res/test0.txt");
-	showDialog("Texto de ejemplo");
+	//showDialog("Texto de ejemplo");
 }
 
 void GameLayer::loadMap(string name) {
@@ -28,7 +28,7 @@ void GameLayer::loadMap(string name) {
 	string line;
 	ifstream streamFile(name.c_str());
 	if (!streamFile.is_open()) {
-		cout << "Falla abrir el fichero de mapa" << endl;
+		cout << "Falla abrir el fichero de mapa" << endl; 
 		return;
 	}
 	else {
@@ -106,10 +106,11 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		break;
 	}
 	case 'W':
-		Tile* water = new Tile("res/water.png", x, y, game);
+		Tile * water = new Tile("res/wateroutline.png", x, y, game);
+		// Tile* water = new Tile("res/water.png", x, y, game);
 		water->y = water->y - water->height / 2;
 		waters.push_back(water);
-		space->addDynamicActor(water);
+		space->addStaticActor(water);
 		break;
 	}
 }
@@ -123,9 +124,10 @@ void GameLayer::processControls() {
 
 	if (controlThrow) {
 		Plank* newPlank = player->throwPlank();
-		if (newPlank != NULL) {
-			//&& player->isTouching(water)) {
-			planks.push_back(newPlank);
+		for (Tile* water : waters) {
+			if (newPlank != NULL && player->isTouching(water)) {
+				planks.push_back(newPlank);
+			}
 		}
 	}
 
@@ -184,10 +186,22 @@ void GameLayer::update() {
 	}
 
 	for (auto const& plank : planks) {
-		plank->update();
+		for (Tile* water : waters) {
+			if (plank->hasWaterNext(water)) {
+				plank->update();
+				return;
+			}
+		}
 	}
 
-	
+	/*for (auto const& plank : planks) {
+		for (Tile* water : waters) {
+			if (plank->isOverlap(water)) {
+				space->addDynamicActor(water);
+				space->removeStaticActor(water);
+			}
+		}
+	}*/
 
 	// Colisiones , Enemy - Projectile
 
@@ -247,7 +261,7 @@ void GameLayer::update() {
 	deleteProjectiles.clear();*/
 
 
-	cout << "update GameLayer" << endl;
+	cout << "update GameLayer" << endl; 
 }
 
 void GameLayer::showDialog(string content) {
@@ -264,9 +278,6 @@ void GameLayer::draw() {
 		projectile->draw();
 	}*/
 
-	for (auto const& plank : planks) {
-		plank->draw();
-	}
 
 	for (auto const& tile : tiles) {
 		tile->draw(scrollX, scrollY);
@@ -274,6 +285,10 @@ void GameLayer::draw() {
 
 	for (auto const& water : waters) {
 		water->draw(scrollX, scrollY);
+	}
+
+	for (auto const& plank : planks) {
+		plank->draw(scrollX, scrollY);
 	}
 
 	player->draw(scrollX, scrollY);

@@ -180,7 +180,27 @@ void Player::draw(float scrollX, float scrollY) {
 Plank* Player::throwPlank() {
 	if (throwTime == 0) {
 		throwTime = throwCadence;
-		return new Plank(x, y, game);
+		// Plank* plank = new Plank(x, y, game);
+		if (orientation == game->orientationRight) {
+			Plank* plank = new Plank(x, y, game, game->orientationRight);
+			plank->vx = 5;
+			plank->vy = 0;
+		}
+		else if (orientation == game->orientationLeft) {
+			Plank* plank = new Plank(x, y, game, game->orientationLeft);
+			plank->vx = -5; // Invertir
+			plank->vy = 0;
+		}
+		else if (orientation == game->orientationDown) {
+			Plank* plank = new Plank(x, y, game, game->orientationDown);
+			plank->vx = 0; 
+			plank->vy = 4;
+		}
+		else if (orientation == game->orientationUp) {
+			Plank* plank = new Plank(x, y, game, game->orientationUp);
+			plank->vx = 0;
+			plank->vy = -4; // Invertir
+		}
 	}
 	else {
 		return NULL;
