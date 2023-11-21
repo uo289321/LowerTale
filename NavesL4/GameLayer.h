@@ -32,7 +32,7 @@ public:
 	void keysToControls(SDL_Event event);
 	void calculateScroll();
 	void showDialog(string text);
-	void switchToBattle();
+	void switchToBattle(Enemy* enemy);
 	
 	Space* space;
 	float scrollX;

@@ -1,12 +1,16 @@
 #include "BattleMenu.h"
 
-BattleMenu::BattleMenu(Game* game)
+BattleMenu::BattleMenu(Enemy* e, GameLayer* layer, Game* game)
 {	
 	Text* t = new Text("Atacar", WIDTH / 3, HEIGHT * 0.8, game);
 	t->highlight();
 	this->options.push_back(t);
 	this->options.push_back(new Text("Usar objeto", WIDTH * 2 / 3, HEIGHT * 0.8, game));	
 	health = new Text("", WIDTH * 0.1 ,HEIGHT * 0.9, game);// ESCRIBIR VIDA DEL JUGADOR
+
+	this->enemy = enemy;
+	this->game = game;
+	this->layer = layer;
 }
 
 
@@ -37,8 +41,17 @@ void BattleMenu::selectPrevious() {
 }
 
 void BattleMenu::select() {
-	
+	hideOptions();
+	switch (selected) {
+	case ATTACK: {
+		int dmg = calculateDamage();
+		layer->showDialog("Damage inflicted: " + to_string(dmg));
+	}
+	case ITEM: {
 
+	}
+
+	}
 
 }
 
@@ -62,7 +75,7 @@ void BattleMenu::draw() {
 }
 
 
-void BattleMenu::update(int health) {
+void BattleMenu::update() {
 
-	this->health->content = to_string(health) + " / 20";
+	this->health->content = to_string(layer->player->health) + " / 20";
 }

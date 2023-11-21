@@ -288,10 +288,10 @@ void GameLayer::draw() {
 	SDL_RenderPresent(game->renderer); // Renderiza
 }
 
-void GameLayer::switchToBattle() {
+void GameLayer::switchToBattle(Enemy* enemy) {
 
 	player->state = game->stateBattle;
-	battleMenu = new BattleMenu(game);
+	battleMenu = new BattleMenu(enemy, this, game);
 	background = backgroundBattle;
 }
 // Si el jugador está en movimiento no permitimos acciones

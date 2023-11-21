@@ -3,22 +3,29 @@
 #include <list>
 #include "Text.h"
 #include "Item.h"
+#include "Enemy.h"
+#include "GameLayer.h"
+
+#define ATTACK 0
+#define ITEM 1
 class BattleMenu
 {
 public:
-	BattleMenu(Game* game);
+	BattleMenu(Enemy* enemy, GameLayer* layer, Game* game);
 	void selectNext();
 	void selectPrevious();
 	void select();
 	void draw();
-	void init();
-	void update(int health);
+	void update();
 	void hideOptions();
 	void showOptions();
-	void loadInventory(list<Item*> inventory);
+	int calculateDamage();
 
 	int selected;
 	list<Text*> options;
 	Text* health;
+	Enemy* enemy;
+	Game* game;
+	GameLayer* layer;
 };
 
