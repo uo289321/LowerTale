@@ -2,18 +2,20 @@
 #include "Actor.h"
 #include <list>
 #include "Text.h"
-class BattleMenu : public Actor
+#include "Item.h"
+class BattleMenu
 {
 public:
-	BattleMenu();
+	BattleMenu(Game* game);
 	void selectNext();
 	void selectPrevious();
 	void select();
-	void draw(float scrollX = 0, float scrollY = 0) override;
+	void draw();
 	void init();
 	void update(int health);
 	void hideOptions();
 	void showOptions();
+	void loadInventory(list<Item*> inventory);
 
 	int selected;
 	list<Text*> options;

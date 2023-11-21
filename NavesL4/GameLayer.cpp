@@ -13,14 +13,16 @@ void GameLayer::init() {
 
 	player = new Player(50, 50, game);
 	// background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
-	background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	backgroundMoving = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	backgroundBattle = new Background("res/backgroundbattle.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	background = backgroundMoving;
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 
 
 	// loadMap("res/" + to_string(game->currentLevel) + ".txt");
 	loadMap("res/test0.txt");
-	showDialog("Texto de ejemplo");
+	switchToBattle();
 }
 
 void GameLayer::loadMap(string name) {
@@ -138,8 +140,15 @@ void GameLayer::processControls() {
 		}
 	}
 
+	if (player->state == game->stateBattle) {
+		if (controlMoveX > 0)
+			battleMenu->selectNext();
+		else if (controlMoveX < 0)
+			battleMenu->selectPrevious();
+	}
+
 	if (player->state == game->stateBlocked) {
-		if (controlCancel && dialogBox->finished) {
+		if ((controlCancel || controlInteract) && dialogBox->finished) {
 			dialogBox = NULL;
 			player->state = game->stateMoving;
 		}
@@ -168,6 +177,12 @@ void GameLayer::update() {
 
 			spawnY = player->y;
 			spawnX = player->x;
+		}
+	}
+
+	for (auto const& item : items) {
+		if (player->isInRange(item) && controlInteract && player->state == game->stateMoving) {
+			showDialog("¡Has encontrado el siguiente objeto: " + item->name);
 		}
 	}
 
@@ -244,7 +259,7 @@ void GameLayer::draw() {
 
 	background->draw(scrollX, scrollY);
 	if (player->state == game->stateBattle) {
-		battleMenu->draw(scrollX, scrollY);
+		battleMenu->draw();
 	}
 	else {
 		for (auto const& tile : tiles) {
@@ -267,6 +282,13 @@ void GameLayer::draw() {
 	
 	
 	SDL_RenderPresent(game->renderer); // Renderiza
+}
+
+void GameLayer::switchToBattle() {
+
+	player->state = game->stateBattle;
+	battleMenu = new BattleMenu(game);
+	background = backgroundBattle;
 }
 // Si el jugador está en movimiento no permitimos acciones
 void GameLayer::keysToControls(SDL_Event event) {

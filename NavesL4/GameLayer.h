@@ -13,6 +13,7 @@
 #include "CheckPoint.h"
 #include "DialogBox.h"
 #include "BattleMenu.h"
+#include "Item.h"
 #include <list>
 
 #include <fstream> // Leer ficheros
@@ -31,6 +32,7 @@ public:
 	void keysToControls(SDL_Event event);
 	void calculateScroll();
 	void showDialog(string text);
+	void switchToBattle();
 	
 	Space* space;
 	float scrollX;
@@ -44,6 +46,8 @@ public:
 	int points;
 	Player* player;
 	Background* background;
+	Background* backgroundMoving;
+	Background* backgroundBattle;
 	DialogBox* dialogBox;
 	BattleMenu* battleMenu;
 
@@ -51,6 +55,7 @@ public:
 	list<Tile*> tiles;
 	list<Enemy*> enemies;
 	list<CheckPoint*> checkPoints;
+	list<Item*> items;
 
 
 	bool controlInteract = false;
