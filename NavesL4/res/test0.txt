@@ -3,7 +3,7 @@ BBBBBBBBBBBBBBB......................................B
 BBBBBBB########................BBBBBBB...............B
 B..............A...............BBBBBBBB..............B
 B..............................BBBBBBBBB.............B
-B....1.........................BBBBBBBBB.............B
+B....1..E......................BBBBBBBBB.............B
 B..............................BBBBBBBBB.............B
 B..............................BBBBBBBBB.............B
 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB

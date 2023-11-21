@@ -7,10 +7,12 @@ BattleMenu::BattleMenu(Enemy* e, GameLayer* layer, Game* game)
 	this->options.push_back(t);
 	this->options.push_back(new Text("Usar objeto", WIDTH * 2 / 3, HEIGHT * 0.8, game));	
 
-	this->health = new Text("", WIDTH * 0.1, HEIGHT * 0.9, game);
-	this->enemy = enemy;
+	this->health = new Text(to_string(layer->player->health) + " / 20", WIDTH * 0.1, HEIGHT * 0.9, game);
+	this->enemy = e;
 	this->game = game;
 	this->layer = layer;
+
+	SDL_Delay(100);
 }
 
 
@@ -78,10 +80,9 @@ void BattleMenu::draw() {
 
 
 void BattleMenu::update() {
-
-	this->health->content = to_string(layer->player->health) + " / 20";
 }
 
 int BattleMenu::calculateDamage() {
 	return 15;
 }
+

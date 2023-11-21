@@ -19,7 +19,7 @@ void Enemy::draw(float scrollX, float scrollY) {
 }
 
 void Enemy::receiveDamage(int dmg) {
-	health -= dmg;
+	this->health -= dmg;
 }
 
 void Enemy::switchToBattle() {

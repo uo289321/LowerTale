@@ -61,7 +61,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		// modificación para empezar a contar desde el suelo.
 		enemy->y = enemy->y - enemy->height / 2;
 		enemies.push_back(enemy);
-		space->addDynamicActor(enemy);
+		space->addStaticActor(enemy);
 		break;
 	}
 	case '1': {
@@ -75,7 +75,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		CheckPoint* cp = new CheckPoint(x, y, game);
 		cp->y = cp->y - cp->height / 2;
 		checkPoints.push_back(cp);
-		space->addDynamicActor(cp);
+		space->addStaticActor(cp);
 		break;
 	}
 	//case 'P': {
@@ -145,6 +145,8 @@ void GameLayer::processControls() {
 			battleMenu->selectNext();
 		else if (controlMoveX < 0)
 			battleMenu->selectPrevious();
+		if (controlInteract)
+			battleMenu->select();
 	}
 
 	if (player->state == game->stateBlocked) {
@@ -152,6 +154,7 @@ void GameLayer::processControls() {
 			dialogBox = NULL;
 		}
 	}
+
 
 }
 
@@ -251,8 +254,8 @@ void GameLayer::update() {
 	deleteProjectiles.clear();*/
 
 
-	if (player->state == game->stateBlocked && dialogBox == NULL) {
-		player->state = game->stateMoving;
+	if (player->state == game->stateBlocked && dialogBox == NULL) {	// se ha cerrado el dialogbox en esta iteración
+		player->state = previousState;
 		SDL_Delay(100);
 	}
 
@@ -260,6 +263,7 @@ void GameLayer::update() {
 }
 
 void GameLayer::showDialog(string content) {
+	previousState = player->state;
 	player->state = game->stateBlocked;
 	dialogBox = new DialogBox(content, game);
 }

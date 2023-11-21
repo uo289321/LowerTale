@@ -49,7 +49,10 @@ public:
 	Background* background;
 	Background* backgroundMoving;
 	Background* backgroundBattle;
+
 	DialogBox* dialogBox;
+	int previousState;
+
 	BattleMenu* battleMenu;
 
 	list<Tile*> tiles;
