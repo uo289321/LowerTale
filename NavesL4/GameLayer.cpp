@@ -159,6 +159,9 @@ void GameLayer::update() {
 		enemy->update();
 	}*/
 
+	if (player->state == game->stateBattle)
+		battleMenu->update(player->health);
+
 	for (auto const& cp : checkPoints) {
 		if (player->isInRange(cp) && controlInteract && player->state == game->stateMoving) {
 			showDialog("Tus fuerzas se han renovado.");
@@ -240,24 +243,28 @@ void GameLayer::draw() {
 	calculateScroll();
 
 	background->draw(scrollX, scrollY);
+	if (player->state == game->stateBattle) {
+		battleMenu->draw(scrollX, scrollY);
+	}
+	else {
+		for (auto const& tile : tiles) {
+			tile->draw(scrollX, scrollY);
+		}
+		player->draw(scrollX, scrollY);
+		for (auto const& enemy : enemies) {
+			enemy->draw(scrollX, scrollY);
+		}
+		for (auto const& cp : checkPoints) {
+			cp->draw(scrollX, scrollY);
+		}
 
+		if (dialogBox != NULL)
+			dialogBox->draw(scrollX, scrollY);
+	}
 	/*for (auto const& projectile : projectiles) {
 		projectile->draw();
 	}*/
-	for (auto const& tile : tiles) {
-		tile->draw(scrollX, scrollY);
-	}
-	player->draw(scrollX, scrollY);
-	for (auto const& enemy : enemies) {
-		enemy->draw(scrollX, scrollY);
-	}
-	for (auto const& cp : checkPoints) {
-		cp->draw(scrollX, scrollY);
-	}
-
-	if (dialogBox != NULL)
-		dialogBox->draw(scrollX, scrollY);
-
+	
 	
 	SDL_RenderPresent(game->renderer); // Renderiza
 }

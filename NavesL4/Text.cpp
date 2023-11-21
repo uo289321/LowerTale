@@ -5,14 +5,36 @@ Text::Text(string content, float x, float y, Game* game) {
 	this->x = x;
 	this->y = y;
 	this->game = game;
+	this->r = 255;
+	this->g = 255;
+	this->b = 255;
+	this->a = 255;
+}
+
+
+
+void Text::highlight() {
+	this->b = 0;
+}
+
+void Text::unhighlight() {
+	this->b = 255;
+}
+
+void Text::show() {
+	this->a = 255;
+}
+
+void Text::hide() {
+	this->a = 0;
 }
 
 void Text::draw() {
 	SDL_Color color;
-	color.r = 255;
-	color.g = 255;
-	color.b = 255;
-	color.a = 255; //transparente
+	color.r = this->r;
+	color.g = this->g;
+	color.b = this->b;
+	color.a = this->a; //transparente
 
 	SDL_Surface* surface = TTF_RenderText_Blended(game->font, content.c_str(), color);
 	// c_str() transforma el string a cost *char;

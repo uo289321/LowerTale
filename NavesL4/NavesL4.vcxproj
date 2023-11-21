@@ -164,6 +164,7 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Background.cpp" />
+    <ClCompile Include="BattleMenu.cpp" />
     <ClCompile Include="CheckPoint.cpp" />
     <ClCompile Include="DialogBox.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Background.h" />
+    <ClInclude Include="BattleMenu.h" />
     <ClInclude Include="CheckPoint.h" />
     <ClInclude Include="DialogBox.h" />
     <ClInclude Include="Enemy.h" />

@@ -38,6 +38,7 @@ public:
 	int const stateDying = 3;
 	int const stateDead = 4;
 	int const stateBlocked = 5;
+	int const stateBattle = 6;
 
 	int const orientationUp = 1;
 	int const orientationRight = 2;

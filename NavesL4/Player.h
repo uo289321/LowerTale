@@ -19,6 +19,7 @@ public:
 	int orientation;
 	bool moving = false;
 	Audio* audioShoot;
+	int health = 20;
 
 
 	int movingCd = 0;

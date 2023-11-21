@@ -12,6 +12,7 @@
 #include "Space.h"
 #include "CheckPoint.h"
 #include "DialogBox.h"
+#include "BattleMenu.h"
 #include <list>
 
 #include <fstream> // Leer ficheros
@@ -44,7 +45,7 @@ public:
 	Player* player;
 	Background* background;
 	DialogBox* dialogBox;
-
+	BattleMenu* battleMenu;
 
 
 	list<Tile*> tiles;
