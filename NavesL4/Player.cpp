@@ -102,10 +102,10 @@ bool Player::isInRange(Actor* actor) {
 }
 
 bool Player::isTouching(Actor* actor) {
-	if ((actor->containsPoint(x + TILE_WIDTH/2, y) && orientation == game->orientationRight)
-		|| (actor->containsPoint(x - TILE_WIDTH/2, y) && orientation == game->orientationLeft)
-		|| (actor->containsPoint(x, y + TILE_HEIGHT/2) && orientation == game->orientationDown)
-		|| (actor->containsPoint(x, y - TILE_HEIGHT/2) && orientation == game->orientationUp)) {
+	if ((actor->containsPoint(x + (TILE_WIDTH/2+1), y+1) && orientation == game->orientationRight)
+		|| (actor->containsPoint(x - (TILE_WIDTH/2+1), y+1) && orientation == game->orientationLeft)
+		|| (actor->containsPoint(x+1, y + (TILE_HEIGHT+1)/2) && orientation == game->orientationDown)
+		|| (actor->containsPoint(x+1, y - (TILE_HEIGHT+1)/2) && orientation == game->orientationUp)) {
 		return true;
 
 	}
@@ -183,12 +183,12 @@ Plank* Player::throwPlank() {
 		// Plank* plank = new Plank(x, y, game);
 		if (orientation == game->orientationRight) {
 			Plank* plank = new Plank(x, y, game, game->orientationRight);
-			plank->vx = 5;
+			plank->vx = 4;
 			plank->vy = 0;
 		}
 		else if (orientation == game->orientationLeft) {
 			Plank* plank = new Plank(x, y, game, game->orientationLeft);
-			plank->vx = -5; // Invertir
+			plank->vx = -4; // Invertir
 			plank->vy = 0;
 		}
 		else if (orientation == game->orientationDown) {

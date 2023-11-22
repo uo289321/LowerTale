@@ -11,11 +11,35 @@ void Plank::update() {
 	y = y + vy;
 }
 
-bool Plank::hasWaterNext(Tile* water) {
-	if ((water->containsPoint(x + TILE_WIDTH/2, y) && orientation == game->orientationRight)
-		|| (water->containsPoint(x - TILE_WIDTH/2, y) && orientation == game->orientationLeft)
-		|| (water->containsPoint(x, y + TILE_HEIGHT/2) && orientation == game->orientationDown)
-		|| (water->containsPoint(x, y - TILE_HEIGHT/2) && orientation == game->orientationUp)) {
+bool Plank::hasActorNext(Actor* actor) {
+	if ((actor->containsPoint(x + (TILE_WIDTH/2.0+1), y) && orientation == game->orientationRight)
+		|| (actor->containsPoint(x - (TILE_WIDTH /2.0+1), y) && orientation == game->orientationLeft)
+		|| (actor->containsPoint(x, y + (TILE_HEIGHT/2.0+1)) && orientation == game->orientationDown)
+		|| (actor->containsPoint(x, y - (TILE_HEIGHT/2.0+1)) && orientation == game->orientationUp)) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool Plank::canMove(list<Tile*> waters, list<Plank*> planks) {
+	for (Tile* water : waters) {
+		if (hasActorNext(water)) {
+			for (Plank* nPlank : planks) {
+				if (hasActorNext(nPlank)) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
+
+bool Plank::isOnTopOf(Actor* actor) {
+	if (actor->containsPoint(x, y)) {
 		return true;
 	}
 	else {

@@ -31,6 +31,7 @@ public:
 	void keysToControls(SDL_Event event);
 	void calculateScroll();
 	void showDialog(string text);
+	bool plankCanMove(Plank* plank);
 	
 	Space* space;
 	float scrollX;

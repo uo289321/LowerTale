@@ -106,7 +106,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		break;
 	}
 	case 'W':
-		Tile * water = new Tile("res/wateroutline.png", x, y, game);
+		Tile * water = new Tile("res/water.png", x, y, game);
 		// Tile* water = new Tile("res/water.png", x, y, game);
 		water->y = water->y - water->height / 2;
 		waters.push_back(water);
@@ -185,23 +185,25 @@ void GameLayer::update() {
 		}
 	}
 
-	for (auto const& plank : planks) {
-		for (Tile* water : waters) {
-			if (plank->hasWaterNext(water)) {
-				plank->update();
-				return;
-			}
+	for (Plank* plank : planks) {
+		if (plank->canMove(waters, planks)) {
+			plank->update();
+		}
+		else {
+			plank->vx = 0;
+			plank->vy = 0;
 		}
 	}
+	
 
-	/*for (auto const& plank : planks) {
+	for (Plank* plank : planks) {
 		for (Tile* water : waters) {
-			if (plank->isOverlap(water)) {
+			if (plank->isOnTopOf(water) && plank->vx == 0 && plank->vy == 0) { 
 				space->addDynamicActor(water);
 				space->removeStaticActor(water);
 			}
 		}
-	}*/
+	}
 
 	// Colisiones , Enemy - Projectile
 
