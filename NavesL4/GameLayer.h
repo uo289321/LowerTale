@@ -12,6 +12,9 @@
 #include "Space.h"
 #include "CheckPoint.h"
 #include "DialogBox.h"
+#include "InventoryMenu.h"
+#include "BattleMenu.h"
+#include "Item.h"
 #include "Plank.h"
 #include <list>
 
@@ -31,6 +34,8 @@ public:
 	void keysToControls(SDL_Event event);
 	void calculateScroll();
 	void showDialog(string text);
+	void showInventory();
+	void switchToBattle();
 	bool plankCanMove(Plank* plank);
 	
 	Space* space;
@@ -45,7 +50,11 @@ public:
 	int points;
 	Player* player;
 	Background* background;
+	Background* backgroundMoving;
+	Background* backgroundBattle;
 	DialogBox* dialogBox;
+	BattleMenu* battleMenu;
+	InventoryMenu* inventory;
 
 
 
@@ -53,11 +62,13 @@ public:
 	list<Tile*> waters;
 	list<Enemy*> enemies;
 	list<CheckPoint*> checkPoints;
+	list<Item*> items;
 	list<Plank*> planks;
 
 
 	bool controlInteract = false;
 	bool controlCancel = false;
+	bool controlInventory = false;
 	int controlMoveY = 0;
 	int controlMoveX = 0;
 	bool controlThrow = false;

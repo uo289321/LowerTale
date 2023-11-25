@@ -14,13 +14,16 @@ void GameLayer::init() {
 	player = new Player(50, 50, game);
 	background = new Background("res/bgoutline.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 	// background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	backgroundMoving = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	backgroundBattle = new Background("res/backgroundbattle.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	background = backgroundMoving;
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 	planks.clear();
 
 	// loadMap("res/" + to_string(game->currentLevel) + ".txt");
 	loadMap("res/test0.txt");
-	//showDialog("Texto de ejemplo");
+	// switchToBattle();
 }
 
 void GameLayer::loadMap(string name) {
@@ -74,6 +77,13 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		cp->y = cp->y - cp->height / 2;
 		checkPoints.push_back(cp);
 		space->addDynamicActor(cp);
+		break;
+	}
+	case 'S': {
+		Item* item = new Item("Filete", x, y, 5, game);
+		item->y = item->y - item->height / 2;
+		items.push_back(item);
+		space->addStaticActor(item);
 		break;
 	}
 	//case 'P': {
@@ -153,14 +163,31 @@ void GameLayer::processControls() {
 		else {
 			player->moveY(0);
 		}
+
+		if (controlInventory)
+			showInventory();
+	}
+
+	if (player->state == game->stateBattle) {
+		if (controlMoveX > 0)
+			battleMenu->selectNext();
+		else if (controlMoveX < 0)
+			battleMenu->selectPrevious();
 	}
 
 	if (player->state == game->stateBlocked) {
-		if (controlCancel && dialogBox->finished) {
+		if ((controlInteract || controlCancel) && dialogBox->finished) {
 			dialogBox = NULL;
+		}
+	}
+
+	if (player->state == game->stateInventory) {
+		if (controlCancel) {
+			inventory = NULL;
 			player->state = game->stateMoving;
 		}
 	}
+
 
 }
 
@@ -172,9 +199,8 @@ void GameLayer::update() {
 	if (dialogBox != NULL)
 		dialogBox->update();
 
-	/*for (auto const& enemy : enemies) {
-		enemy->update();
-	}*/
+	if (player->state == game->stateBattle)
+		battleMenu->update(player->health);
 
 	for (auto const& cp : checkPoints) {
 		if (player->isInRange(cp) && controlInteract && player->state == game->stateMoving) {
@@ -183,27 +209,43 @@ void GameLayer::update() {
 			spawnY = player->y;
 			spawnX = player->x;
 		}
-	}
 
-	for (Plank* plank : planks) {
-		if (plank->canMove(waters, planks)) {
-			plank->update();
-		}
-		else {
-			plank->vx = 0;
-			plank->vy = 0;
-		}
-	}
-	
-
-	for (Plank* plank : planks) {
-		for (Tile* water : waters) {
-			if (plank->isOnTopOf(water) && plank->vx == 0 && plank->vy == 0) { 
-				space->addDynamicActor(water);
-				space->removeStaticActor(water);
+		for (Plank* plank : planks) {
+			if (plank->canMove(waters, planks)) {
+				plank->update();
+			}
+			else {
+				plank->vx = 0;
+				plank->vy = 0;
 			}
 		}
+
+
+		for (Plank* plank : planks) {
+			for (Tile* water : waters) {
+				if (plank->isOnTopOf(water) && plank->vx == 0 && plank->vy == 0) {
+					space->addDynamicActor(water);
+					space->removeStaticActor(water);
+				}
+			}
+		}
+
+		Item* removeItem = NULL;
+		for (auto const& item : items) {
+			if (player->isInRange(item) && controlInteract && player->state == game->stateMoving) {
+				showDialog("Has recogido el siguiente objeto: " + item->name);
+				removeItem = item;
+				player->pick(item);
+
+			}
+		}
+
+		if (removeItem != NULL) {
+			items.remove(removeItem);
+			space->removeStaticActor(removeItem);
 	}
+
+	
 
 	// Colisiones , Enemy - Projectile
 
@@ -231,25 +273,15 @@ void GameLayer::update() {
 					deleteProjectiles.end(),
 					projectile) != deleteProjectiles.end();
 
-				if (!pInList) {
-					deleteProjectiles.push_back(projectile);
-				}
+	}
 
-				bool eInList = std::find(deleteEnemies.begin(),
-					deleteEnemies.end(),
-					enemy) != deleteEnemies.end();
+	if (player->state == game->stateBlocked && dialogBox == NULL) {
+		player->state = game->stateMoving;
+		SDL_Delay(100);
+	}
 
-				if (!eInList) {
-					deleteEnemies.push_back(enemy);
-				}
-
-				points++;
-				textPoints->content = to_string(points);
-
-
-			}
-		}
-	}*/
+	// cout << "update GameLayer" << endl;
+}
 
 	/*for (auto const& delEnemy : deleteEnemies) {
 		enemies.remove(delEnemy);
@@ -263,7 +295,7 @@ void GameLayer::update() {
 	deleteProjectiles.clear();*/
 
 
-	cout << "update GameLayer" << endl; 
+	cout << "update GameLayer" << endl;
 }
 
 void GameLayer::showDialog(string content) {
@@ -271,42 +303,57 @@ void GameLayer::showDialog(string content) {
 	dialogBox = new DialogBox(content, game);
 }
 
+void GameLayer::showInventory() {
+	player->state = game->stateInventory;
+	inventory = new InventoryMenu(player, game);
+}
+
 void GameLayer::draw() {
 	calculateScroll();
 
 	background->draw(scrollX, scrollY);
-
-	/*for (auto const& projectile : projectiles) {
-		projectile->draw();
-	}*/
-
-
-	for (auto const& tile : tiles) {
-		tile->draw(scrollX, scrollY);
+	if (player->state == game->stateBattle) {
+		battleMenu->draw();
 	}
+	else {
+		for (auto const& tile : tiles) {
+			tile->draw(scrollX, scrollY);
+		}
+		for (auto const& water : waters) {
+			water->draw(scrollX, scrollY);
+		}
+		for (auto const& plank : planks) {
+			plank->draw(scrollX, scrollY);
+		}
+		player->draw(scrollX, scrollY);
+		for (auto const& enemy : enemies) {
+			enemy->draw(scrollX, scrollY);
+		}
+		for (auto const& cp : checkPoints) {
+			cp->draw(scrollX, scrollY);
+		}
 
-	for (auto const& water : waters) {
-		water->draw(scrollX, scrollY);
+		for (auto const& item : items) {
+			item->draw(scrollX, scrollY);
+		}
+
+		if (dialogBox != NULL)
+			dialogBox->draw(scrollX, scrollY);
+
+		if (inventory != NULL)
+			inventory->draw(scrollX, scrollY);
+
+		SDL_RenderPresent(game->renderer); // Renderiza
 	}
-
-	for (auto const& plank : planks) {
-		plank->draw(scrollX, scrollY);
-	}
-
-	player->draw(scrollX, scrollY);
-	for (auto const& enemy : enemies) {
-		enemy->draw(scrollX, scrollY);
-	}
-	for (auto const& cp : checkPoints) {
-		cp->draw(scrollX, scrollY);
-	}
-
-	if (dialogBox != NULL)
-		dialogBox->draw(scrollX, scrollY);
-
-	
-	SDL_RenderPresent(game->renderer); // Renderiza
 }
+
+void GameLayer::switchToBattle() {
+
+	player->state = game->stateBattle;
+	battleMenu = new BattleMenu(game);
+	background = backgroundBattle;
+}
+
 // Si el jugador está en movimiento no permitimos acciones
 void GameLayer::keysToControls(SDL_Event event) {
 	if (event.type == SDL_KEYDOWN) {
@@ -337,6 +384,9 @@ void GameLayer::keysToControls(SDL_Event event) {
 		case SDLK_x:
 			controlCancel = true;
 			break;
+		case SDLK_c:
+			controlInventory = true;
+			break;
 		case SDLK_p:
 			controlThrow = true;
 		}
@@ -347,36 +397,40 @@ void GameLayer::keysToControls(SDL_Event event) {
 	if (event.type == SDL_KEYUP) {
 		int code = event.key.keysym.sym;
 		// Levantada
-		switch (code) {
-		case SDLK_d: // derecha
-			if (controlMoveX == 1) {
-				controlMoveX = 0;
+			switch (code) {
+			case SDLK_d: // derecha
+				if (controlMoveX == 1) {
+					controlMoveX = 0;
+				}
+				break;
+			case SDLK_a: // izquierda
+				if (controlMoveX == -1) {
+					controlMoveX = 0;
+				}
+				break;
+			case SDLK_w: // arriba
+				if (controlMoveY == -1) {
+					controlMoveY = 0;
+				}
+				break;
+			case SDLK_s: // abajo
+				if (controlMoveY == 1) {
+					controlMoveY = 0;
+				}
+				break;
+			case SDLK_z:
+				controlInteract = false;
+				break;
+			case SDLK_x:
+				controlCancel = false;
+				break;
+			case SDLK_c:
+				controlInventory = false;
+				break;
 			}
-			break;
-		case SDLK_a: // izquierda
-			if (controlMoveX == -1) {
-				controlMoveX = 0;
+			case SDLK_p:
+				controlThrow = false;
 			}
-			break;
-		case SDLK_w: // arriba
-			if (controlMoveY == -1) {
-				controlMoveY = 0;
-			}
-			break;
-		case SDLK_s: // abajo
-			if (controlMoveY == 1) {
-				controlMoveY = 0;
-			}
-			break;
-		case SDLK_z:
-			controlInteract = false;
-			break;
-		case SDLK_x:
-			controlCancel = false;
-		case SDLK_p:
-			controlThrow = false;
-		}
-
 		}
 
 }

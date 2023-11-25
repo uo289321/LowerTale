@@ -5,7 +5,12 @@
 #include "Audio.h"
 #include "Animation.h"
 #include "Tile.h"
+#include "Item.h"
+#include <list>
+class Item;
 #include "Plank.h"
+
+#define MAX_HEALTH 20
 
 class Player : public Actor
 {
@@ -20,13 +25,15 @@ public:
 	Plank* throwPlank();
 	int throwCadence = 5;
 	int throwTime = 0;
+	void heal(int healing);
+	void pick(Item* item);
 	int state;
 	int orientation;
 	bool moving = false;
+	int movingCd = 0;
 	Audio* audioShoot;
 
-
-	int movingCd = 0;
+	int health = MAX_HEALTH;
 
 	Animation* aIdleRight;
 	Animation* aIdleLeft;
@@ -39,5 +46,7 @@ public:
 	Animation* aMovingRight;
 
 	Animation* animation; // Referencia a la animación mostrada
+
+	list<Item*> inventory;
 };
 
