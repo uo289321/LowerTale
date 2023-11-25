@@ -12,6 +12,8 @@
 #include "Space.h"
 #include "CheckPoint.h"
 #include "DialogBox.h"
+#include "InventoryMenu.h"
+#include "Item.h"
 #include <list>
 
 #include <fstream> // Leer ficheros
@@ -30,6 +32,7 @@ public:
 	void keysToControls(SDL_Event event);
 	void calculateScroll();
 	void showDialog(string text);
+	void showInventory();
 	
 	Space* space;
 	float scrollX;
@@ -44,16 +47,19 @@ public:
 	Player* player;
 	Background* background;
 	DialogBox* dialogBox;
+	InventoryMenu* inventory;
 
 
 
 	list<Tile*> tiles;
 	list<Enemy*> enemies;
 	list<CheckPoint*> checkPoints;
+	list<Item*> items;
 
 
 	bool controlInteract = false;
 	bool controlCancel = false;
+	bool controlInventory = false;
 	int controlMoveY = 0;
 	int controlMoveX = 0;
 
