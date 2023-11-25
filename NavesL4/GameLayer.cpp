@@ -79,7 +79,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		break;
 	}
 	case 'S': {
-		Item* item = new Item("steak", x, y, 5, game);
+		Item* item = new Item("Filete", x, y, 5, game);
 		item->y = item->y - item->height / 2;
 		items.push_back(item);
 		space->addStaticActor(item);
