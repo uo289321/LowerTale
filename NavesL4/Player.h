@@ -27,7 +27,6 @@ public:
 	bool moving = false;
 	int movingCd = 0;
 	Audio* audioShoot;
-	int health = 20;
 
 	int health = MAX_HEALTH;
 

@@ -5,7 +5,7 @@ InventoryMenu::InventoryMenu(Player* p, Game* game)
 {
 	this->player = p;
 	this->game = game;
-
+	this->selected = -1;
 	loadOptions();
 }
 
@@ -20,21 +20,46 @@ void InventoryMenu::loadOptions() {
 		this->options.push_back(opt);
 		index += 0.1;
 	}
+
+	if (options.size() > 0) {
+		Text* firstOp = *(options.begin());
+		firstOp->highlight();
+		selected = 0;
+	}
 }
 
 void InventoryMenu::select() {
 	auto it = player->inventory.begin();
-	
+	std::advance(it, selected);
+	Item* item = *it;
 	player->heal(item->healing);
 }
 
 void InventoryMenu::moveDown()
 {
-	selected = selected - width < 0 ? selected : selected - width;
+	if (selected < options.size() - 1) {
+		selected++;
+		auto iter = options.begin();
+		std::advance(iter, selected - 1);
+		Text* t = *iter;
+		t->unhighlight();
+		std::advance(iter, 1);
+		t = *iter;
+		t->highlight();
+	}
 }
 
 void InventoryMenu::moveUp() {
-	selected = selected + width > this->options.size() ? selected : selected + width;
+	if (selected > 0) {
+		selected--;
+		auto iter = options.begin();
+		std::advance(iter, selected);
+		Text* t = *iter;
+		t->highlight();
+		std::advance(iter, 1);
+		t = *iter;
+		t->unhighlight();
+	}
 }
 
 void InventoryMenu::draw(float scrollX, float scrollY) {

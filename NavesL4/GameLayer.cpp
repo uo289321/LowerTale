@@ -181,10 +181,6 @@ void GameLayer::update() {
 	if (dialogBox != NULL)
 		dialogBox->update();
 
-	/*for (auto const& enemy : enemies) {
-		enemy->update();
-	}*/
-
 	if (player->state == game->stateBattle)
 		battleMenu->update(player->health);
 
@@ -212,27 +208,12 @@ void GameLayer::update() {
 
 	}
 
-	// cout << "update GameLayer" << endl;
-}
-
-	/*for (auto const& delEnemy : deleteEnemies) {
-		enemies.remove(delEnemy);
-	}
-	deleteEnemies.clear();
-
-	for (auto const& delProjectile : deleteProjectiles) {
-		projectiles.remove(delProjectile);
-		delete delProjectile;
-	}
-	deleteProjectiles.clear();*/
-
-
 	if (player->state == game->stateBlocked && dialogBox == NULL) {
 		player->state = game->stateMoving;
 		SDL_Delay(100);
 	}
 
-	cout << "update GameLayer" << endl;
+	// cout << "update GameLayer" << endl;
 }
 
 void GameLayer::showDialog(string content) {
@@ -264,17 +245,18 @@ void GameLayer::draw() {
 			cp->draw(scrollX, scrollY);
 		}
 
-	for (auto const& item : items) {
-		item->draw(scrollX, scrollY);
+		for (auto const& item : items) {
+			item->draw(scrollX, scrollY);
+		}
+
+		if (dialogBox != NULL)
+			dialogBox->draw(scrollX, scrollY);
+
+		if (inventory != NULL)
+			inventory->draw(scrollX, scrollY);
+
+		SDL_RenderPresent(game->renderer); // Renderiza
 	}
-
-	if (dialogBox != NULL)
-		dialogBox->draw(scrollX, scrollY);
-
-	if (inventory != NULL)
-		inventory->draw(scrollX, scrollY);
-	
-	SDL_RenderPresent(game->renderer); // Renderiza
 }
 
 void GameLayer::switchToBattle() {
@@ -283,6 +265,7 @@ void GameLayer::switchToBattle() {
 	battleMenu = new BattleMenu(game);
 	background = backgroundBattle;
 }
+
 // Si el jugador está en movimiento no permitimos acciones
 void GameLayer::keysToControls(SDL_Event event) {
 	if (event.type == SDL_KEYDOWN) {

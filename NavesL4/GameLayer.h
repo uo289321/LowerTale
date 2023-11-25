@@ -12,7 +12,7 @@
 #include "Space.h"
 #include "CheckPoint.h"
 #include "DialogBox.h"
-#include "InventoryMenu.h""
+#include "InventoryMenu.h"
 #include "BattleMenu.h"
 #include "Item.h"
 #include <list>
@@ -51,7 +51,7 @@ public:
 	Background* backgroundMoving;
 	Background* backgroundBattle;
 	DialogBox* dialogBox;
-	BattleMenu* battleMenu
+	BattleMenu* battleMenu;
 	InventoryMenu* inventory;
 
 
