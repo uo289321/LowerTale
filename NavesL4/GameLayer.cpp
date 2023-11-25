@@ -78,6 +78,13 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		space->addDynamicActor(cp);
 		break;
 	}
+	case 'S': {
+		Item* item = new Item("steak", x, y, 5, game);
+		item->y = item->y - item->height / 2;
+		items.push_back(item);
+		space->addStaticActor(item);
+		break;
+	}
 	//case 'P': {
 	//	Collectable* c = new Collectable(x, y, game);
 	//	c->y = c->y - c->height / 2;
@@ -138,6 +145,9 @@ void GameLayer::processControls() {
 		else {
 			player->moveY(0);
 		}
+
+		if (controlInventory)
+			showInventory();
 	}
 
 	if (player->state == game->stateBattle) {
@@ -152,6 +162,14 @@ void GameLayer::processControls() {
 			dialogBox = NULL;
 		}
 	}
+
+	if (player->state == game->stateInventory) {
+		if (controlCancel) {
+			inventory = NULL;
+			player->state = game->stateMoving;
+		}
+	}
+
 
 }
 
@@ -179,59 +197,23 @@ void GameLayer::update() {
 		}
 	}
 
+	Item* removeItem = NULL;
 	for (auto const& item : items) {
 		if (player->isInRange(item) && controlInteract && player->state == game->stateMoving) {
-			showDialog("¡Has encontrado el siguiente objeto: " + item->name);
+			showDialog("Has recogido el siguiente objeto: " + item->name);
+			removeItem = item;
+			player->pick(item);
+			
 		}
 	}
+	if (removeItem != NULL) {
+		items.remove(removeItem);
+		space->removeStaticActor(removeItem);
 
-	
+	}
 
-	// Colisiones , Enemy - Projectile
-
-	/*list<Enemy*> deleteEnemies;
-	list<Projectile*> deleteProjectiles;
-	for (auto const& projectile : projectiles) {
-		if (projectile->isInRender() == false) {
-
-			bool pInList = std::find(deleteProjectiles.begin(),
-				deleteProjectiles.end(),
-				projectile) != deleteProjectiles.end();
-
-			if (!pInList) {
-				deleteProjectiles.push_back(projectile);
-			}
-		}
-	}*/
-
-
-
-	/*for (auto const& enemy : enemies) {
-		for (auto const& projectile : projectiles) {
-			if (enemy->isOverlap(projectile)) {
-				bool pInList = std::find(deleteProjectiles.begin(),
-					deleteProjectiles.end(),
-					projectile) != deleteProjectiles.end();
-
-				if (!pInList) {
-					deleteProjectiles.push_back(projectile);
-				}
-
-				bool eInList = std::find(deleteEnemies.begin(),
-					deleteEnemies.end(),
-					enemy) != deleteEnemies.end();
-
-				if (!eInList) {
-					deleteEnemies.push_back(enemy);
-				}
-
-				points++;
-				textPoints->content = to_string(points);
-
-
-			}
-		}
-	}*/
+	// cout << "update GameLayer" << endl;
+}
 
 	/*for (auto const& delEnemy : deleteEnemies) {
 		enemies.remove(delEnemy);
@@ -258,6 +240,11 @@ void GameLayer::showDialog(string content) {
 	dialogBox = new DialogBox(content, game);
 }
 
+void GameLayer::showInventory() {
+	player->state = game->stateInventory;
+	inventory = new InventoryMenu(player, game);
+}
+
 void GameLayer::draw() {
 	calculateScroll();
 
@@ -277,13 +264,15 @@ void GameLayer::draw() {
 			cp->draw(scrollX, scrollY);
 		}
 
-		if (dialogBox != NULL)
-			dialogBox->draw(scrollX, scrollY);
+	for (auto const& item : items) {
+		item->draw(scrollX, scrollY);
 	}
-	/*for (auto const& projectile : projectiles) {
-		projectile->draw();
-	}*/
-	
+
+	if (dialogBox != NULL)
+		dialogBox->draw(scrollX, scrollY);
+
+	if (inventory != NULL)
+		inventory->draw(scrollX, scrollY);
 	
 	SDL_RenderPresent(game->renderer); // Renderiza
 }
@@ -324,6 +313,9 @@ void GameLayer::keysToControls(SDL_Event event) {
 		case SDLK_x:
 			controlCancel = true;
 			break;
+		case SDLK_c:
+			controlInventory = true;
+			break;
 		}
 
 
@@ -358,7 +350,12 @@ void GameLayer::keysToControls(SDL_Event event) {
 				break;
 			case SDLK_x:
 				controlCancel = false;
+				break;
+			case SDLK_c:
+				controlInventory = false;
+				break;
 			}
+			
 
 		}
 

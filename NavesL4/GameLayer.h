@@ -12,6 +12,7 @@
 #include "Space.h"
 #include "CheckPoint.h"
 #include "DialogBox.h"
+#include "InventoryMenu.h""
 #include "BattleMenu.h"
 #include "Item.h"
 #include <list>
@@ -32,6 +33,7 @@ public:
 	void keysToControls(SDL_Event event);
 	void calculateScroll();
 	void showDialog(string text);
+	void showInventory();
 	void switchToBattle();
 	
 	Space* space;
@@ -49,7 +51,9 @@ public:
 	Background* backgroundMoving;
 	Background* backgroundBattle;
 	DialogBox* dialogBox;
-	BattleMenu* battleMenu;
+	BattleMenu* battleMenu
+	InventoryMenu* inventory;
+
 
 
 	list<Tile*> tiles;
@@ -60,6 +64,7 @@ public:
 
 	bool controlInteract = false;
 	bool controlCancel = false;
+	bool controlInventory = false;
 	int controlMoveY = 0;
 	int controlMoveX = 0;
 

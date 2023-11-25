@@ -84,6 +84,14 @@ void Player::update() {
 	}
 }
 
+void Player::heal(int healing) {
+	this->health = this->health + healing > MAX_HEALTH ? MAX_HEALTH : this->health + healing;
+}
+
+void Player::pick(Item* item) {
+	this->inventory.push_back(item);
+}
+
 bool Player::isInRange(Actor* actor) {
 	if ((actor->containsPoint(x + TILE_WIDTH, y) && orientation == game->orientationRight)
 		|| (actor->containsPoint(x - TILE_WIDTH, y) && orientation == game->orientationLeft)
