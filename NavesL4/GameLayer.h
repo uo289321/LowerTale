@@ -25,7 +25,10 @@ class GameLayer : public Layer
 public:
 	GameLayer(Game* game);
 	void init() override;
+
 	void processControls() override;
+	void processMovingState();
+
 	void update() override;
 	void draw() override;
 	void loadMap(string level);

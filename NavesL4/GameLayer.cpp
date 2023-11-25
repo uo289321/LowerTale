@@ -57,7 +57,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 {
 	switch (character) {
 	case 'E': {
-		Enemy* enemy = new Enemy(x, y, game);
+		Enemy* enemy = new Enemy("enemy1.png", x, y, game);
 		// modificación para empezar a contar desde el suelo.
 		enemy->y = enemy->y - enemy->height / 2;
 		enemies.push_back(enemy);
@@ -123,31 +123,9 @@ void GameLayer::processControls() {
 	while (SDL_PollEvent(&event)) {
 		keysToControls(event);
 	}
-	// Eje X
+
 	if (player->state == game->stateMoving) {
-		if (controlMoveX > 0) {
-			player->moveX(1);
-		}
-		else if (controlMoveX < 0) {
-			player->moveX(-1);
-		}
-		else {
-			player->moveX(0);
-		}
-
-		// Eje Y
-		if (controlMoveY > 0) {
-			player->moveY(1);
-		}
-		else if (controlMoveY < 0) {
-			player->moveY(-1);
-		}
-		else {
-			player->moveY(0);
-		}
-
-		if (controlInventory)
-			showInventory();
+		processMovingState();
 	}
 
 	if (player->state == game->stateBattle) {
@@ -155,6 +133,8 @@ void GameLayer::processControls() {
 			battleMenu->selectNext();
 		else if (controlMoveX < 0)
 			battleMenu->selectPrevious();
+		if (controlInteract)
+			battleMenu->select();
 	}
 
 	if (player->state == game->stateBlocked) {
@@ -172,6 +152,33 @@ void GameLayer::processControls() {
 
 
 }
+
+void GameLayer::processMovingState() {
+	if (controlMoveX > 0) {
+		player->moveX(1);
+	}
+	else if (controlMoveX < 0) {
+		player->moveX(-1);
+	}
+	else {
+		player->moveX(0);
+	}
+
+	// Eje Y
+	if (controlMoveY > 0) {
+		player->moveY(1);
+	}
+	else if (controlMoveY < 0) {
+		player->moveY(-1);
+	}
+	else {
+		player->moveY(0);
+	}
+
+	if (controlInventory)
+		showInventory();
+}
+
 
 void GameLayer::update() {
 	space->update();
@@ -211,6 +218,12 @@ void GameLayer::update() {
 	if (player->state == game->stateBlocked && dialogBox == NULL) {
 		player->state = game->stateMoving;
 		SDL_Delay(100);
+	}
+
+	for (auto const& enemy : enemies) {
+		if (player->isInRange(enemy) && controlInteract && player->state == game->stateMoving) {
+			switchToBattle();
+		}
 	}
 
 	// cout << "update GameLayer" << endl;

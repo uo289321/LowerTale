@@ -1,7 +1,7 @@
 #include "Enemy.h"
 
-Enemy::Enemy(float x, float y, Game* game)
-	: Actor("res/enemigo.png", x, y, 36, 40, game) {
+Enemy::Enemy(string filename, float x, float y, Game* game)
+	: Actor("res/" + filename, x, y, 36, 40, game) {
 
 }
 
@@ -15,6 +15,6 @@ void Enemy::update() {
 }
 
 void Enemy::draw(float scrollX, float scrollY) {
-	animation->draw(x - scrollX, y - scrollY);
+	Actor::draw();
 }
 

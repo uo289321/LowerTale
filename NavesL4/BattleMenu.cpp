@@ -6,7 +6,7 @@ BattleMenu::BattleMenu(Game* game)
 	t->highlight();
 	this->options.push_back(t);
 	this->options.push_back(new Text("Usar objeto", WIDTH * 2 / 3, HEIGHT * 0.8, game));	
-	health = new Text("", WIDTH * 0.1 ,HEIGHT * 0.9, game);// ESCRIBIR VIDA DEL JUGADOR
+	health = new Text("vida del jugador", WIDTH * 0.1 ,HEIGHT * 0.9, game);// ESCRIBIR VIDA DEL JUGADOR
 }
 
 
