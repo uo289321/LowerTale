@@ -23,6 +23,9 @@ void InventoryMenu::loadOptions() {
 }
 
 void InventoryMenu::select() {
+	auto it = player->inventory.begin();
+	
+	player->heal(item->healing);
 }
 
 void InventoryMenu::moveDown()

@@ -2,6 +2,7 @@
 #include "Player.h"
 #include <list>
 #include "Text.h"
+#include "Item.h"
 
 class InventoryMenu :
     public Actor
@@ -17,6 +18,7 @@ public:
     Player* player;
     Game* game;
     list<Text*> options;
+    list<Item*> items;
     int selected;
 };
 
