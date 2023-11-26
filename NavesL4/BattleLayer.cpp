@@ -6,6 +6,7 @@ BattleLayer::BattleLayer(Enemy* enemy, Player* player, Game* game)
 	this->player = player;
 	this->playerModel = new Actor("res/icono_puntos.png", WIDTH * 0.5, HEIGHT * 0.5, PLAYERMODEL_WIDTH, PLAYERMODEL_HEIGHT, game);
 	this->enemy = enemy;
+	this->shield = new Shield(game);
 	init();
 	health = new Text("vida del jugador", WIDTH * 0.15, HEIGHT * 0.92, game);// ESCRIBIR VIDA DEL JUGADOR
 }
@@ -29,16 +30,16 @@ void BattleLayer::processControls()
 
 	if (player->state == game->stateDefending) {
 		if (controlMoveX > 0) {
-			battleMenu->blockRight();
+			shield->moveX(1);
 		}
 		else if (controlMoveX < 0) {
-			battleMenu->blockLeft();
+			shield->moveX(-1);
 		}
 		else if (controlMoveY > 0) {
-			battleMenu->blockDown();
+			shield->moveY(1);
 		}
 		else if (controlMoveY < 0) {
-			battleMenu->blockUp();
+			shield->moveY(-1);
 		}
 
 	}
@@ -203,6 +204,7 @@ void BattleLayer::update() {
 void BattleLayer::switchToDefense() {
 	defenseTimer = DEFENSE_TIMER;
 	player->state = game->stateDefending;
+	shield->moveX(1);
 }
 
 void BattleLayer::switchToAttack() {
@@ -238,7 +240,10 @@ void BattleLayer::draw()
 		for (auto const& proj : projectiles) {
 			proj->draw();
 		}
+		shield->draw();
 	}
+
+
 	
 
 

@@ -59,30 +59,11 @@ void BattleMenu::select() {
 }
 
 void BattleMenu::attack() {
-	hideOptions();
-	slash = new Animation("res/slash.png", 38, 87, 190, 87, 5, 5, false, game);
-	while (!slash->update()) { 
-		slash->draw(WIDTH/2, HEIGHT/2);
-		SDL_Delay(30); 
-	}
 	// atacar
 	// pasar a defensa
 	layer->player->state = game->stateDefending;
 }
 
-
-
-void BattleMenu::hideOptions() {
-	for (auto const& text : options) {
-		text->hide();
-	}
-}
-
-void BattleMenu::showOptions() {
-	for (auto const& text : options) {
-		text->show();
-	}
-}
 
 void BattleMenu::draw() {
 	if (layer->player->state == game->stateBattle) {

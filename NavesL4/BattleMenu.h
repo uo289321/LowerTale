@@ -20,8 +20,6 @@ public:
 	void selectPrevious();
 	void select();
 	void draw();
-	void hideOptions();
-	void showOptions();
 	void blockRight();
 	void blockLeft();
 	void blockUp();

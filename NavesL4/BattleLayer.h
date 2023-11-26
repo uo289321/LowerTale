@@ -8,6 +8,7 @@ class BattleMenu;
 #include "InventoryMenu.h"
 #include "Projectile.h"
 #include <list>
+#include "Shield.h"
 
 #define BUTTON_DELAY 10
 #define DEFENSE_TIMER 600
@@ -34,6 +35,7 @@ public:
 	int buttonDelay = 0;
 	Enemy* enemy;
 	Player* player;
+	Shield* shield;
 
 	int defenseTimer = DEFENSE_TIMER;
 

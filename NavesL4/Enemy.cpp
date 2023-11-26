@@ -1,8 +1,7 @@
 #include "Enemy.h"
 
-Enemy::Enemy(string filename, int fireRate, float x, float y, GameLayer* layer, Game* game)
+Enemy::Enemy(string filename, int fireRate, float x, float y, Game* game)
 	: Actor("res/" + filename + ".png", x, y, TILE_WIDTH, TILE_HEIGHT, game) {
-	this->layer = layer;
 	this->fireRate = fireRate;
 	this->animation = new Animation("res/" + filename + "battle.png", 21, 19, 42, 19, 5, 2, true, game);
 	this->counter = 0;
@@ -14,8 +13,7 @@ Projectile* Enemy::update() {
 	if (counter <= 0) {
 		counter = fireRate;
 		return generateProjectile();
-	}
-			
+	}	
 	return NULL;
 }
 

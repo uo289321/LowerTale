@@ -8,7 +8,7 @@ class GameLayer;
 class Enemy : public Actor
 {
 public:
-	Enemy(string fileName, int fireRate, float x, float y, GameLayer* layer, Game* game);
+	Enemy(string fileName, int fireRate, float x, float y, Game* game);
 	void drawAnim(); // Va a sobrescribir
 	Projectile* update();
 	Projectile* generateProjectile();
@@ -16,6 +16,5 @@ public:
 	int fireRate;
 	int counter;
 	GameLayer* layer;
-	Animation* aMoving;
 	Animation* animation; // Referencia a la animación mostrada
 };
