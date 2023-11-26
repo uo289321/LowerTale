@@ -134,9 +134,11 @@ void GameLayer::processControls() {
 
 	if (controlThrow) {
 		Plank* newPlank = player->throwPlank();
+		bool generated = false;
 		for (Tile* water : waters) {
-			if (newPlank != NULL && player->isTouching(water)) {
+			if (newPlank != NULL && player->isTouching(water) && !generated) {
 				planks.push_back(newPlank);
+				generated = true;
 			}
 		}
 	}
@@ -208,15 +210,16 @@ void GameLayer::update() {
 			spawnX = player->x;
 		}
 
-		for (Plank* plank : planks) {
-			if (plank->canMove(waters, planks)) {
-				plank->update();
-			}
-			else {
-				plank->vx = 0;
-				plank->vy = 0;
-			}
+	for (Plank* plank : planks) {
+		if (plank->canMove(waters, planks)) {
+			plank->update();
+			cout << "plankSpeed" << plank->vy << endl;
 		}
+		else {
+			plank->vx = 0;
+			plank->vy = 0;
+		}
+	}
 
 
 		for (Plank* plank : planks) {
@@ -244,7 +247,7 @@ void GameLayer::update() {
 		}
 	}
 
-	cout << "update GameLayer" << endl;
+	// cout << "update GameLayer" << endl;
 }
 
 void GameLayer::showDialog(string content) {
