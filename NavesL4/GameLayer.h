@@ -14,11 +14,14 @@
 #include "DialogBox.h"
 #include "InventoryMenu.h"
 #include "BattleMenu.h"
+class BattleMenu;
 #include "Item.h"
 #include <list>
 
 #include <fstream> // Leer ficheros
 #include <sstream> // Leer líneas / String
+
+#define BUTTON_DELAY 10
 
 class GameLayer : public Layer
 {
@@ -37,13 +40,15 @@ public:
 	void calculateScroll();
 	void showDialog(string text);
 	void showInventory();
-	void switchToBattle();
+	void switchToBattle(Enemy* enemy);
 	
 	Space* space;
 	float scrollX;
 	float scrollY;
 	int mapWidth;
 	int mapHeight;
+
+	int lastState;
 
 
 	Audio* audioBackground;
@@ -66,6 +71,8 @@ public:
 
 
 	bool controlInteract = false;
+	int buttonDelay = BUTTON_DELAY;
+
 	bool controlCancel = false;
 	bool controlInventory = false;
 	int controlMoveY = 0;

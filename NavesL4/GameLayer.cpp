@@ -18,11 +18,11 @@ void GameLayer::init() {
 	background = backgroundMoving;
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
+	checkPoints.clear();
 
 
 	// loadMap("res/" + to_string(game->currentLevel) + ".txt");
 	loadMap("res/test0.txt");
-	// switchToBattle();
 }
 
 void GameLayer::loadMap(string name) {
@@ -57,11 +57,11 @@ void GameLayer::loadMapObject(char character, float x, float y)
 {
 	switch (character) {
 	case 'E': {
-		Enemy* enemy = new Enemy("enemy1.png", x, y, game);
+		Enemy* enemy = new Enemy("enemy1", x, y, this, game);
 		// modificación para empezar a contar desde el suelo.
 		enemy->y = enemy->y - enemy->height / 2;
 		enemies.push_back(enemy);
-		space->addDynamicActor(enemy);
+		space->addStaticActor(enemy);
 		break;
 	}
 	case '1': {
@@ -124,6 +124,7 @@ void GameLayer::processControls() {
 		keysToControls(event);
 	}
 
+
 	if (player->state == game->stateMoving) {
 		processMovingState();
 	}
@@ -137,6 +138,22 @@ void GameLayer::processControls() {
 			battleMenu->select();
 	}
 
+	if (player->state == game->stateDefending) {
+		if (controlMoveX > 0) {
+			battleMenu->blockRight();
+		}
+		else if (controlMoveX < 0) {
+			battleMenu->blockLeft();
+		}
+		else if (controlMoveY > 0) {
+			battleMenu->blockDown();
+		}
+		else if (controlMoveY < 0) {
+			battleMenu->blockUp();
+		}
+
+	}
+
 	if (player->state == game->stateBlocked) {
 		if ((controlInteract || controlCancel) && dialogBox->finished) {
 			dialogBox = NULL;
@@ -146,7 +163,7 @@ void GameLayer::processControls() {
 	if (player->state == game->stateInventory) {
 		if (controlCancel) {
 			inventory = NULL;
-			player->state = game->stateMoving;
+			player->state = this->lastState;
 		}
 	}
 
@@ -181,6 +198,7 @@ void GameLayer::processMovingState() {
 
 
 void GameLayer::update() {
+	buttonDelay--;
 	space->update();
 	background->update();
 	player->update();
@@ -190,6 +208,10 @@ void GameLayer::update() {
 
 	if (player->state == game->stateBattle)
 		battleMenu->update(player->health);
+
+	for (auto const& enemy : enemies) {
+		enemy->update();
+	}
 
 	for (auto const& cp : checkPoints) {
 		if (player->isInRange(cp) && controlInteract && player->state == game->stateMoving) {
@@ -216,13 +238,13 @@ void GameLayer::update() {
 	}
 
 	if (player->state == game->stateBlocked && dialogBox == NULL) {
-		player->state = game->stateMoving;
+		player->state = lastState;
 		SDL_Delay(100);
 	}
 
 	for (auto const& enemy : enemies) {
 		if (player->isInRange(enemy) && controlInteract && player->state == game->stateMoving) {
-			switchToBattle();
+			switchToBattle(enemy);
 		}
 	}
 
@@ -230,11 +252,13 @@ void GameLayer::update() {
 }
 
 void GameLayer::showDialog(string content) {
+	this->lastState = player->state;
 	player->state = game->stateBlocked;
 	dialogBox = new DialogBox(content, game);
 }
 
 void GameLayer::showInventory() {
+	this->lastState = player->state;
 	player->state = game->stateInventory;
 	inventory = new InventoryMenu(player, game);
 }
@@ -243,7 +267,9 @@ void GameLayer::draw() {
 	calculateScroll();
 
 	background->draw(scrollX, scrollY);
-	if (player->state == game->stateBattle) {
+
+
+	if (player->state == game->stateBattle || this->lastState == game->stateBattle) {
 		battleMenu->draw();
 	}
 	else {
@@ -251,9 +277,7 @@ void GameLayer::draw() {
 			tile->draw(scrollX, scrollY);
 		}
 		player->draw(scrollX, scrollY);
-		for (auto const& enemy : enemies) {
-			enemy->draw(scrollX, scrollY);
-		}
+		
 		for (auto const& cp : checkPoints) {
 			cp->draw(scrollX, scrollY);
 		}
@@ -262,20 +286,28 @@ void GameLayer::draw() {
 			item->draw(scrollX, scrollY);
 		}
 
-		if (dialogBox != NULL)
-			dialogBox->draw(scrollX, scrollY);
+		
 
-		if (inventory != NULL)
-			inventory->draw(scrollX, scrollY);
-
-		SDL_RenderPresent(game->renderer); // Renderiza
 	}
+
+	for (auto const& enemy : enemies) {
+		enemy->draw(scrollX, scrollY);
+	}
+	
+
+	if (dialogBox != NULL)
+		dialogBox->draw(scrollX, scrollY);
+
+	if (inventory != NULL)
+		inventory->draw(scrollX, scrollY);
+
+	SDL_RenderPresent(game->renderer); // Renderiza
 }
 
-void GameLayer::switchToBattle() {
+void GameLayer::switchToBattle(Enemy* enemy) {
 
 	player->state = game->stateBattle;
-	battleMenu = new BattleMenu(game);
+	battleMenu = new BattleMenu(enemy, this, game);
 	background = backgroundBattle;
 }
 
@@ -304,13 +336,22 @@ void GameLayer::keysToControls(SDL_Event event) {
 			controlMoveY = 1;
 			break;
 		case SDLK_z: // interaccion
-			controlInteract = true;
+			if (buttonDelay <= 0) {
+				controlInteract = true;
+				buttonDelay = BUTTON_DELAY;
+			}
 			break;
 		case SDLK_x:
-			controlCancel = true;
+			if (buttonDelay <= 0) {
+				controlCancel = true;
+				buttonDelay = BUTTON_DELAY;
+			}
 			break;
 		case SDLK_c:
-			controlInventory = true;
+			if (buttonDelay <= 0) {
+				controlInventory = true;
+				buttonDelay = BUTTON_DELAY;
+			}
 			break;
 		}
 
