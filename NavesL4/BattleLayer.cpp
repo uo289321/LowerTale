@@ -217,7 +217,6 @@ void BattleLayer::changeEnemy(Enemy* enemy) {
 void BattleLayer::init()
 {
 	this->battleMenu = new BattleMenu(this->enemy, this, game);
-	
 }
 
 void BattleLayer::draw()

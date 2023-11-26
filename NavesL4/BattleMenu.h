@@ -5,6 +5,7 @@
 #include "Item.h"
 #include "BattleLayer.h"
 #include "Enemy.h"
+#include "Animation.h"
 class Enemy;
 class BattleLayer;
 
@@ -28,7 +29,7 @@ public:
 
 	void attack();
 
-
+	Animation* slash;
 	int blockCd;
 	Enemy* enemy;
 	int selected;
