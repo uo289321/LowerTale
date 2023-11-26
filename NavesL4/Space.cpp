@@ -43,7 +43,7 @@ void Space::updateMoveRight(Actor* dynamicAct) {
                 && rightDynamic <= leftStatic
                 && topStatic < downDynamic
                 && downStatic > topDynamic) {
-
+                dynamicAct->stopMovement();
                 // Comprobamos si la distancia al estático es menor
                 // que nuestro movimientoPosible actual
                 if (possibleMovement >= leftStatic - rightDynamic) {
@@ -80,7 +80,7 @@ void Space::updateMoveLeft(Actor* dynamicAct) {
                 && leftDynamic >= rightStatic
                 && topStatic < downDynamic
                 && downStatic > topDynamic) {
-
+                dynamicAct->stopMovement();
                 // Comprobamos si la distancia al estático es menor
                 // que nuestro movimientoPosible actual
                 if (possibleMovement <= rightStatic - leftDynamic) {
@@ -121,7 +121,7 @@ void Space::updateMoveTop(Actor* dynamicAct) {
                 && downDynamic > topStatic
                 && leftDynamic < rightStatic
                 && rightDynamic > leftStatic) {
-
+                dynamicAct->stopMovement();
                 // Comprobamos si la distancia al estático es menor
                 // que nuestro movimientoPosible actual
                 if (possibleMovement <= downStatic - topDynamic) {
@@ -169,7 +169,7 @@ void Space::updateMoveDown(Actor* dynamicAct) {
                 && topDynamic < downStatic
                 && leftDynamic < rightStatic
                 && rightDynamic > leftStatic) {
-
+                dynamicAct->stopMovement();
                 // Comprobamos si la distancia al estático es menor
                 // que nuestro movimientoPosible actual
                 if (possibleMovement >= topStatic - downDynamic) {

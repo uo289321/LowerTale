@@ -11,20 +11,18 @@ void GameLayer::init() {
 	audioBackground = new Audio("res/musica_ambiente.mp3", true);
 	// audioBackground->play();
 
-	points = 0;
-	textPoints = new Text("hola", WIDTH * 0.92, HEIGHT * 0.04, game);
-	textPoints->content = to_string(points);
-
 	player = new Player(50, 50, game);
-	background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
-	backgroundPoints = new Actor("res/icono_puntos.png",
-		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
+	// background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	backgroundMoving = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	backgroundBattle = new Background("res/backgroundbattle.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	background = backgroundMoving;
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 
 
 	// loadMap("res/" + to_string(game->currentLevel) + ".txt");
-	loadMap("res/test1.txt");
+	loadMap("res/test0.txt");
+	// switchToBattle();
 }
 
 void GameLayer::loadMap(string name) {
@@ -39,7 +37,7 @@ void GameLayer::loadMap(string name) {
 		// Por línea
 		for (int i = 0; getline(streamFile, line); i++) {
 			istringstream streamLine(line);
-			mapWidth = line.length() * 40; // Ancho del mapa en pixels
+			mapWidth = line.length() * 32; // Ancho del mapa en pixels
 			// Por carácter (en cada línea)
 			for (int j = 0; !streamLine.eof(); j++) {
 				streamLine >> character; // Leer character 
@@ -80,6 +78,13 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		space->addDynamicActor(cp);
 		break;
 	}
+	case 'S': {
+		Item* item = new Item("Filete", x, y, 5, game);
+		item->y = item->y - item->height / 2;
+		items.push_back(item);
+		space->addStaticActor(item);
+		break;
+	}
 	case 'Q': {
 		Tile* caja = new Tile("res/caja.png", x, y, game);
 		caja->y = caja->y - caja->height / 2;
@@ -101,8 +106,15 @@ void GameLayer::loadMapObject(char character, float x, float y)
 	//	space->addDynamicActor(j);
 	//	break;
 	//}
+	case 'B': {
+		Tile* tile = new Tile("res/black.png", x, y, game);
+		tile->y = tile->y - tile->height / 2;
+		tiles.push_back(tile);
+		space->addStaticActor(tile);
+		break;
+	}
 	case '#': {
-		Tile* tile = new Tile("res/bloque_tierra.png", x, y, game);
+		Tile* tile = new Tile("res/pared.png", x, y, game);
 		// modificación para empezar a contar desde el suelo.
 		tile->y = tile->y - tile->height / 2;
 		tiles.push_back(tile);
@@ -119,34 +131,51 @@ void GameLayer::processControls() {
 		keysToControls(event);
 	}
 	// Eje X
-	if (controlMoveX > 0) {
-		player->moveX(1);
-	}
-	else if (controlMoveX < 0) {
-		player->moveX(-1);
-	}
-	else {
-		player->moveX(0);
+	if (player->state == game->stateMoving) {
+		if (controlMoveX > 0) {
+			player->moveX(1);
+		}
+		else if (controlMoveX < 0) {
+			player->moveX(-1);
+		}
+		else {
+			player->moveX(0);
+		}
+
+		// Eje Y
+		if (controlMoveY > 0) {
+			player->moveY(1);
+		}
+		else if (controlMoveY < 0) {
+			player->moveY(-1);
+		}
+		else {
+			player->moveY(0);
+		}
+
+		if (controlInventory)
+			showInventory();
 	}
 
-	// Eje Y
-	if (controlMoveY > 0) {
-		player->moveY(1);
-	}
-	else if (controlMoveY < 0) {
-		player->moveY(-1);
-	}
-	else {
-		player->moveY(0);
+	if (player->state == game->stateBattle) {
+		if (controlMoveX > 0)
+			battleMenu->selectNext();
+		else if (controlMoveX < 0)
+			battleMenu->selectPrevious();
 	}
 
-	if (!player->moving) {
-		controlMoveX = 0;
-		controlMoveY = 0;
+	if (player->state == game->stateBlocked) {
+		if ((controlInteract || controlCancel) && dialogBox->finished) {
+			dialogBox = NULL;
+		}
 	}
-	
-	
 
+	if (player->state == game->stateInventory) {
+		if (controlCancel) {
+			inventory = NULL;
+			player->state = game->stateMoving;
+		}
+	}
 
 
 }
@@ -155,20 +184,34 @@ void GameLayer::update() {
 	space->update();
 	background->update();
 	player->update();
-	/*for (auto const& enemy : enemies) {
-		enemy->update();
-	}*/
 
+	if (dialogBox != NULL)
+		dialogBox->update();
 
+	if (player->state == game->stateBattle)
+		battleMenu->update(player->health);
 
-	// Colisiones
-	for (auto const& enemy : enemies) {
-		if (player->isOverlap(enemy)) {
-			init();
-			return; // Cortar el for
+	for (auto const& cp : checkPoints) {
+		if (player->isInRange(cp) && controlInteract && player->state == game->stateMoving) {
+			showDialog("Tus fuerzas se han renovado.");
+
+			spawnY = player->y;
+			spawnX = player->x;
 		}
 	}
 
+	Item* removeItem = NULL;
+	for (auto const& item : items) {
+		if (player->isInRange(item) && controlInteract && player->state == game->stateMoving) {
+			showDialog("Has recogido el siguiente objeto: " + item->name);
+			removeItem = item;
+			player->pick(item);
+			
+		}
+	}
+	if (removeItem != NULL) {
+		items.remove(removeItem);
+		space->removeStaticActor(removeItem);
 	// Caja
 	for (auto const& caja : cajas) {
 		if (caja->isOverlap(player)
@@ -202,60 +245,65 @@ void GameLayer::update() {
 		}
 	}*/
 
-
-
-	/*for (auto const& enemy : enemies) {
-		for (auto const& projectile : projectiles) {
-			if (enemy->isOverlap(projectile)) {
-				bool pInList = std::find(deleteProjectiles.begin(),
-					deleteProjectiles.end(),
-					projectile) != deleteProjectiles.end();
-
-				if (!pInList) {
-					deleteProjectiles.push_back(projectile);
-				}
-
-				bool eInList = std::find(deleteEnemies.begin(),
-					deleteEnemies.end(),
-					enemy) != deleteEnemies.end();
-
-				if (!eInList) {
-					deleteEnemies.push_back(enemy);
-				}
-
-				points++;
-				textPoints->content = to_string(points);
-
-
-			}
-		}
-	}*/
-
-	/*for (auto const& delEnemy : deleteEnemies) {
-		enemies.remove(delEnemy);
 	}
-	deleteEnemies.clear();
 
-	for (auto const& delProjectile : deleteProjectiles) {
-		projectiles.remove(delProjectile);
-		delete delProjectile;
+	if (player->state == game->stateBlocked && dialogBox == NULL) {
+		player->state = game->stateMoving;
+		SDL_Delay(100);
 	}
-	deleteProjectiles.clear();*/
 
+	// cout << "update GameLayer" << endl;
+}
 
-	cout << "update GameLayer" << endl;
+void GameLayer::showDialog(string content) {
+	player->state = game->stateBlocked;
+	dialogBox = new DialogBox(content, game);
+}
+
+void GameLayer::showInventory() {
+	player->state = game->stateInventory;
+	inventory = new InventoryMenu(player, game);
 }
 
 void GameLayer::draw() {
-	background->draw();
-	/*for (auto const& projectile : projectiles) {
-		projectile->draw();
-	}*/
+	calculateScroll();
 
-	player->draw();
-	for (auto const& enemy : enemies) {
-		enemy->draw();
+	background->draw(scrollX, scrollY);
+	if (player->state == game->stateBattle) {
+		battleMenu->draw();
 	}
+	else {
+		for (auto const& tile : tiles) {
+			tile->draw(scrollX, scrollY);
+		}
+		player->draw(scrollX, scrollY);
+		for (auto const& enemy : enemies) {
+			enemy->draw(scrollX, scrollY);
+		}
+		for (auto const& cp : checkPoints) {
+			cp->draw(scrollX, scrollY);
+		}
+
+		for (auto const& item : items) {
+			item->draw(scrollX, scrollY);
+		}
+
+		if (dialogBox != NULL)
+			dialogBox->draw(scrollX, scrollY);
+
+		if (inventory != NULL)
+			inventory->draw(scrollX, scrollY);
+
+		SDL_RenderPresent(game->renderer); // Renderiza
+	}
+}
+
+void GameLayer::switchToBattle() {
+
+	player->state = game->stateBattle;
+	battleMenu = new BattleMenu(game);
+	background = backgroundBattle;
+}
 
 	for (auto const& caja : cajas) {
 		caja->draw();
@@ -285,62 +333,94 @@ void GameLayer::keysToControls(SDL_Event event) {
 			game->scale();
 			break;
 		case SDLK_d: // derecha
-			if(!player->moving)
-				controlMoveX = 1;
+			controlMoveX = 1;
 			break;
 		case SDLK_a: // izquierda
-			if (!player->moving)
-				controlMoveX = -1;
+			controlMoveX = -1;
 			break;
 		case SDLK_w: // arriba
-			if (!player->moving)
-				controlMoveY = -1;
+			controlMoveY = -1;
 			break;
 		case SDLK_s: // abajo
-			if (!player->moving)
-				controlMoveY = 1;
+			controlMoveY = 1;
 			break;
-		case SDLK_SPACE: // dispara
-			if (!player->moving)
-				controlShoot = true;
+		case SDLK_z: // interaccion
+			controlInteract = true;
+			break;
+		case SDLK_x:
+			controlCancel = true;
+			break;
+		case SDLK_c:
+			controlInventory = true;
 			break;
 		}
 
 
-	}
-	//if (event.type == SDL_KEYUP) {
-	//	int code = event.key.keysym.sym;
-	//	// Levantada
-	//	if (!player->moving) {
-	//		switch (code) {
-	//		case SDLK_d: // derecha
-	//			if (controlMoveX == 1) {
-	//				controlMoveX = 0;
-	//			}
-	//			break;
-	//		case SDLK_a: // izquierda
-	//			if (controlMoveX == -1) {
-	//				controlMoveX = 0;
-	//			}
-	//			break;
-	//		case SDLK_w: // arriba
-	//			if (controlMoveY == -1) {
-	//				controlMoveY = 0;
-	//			}
-	//			break;
-	//		case SDLK_s: // abajo
-	//			if (controlMoveY == 1) {
-	//				controlMoveY = 0;
-	//			}
-	//			break;
-	//		case SDLK_SPACE: // dispara
-	//			controlShoot = false;
-	//			break;
-	//		}
-	//	}
-	//	
 
-	//}
+	}
+	if (event.type == SDL_KEYUP) {
+		int code = event.key.keysym.sym;
+		// Levantada
+			switch (code) {
+			case SDLK_d: // derecha
+				if (controlMoveX == 1) {
+					controlMoveX = 0;
+				}
+				break;
+			case SDLK_a: // izquierda
+				if (controlMoveX == -1) {
+					controlMoveX = 0;
+				}
+				break;
+			case SDLK_w: // arriba
+				if (controlMoveY == -1) {
+					controlMoveY = 0;
+				}
+				break;
+			case SDLK_s: // abajo
+				if (controlMoveY == 1) {
+					controlMoveY = 0;
+				}
+				break;
+			case SDLK_z:
+				controlInteract = false;
+				break;
+			case SDLK_x:
+				controlCancel = false;
+				break;
+			case SDLK_c:
+				controlInventory = false;
+				break;
+			}
+			
+
+		}
+
+}
+
+void GameLayer::calculateScroll() {
+	// limite izquierda
+	if (player->x > WIDTH * 0.3) {
+		if (player->x - scrollX < WIDTH * 0.3) {
+			scrollX = player->x - WIDTH * 0.3;
+		}
+	}
+
+	// limite derecha
+	if (player->x < mapWidth - WIDTH * 0.3) {
+		if (player->x - scrollX > WIDTH * 0.7) {
+			scrollX = player->x - WIDTH * 0.7;
+		}
+	}
+
+
+	if (player->y - scrollY > HEIGHT * 0.7) {
+		scrollY = player->y - HEIGHT * 0.7;
+	}
+
+	if (player->y - scrollY < HEIGHT * 0.3) {
+		scrollY = player->y - HEIGHT * 0.3;
+	}
 
 }
 

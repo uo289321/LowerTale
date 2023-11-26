@@ -2,22 +2,18 @@
 
 #include "Game.h"
 
-class Text
+class AnimatedText
 {
 public:
-	Text(string content, float x, float y, Game* game);
+	AnimatedText(string content, float x, float y, Game* game);
 	void draw();
-	void highlight();
-	void unhighlight();
-	void hide();
-	void show();
+	bool update();
 	string content; // texto
+	string shown;
 	int x;
 	int y;
-	int r, g, b, a;
 	int width;
 	int height;
+	int n = 1;
 	Game* game; // referencia al juego
-
 };
-

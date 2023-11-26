@@ -9,7 +9,9 @@ public:
 	~Actor();
 	virtual void draw(float scrollX = 0, float scrollY = 0);
 	bool isOverlap(Actor* actor);
+	bool containsPoint(int pointX, int pointY); // contiene punto
 	bool isInRender();
+	void stopMovement();
 
 	bool collisionUp;
 	bool collisionDown;

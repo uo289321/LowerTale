@@ -11,6 +11,10 @@
 #include "Tile.h"
 #include "Space.h"
 #include "CheckPoint.h"
+#include "DialogBox.h"
+#include "InventoryMenu.h"
+#include "BattleMenu.h"
+#include "Item.h"
 #include <list>
 
 #include <fstream> // Leer ficheros
@@ -28,6 +32,9 @@ public:
 	void loadMapObject(char character, float x, float y);
 	void keysToControls(SDL_Event event);
 	void calculateScroll();
+	void showDialog(string text);
+	void showInventory();
+	void switchToBattle();
 	
 	Space* space;
 	float scrollX;
@@ -41,15 +48,29 @@ public:
 	int points;
 	Player* player;
 	Background* background;
-	Actor* backgroundPoints;
+	Background* backgroundMoving;
+	Background* backgroundBattle;
+	DialogBox* dialogBox;
+	BattleMenu* battleMenu;
+	InventoryMenu* inventory;
+
+
+
 	list<Tile*> tiles;
 	list<Enemy*> enemies;
 	list<CheckPoint*> checkPoints;
+	list<Item*> items;
+
 	list<Tile*> cajas;
 
-	bool controlShoot = false;
+	bool controlInteract = false;
+	bool controlCancel = false;
+	bool controlInventory = false;
 	int controlMoveY = 0;
 	int controlMoveX = 0;
+
+	int spawnX = -1;
+	int spawnY = -1;
 
 
 };

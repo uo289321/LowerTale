@@ -1,42 +1,30 @@
-#include "Text.h"
+#include "AnimatedText.h"
+#include <string>
 
-Text::Text(string content, float x, float y, Game* game) {
+AnimatedText::AnimatedText(string content, float x, float y, Game* game) {
 	this->content = content;
 	this->x = x;
 	this->y = y;
 	this->game = game;
-	this->r = 255;
-	this->g = 255;
-	this->b = 255;
-	this->a = 255;
+	this->shown = content.substr(0, n);
 }
 
-
-
-void Text::highlight() {
-	this->b = 0;
+bool AnimatedText::update() {
+	this->n++;
+	this->shown = content.substr(0, n);
+	if (n >= content.length())
+		return true;
+	return false;
 }
 
-void Text::unhighlight() {
-	this->b = 255;
-}
-
-void Text::show() {
-	this->a = 255;
-}
-
-void Text::hide() {
-	this->a = 0;
-}
-
-void Text::draw() {
+void AnimatedText::draw() {
 	SDL_Color color;
-	color.r = this->r;
-	color.g = this->g;
-	color.b = this->b;
-	color.a = this->a; //transparente
+	color.r = 255;
+	color.g = 255;
+	color.b = 255;
+	color.a = 255; //transparente
 
-	SDL_Surface* surface = TTF_RenderText_Blended(game->font, content.c_str(), color);
+	SDL_Surface* surface = TTF_RenderText_Blended(game->font, shown.c_str(), color);
 	// c_str() transforma el string a cost *char;
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(game->renderer, surface);
 
