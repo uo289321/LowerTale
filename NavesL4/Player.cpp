@@ -163,7 +163,6 @@ void Player::moveY(float axis) {
 
 void Player::draw(float scrollX, float scrollY) {
 
-
 	animation->draw(x - scrollX, y - scrollY);
 
 }

@@ -3,22 +3,22 @@
 #include <list>
 #include "Text.h"
 #include "Item.h"
-#include "GameLayer.h"
+#include "BattleLayer.h"
 #include "Enemy.h"
 class Enemy;
-class GameLayer;
+class BattleLayer;
 
 #define BLOCK_CD 5
+#define DEFENSE_DURATION 600 // 20 segundos (habiendo 30 iteraciones en un segundo)
 
 class BattleMenu
 {
 public:
-	BattleMenu(Enemy* enemy, GameLayer* layer, Game* game);
+	BattleMenu(Enemy* enemy, BattleLayer* layer, Game* game);
 	void selectNext();
 	void selectPrevious();
 	void select();
 	void draw();
-	void update();
 	void hideOptions();
 	void showOptions();
 	void blockRight();
@@ -26,13 +26,14 @@ public:
 	void blockUp();
 	void blockDown();
 
+	void attack();
+
 
 	int blockCd;
 	Enemy* enemy;
 	int selected;
 	list<Text*> options;
-	Text* health;
-	GameLayer* layer;
+	BattleLayer* layer;
 	Game* game;
 };
 

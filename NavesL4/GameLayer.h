@@ -5,6 +5,7 @@
 #include "Background.h"
 
 #include "Enemy.h"
+class Enemy;
 #include "Projectile.h"
 #include "Text.h"
 #include "Audio.h" 
@@ -59,7 +60,7 @@ public:
 	Background* backgroundMoving;
 	Background* backgroundBattle;
 	DialogBox* dialogBox;
-	BattleMenu* battleMenu;
+	// BattleMenu* battleMenu;
 	InventoryMenu* inventory;
 
 
@@ -72,9 +73,9 @@ public:
 
 	bool controlInteract = false;
 	int buttonDelay = BUTTON_DELAY;
-
 	bool controlCancel = false;
 	bool controlInventory = false;
+	Enemy* controlBattle = NULL;
 	int controlMoveY = 0;
 	int controlMoveX = 0;
 

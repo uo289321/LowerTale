@@ -32,6 +32,8 @@ public:
 	SDL_Renderer* renderer; // renderizador
 	bool loopActive; // Juego activo
 	Layer* gameLayer;
+	Layer* battleLayer;
+	Layer* activeLayer;
 
 	int const stateMoving = 1;
 	int const stateJumping = 2;

@@ -12,9 +12,8 @@ void GameLayer::init() {
 	// audioBackground->play();
 
 	player = new Player(50, 50, game);
-	// background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 	backgroundMoving = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
-	backgroundBattle = new Background("res/backgroundbattle.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	// backgroundBattle = new Background("res/backgroundbattle.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 	background = backgroundMoving;
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
@@ -42,8 +41,8 @@ void GameLayer::loadMap(string name) {
 			for (int j = 0; !streamLine.eof(); j++) {
 				streamLine >> character; // Leer character 
 				cout << character;
-				float x = 32 / 2 + j * 32; // x central
-				float y = 40 + i * 40; // y suelo
+				float x = TILE_WIDTH / 2 + j * TILE_WIDTH; // x central
+				float y = TILE_HEIGHT + i * TILE_HEIGHT; // y suelo
 				loadMapObject(character, x, y);
 			}
 
@@ -57,7 +56,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 {
 	switch (character) {
 	case 'E': {
-		Enemy* enemy = new Enemy("enemy1", x, y, this, game);
+		Enemy* enemy = new Enemy("enemy1", 15, x, y, this, game);
 		// modificación para empezar a contar desde el suelo.
 		enemy->y = enemy->y - enemy->height / 2;
 		enemies.push_back(enemy);
@@ -129,16 +128,16 @@ void GameLayer::processControls() {
 		processMovingState();
 	}
 
-	if (player->state == game->stateBattle) {
+	/*if (player->state == game->stateBattle) {
 		if (controlMoveX > 0)
 			battleMenu->selectNext();
 		else if (controlMoveX < 0)
 			battleMenu->selectPrevious();
 		if (controlInteract)
 			battleMenu->select();
-	}
+	}*/
 
-	if (player->state == game->stateDefending) {
+	/*if (player->state == game->stateDefending) {
 		if (controlMoveX > 0) {
 			battleMenu->blockRight();
 		}
@@ -152,19 +151,27 @@ void GameLayer::processControls() {
 			battleMenu->blockUp();
 		}
 
-	}
+	}*/
 
 	if (player->state == game->stateBlocked) {
 		if ((controlInteract || controlCancel) && dialogBox->finished) {
 			dialogBox = NULL;
+			controlInteract = false;
+			controlCancel = false;
 		}
 	}
 
 	if (player->state == game->stateInventory) {
 		if (controlCancel) {
 			inventory = NULL;
-			player->state = this->lastState;
+			player->state = game->stateMoving;
 		}
+	}
+
+	if (controlBattle != NULL) {
+		player->state = game->stateBattle;
+		game->activeLayer = new BattleLayer(controlBattle, player, game);
+		controlBattle = NULL;
 	}
 
 
@@ -206,19 +213,13 @@ void GameLayer::update() {
 	if (dialogBox != NULL)
 		dialogBox->update();
 
-	if (player->state == game->stateBattle)
-		battleMenu->update(player->health);
-
-	for (auto const& enemy : enemies) {
-		enemy->update();
-	}
-
 	for (auto const& cp : checkPoints) {
 		if (player->isInRange(cp) && controlInteract && player->state == game->stateMoving) {
 			showDialog("Tus fuerzas se han renovado.");
 
 			spawnY = player->y;
 			spawnX = player->x;
+			controlInteract = false;
 		}
 	}
 
@@ -228,6 +229,7 @@ void GameLayer::update() {
 			showDialog("Has recogido el siguiente objeto: " + item->name);
 			removeItem = item;
 			player->pick(item);
+			controlInteract = false;
 			
 		}
 	}
@@ -238,7 +240,7 @@ void GameLayer::update() {
 	}
 
 	if (player->state == game->stateBlocked && dialogBox == NULL) {
-		player->state = lastState;
+		player->state = game->stateMoving;
 		SDL_Delay(100);
 	}
 
@@ -261,6 +263,7 @@ void GameLayer::showInventory() {
 	this->lastState = player->state;
 	player->state = game->stateInventory;
 	inventory = new InventoryMenu(player, game);
+	controlInventory = false;
 }
 
 void GameLayer::draw() {
@@ -269,10 +272,6 @@ void GameLayer::draw() {
 	background->draw(scrollX, scrollY);
 
 
-	if (player->state == game->stateBattle || this->lastState == game->stateBattle) {
-		battleMenu->draw();
-	}
-	else {
 		for (auto const& tile : tiles) {
 			tile->draw(scrollX, scrollY);
 		}
@@ -285,10 +284,6 @@ void GameLayer::draw() {
 		for (auto const& item : items) {
 			item->draw(scrollX, scrollY);
 		}
-
-		
-
-	}
 
 	for (auto const& enemy : enemies) {
 		enemy->draw(scrollX, scrollY);
@@ -305,10 +300,7 @@ void GameLayer::draw() {
 }
 
 void GameLayer::switchToBattle(Enemy* enemy) {
-
-	player->state = game->stateBattle;
-	battleMenu = new BattleMenu(enemy, this, game);
-	background = backgroundBattle;
+	controlBattle = enemy;
 }
 
 // Si el jugador está en movimiento no permitimos acciones
