@@ -187,8 +187,6 @@ void GameLayer::processControls() {
 			player->state = game->stateMoving;
 		}
 	}
-
-
 }
 
 void GameLayer::update() {
@@ -243,57 +241,8 @@ void GameLayer::update() {
 		if (removeItem != NULL) {
 			items.remove(removeItem);
 			space->removeStaticActor(removeItem);
-	}
-
-	
-
-	// Colisiones , Enemy - Projectile
-
-	/*list<Enemy*> deleteEnemies;
-	list<Projectile*> deleteProjectiles;
-	for (auto const& projectile : projectiles) {
-		if (projectile->isInRender() == false) {
-
-			bool pInList = std::find(deleteProjectiles.begin(),
-				deleteProjectiles.end(),
-				projectile) != deleteProjectiles.end();
-
-			if (!pInList) {
-				deleteProjectiles.push_back(projectile);
-			}
 		}
-	}*/
-
-
-
-	/*for (auto const& enemy : enemies) {
-		for (auto const& projectile : projectiles) {
-			if (enemy->isOverlap(projectile)) {
-				bool pInList = std::find(deleteProjectiles.begin(),
-					deleteProjectiles.end(),
-					projectile) != deleteProjectiles.end();
-
 	}
-
-	if (player->state == game->stateBlocked && dialogBox == NULL) {
-		player->state = game->stateMoving;
-		SDL_Delay(100);
-	}
-
-	// cout << "update GameLayer" << endl;
-}
-
-	/*for (auto const& delEnemy : deleteEnemies) {
-		enemies.remove(delEnemy);
-	}
-	deleteEnemies.clear();
-
-	for (auto const& delProjectile : deleteProjectiles) {
-		projectiles.remove(delProjectile);
-		delete delProjectile;
-	}
-	deleteProjectiles.clear();*/
-
 
 	cout << "update GameLayer" << endl;
 }
@@ -397,42 +346,41 @@ void GameLayer::keysToControls(SDL_Event event) {
 	if (event.type == SDL_KEYUP) {
 		int code = event.key.keysym.sym;
 		// Levantada
-			switch (code) {
-			case SDLK_d: // derecha
-				if (controlMoveX == 1) {
-					controlMoveX = 0;
-				}
-				break;
-			case SDLK_a: // izquierda
-				if (controlMoveX == -1) {
-					controlMoveX = 0;
-				}
-				break;
-			case SDLK_w: // arriba
-				if (controlMoveY == -1) {
-					controlMoveY = 0;
-				}
-				break;
-			case SDLK_s: // abajo
-				if (controlMoveY == 1) {
-					controlMoveY = 0;
-				}
-				break;
-			case SDLK_z:
-				controlInteract = false;
-				break;
-			case SDLK_x:
-				controlCancel = false;
-				break;
-			case SDLK_c:
-				controlInventory = false;
-				break;
+		switch (code) {
+		case SDLK_d: // derecha
+			if (controlMoveX == 1) {
+				controlMoveX = 0;
 			}
-			case SDLK_p:
-				controlThrow = false;
+			break;
+		case SDLK_a: // izquierda
+			if (controlMoveX == -1) {
+				controlMoveX = 0;
 			}
-		}
-
+			break;
+		case SDLK_w: // arriba
+			if (controlMoveY == -1) {
+				controlMoveY = 0;
+			}
+			break;
+		case SDLK_s: // abajo
+			if (controlMoveY == 1) {
+				controlMoveY = 0;
+			}
+			break;
+		case SDLK_z:
+			controlInteract = false;
+			break;
+		case SDLK_x:
+			controlCancel = false;
+			break;
+		case SDLK_c:
+			controlInventory = false;
+			break;
+		case SDLK_p:
+			controlThrow = false;
+			break;
+		}		
+	}
 }
 
 void GameLayer::calculateScroll() {
