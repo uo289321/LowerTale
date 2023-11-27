@@ -29,7 +29,7 @@ void GameLayer::loadMap(string name) {
 	string line;
 	ifstream streamFile(name.c_str());
 	if (!streamFile.is_open()) {
-		cout << "Falla abrir el fichero de mapa" << endl; 
+		cout << "Falla abrir el fichero de mapa" << endl;
 		return;
 	}
 	else {
@@ -82,6 +82,13 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		item->y = item->y - item->height / 2;
 		items.push_back(item);
 		space->addStaticActor(item);
+		break;
+	}
+	case 'Q': {
+		Box* box = new Box(x, y, game);
+		box->y = box->y - box->height / 2;
+		boxes.push_back(box);
+		space->addMovableActor(box);
 		break;
 	}
 	case 'P': {
@@ -240,6 +247,8 @@ void GameLayer::update() {
 	buttonDelay--;
 	space->update();
 	background->update();
+	
+
 	player->update();
 
 	if (dialogBox != NULL)
@@ -285,7 +294,7 @@ void GameLayer::update() {
 			removeItem = item;
 			player->pick(item);
 			controlInteract = false;
-			
+
 		}
 	}
 	if (removeItem != NULL) {
@@ -293,6 +302,34 @@ void GameLayer::update() {
 		space->removeStaticActor(removeItem);
 
 	}
+	// Caja
+	for (auto const& box : boxes) {
+		if (player->isTouching(box)) {
+			box->vx = player->vx;
+			box->vy = player->vy;
+		}
+		else {
+			box->vx = 0;
+			box->vy = 0;
+		}
+	}
+
+	// Colisiones , Enemy - Projectile
+
+	/*list<Enemy*> deleteEnemies;
+	list<Projectile*> deleteProjectiles;
+	for (auto const& projectile : projectiles) {
+		if (projectile->isInRender() == false) {
+
+			bool pInList = std::find(deleteProjectiles.begin(),
+				deleteProjectiles.end(),
+				projectile) != deleteProjectiles.end();
+
+			if (!pInList) {
+				deleteProjectiles.push_back(projectile);
+			}
+		}
+	}*/
 
 	if (player->state == game->stateBlocked && dialogBox == NULL) {
 		player->state = game->stateMoving;
@@ -351,24 +388,24 @@ void GameLayer::draw() {
 	background->draw(scrollX, scrollY);
 
 
-		for (auto const& tile : tiles) {
-			tile->draw(scrollX, scrollY);
-		}
-		for (auto const& water : waters) {
-			water->draw(scrollX, scrollY);
-		}
-		for (auto const& plank : planks) {
-			plank->draw(scrollX, scrollY);
-		}
-		player->draw(scrollX, scrollY);
-		
-		for (auto const& cp : checkPoints) {
-			cp->draw(scrollX, scrollY);
-		}
+	for (auto const& tile : tiles) {
+		tile->draw(scrollX, scrollY);
+	}
+	for (auto const& water : waters) {
+		water->draw(scrollX, scrollY);
+	}
+	for (auto const& plank : planks) {
+		plank->draw(scrollX, scrollY);
+	}
+	player->draw(scrollX, scrollY);
 
-		for (auto const& item : items) {
-			item->draw(scrollX, scrollY);
-		}
+	for (auto const& cp : checkPoints) {
+		cp->draw(scrollX, scrollY);
+	}
+
+	for (auto const& item : items) {
+		item->draw(scrollX, scrollY);
+	}
 
 	for (auto const& enemy : enemies) {
 		enemy->draw(scrollX, scrollY);
@@ -381,6 +418,11 @@ void GameLayer::draw() {
 
 	if (dialogBox != NULL)
 		dialogBox->draw(scrollX, scrollY);
+
+	for (auto const& box : boxes) {
+		box->draw(scrollX, scrollY);
+	}
+
 
 	if (inventory != NULL)
 		inventory->draw(scrollX, scrollY);
@@ -477,7 +519,7 @@ void GameLayer::keysToControls(SDL_Event event) {
 		case SDLK_p:
 			controlThrow = false;
 			break;
-		}		
+		}
 	}
 }
 

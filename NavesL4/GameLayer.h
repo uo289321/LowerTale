@@ -18,6 +18,7 @@ class Enemy;
 class BattleMenu;
 #include "Item.h"
 #include "Plank.h"
+#include "Box.h"
 #include "PressurePlate.h"
 #include <list>
 
@@ -76,6 +77,7 @@ public:
 	list<Plank*> planks;
 	list<PressurePlate*> pressurePlates;
 
+	list<Box*> boxes;
 
 	bool controlInteract = false;
 	int buttonDelay = BUTTON_DELAY;

@@ -9,6 +9,7 @@
 #include <list>
 class Item;
 #include "Plank.h"
+#include "Box.h"
 
 #define MAX_HEALTH 20
 
@@ -32,6 +33,7 @@ public:
 	bool moving = false;
 	int movingCd = 0;
 	Audio* audioShoot;
+
 
 	int health = MAX_HEALTH;
 
