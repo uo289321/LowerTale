@@ -20,6 +20,7 @@ class BattleMenu;
 #include "Plank.h"
 #include "Box.h"
 #include "PressurePlate.h"
+#include "Door.h"
 #include <list>
 
 #include <fstream> // Leer ficheros
@@ -76,8 +77,8 @@ public:
 	list<Item*> items;
 	list<Plank*> planks;
 	list<PressurePlate*> pressurePlates;
-
 	list<Box*> boxes;
+	Door* door;
 
 	bool controlInteract = false;
 	int buttonDelay = BUTTON_DELAY;

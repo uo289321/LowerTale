@@ -2,7 +2,7 @@ BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 BBBBBBBBBBBBBBB......................................B
 BBBBBBB########................BBBBBBB...............B
 B..............A...............BBBBBBBB..............B
-B........E.........WWWWW.......BBBBBBBBB.............B
+B..D.....E.........WWWWW.......BBBBBBBBB.............B
 B....1.....S.......WWWWW.......BBBBBBBBB.............B
 B.......Q..........WWWWW.......BBBBBBBBB.............B
 B............P.................BBBBBBBBB.............B

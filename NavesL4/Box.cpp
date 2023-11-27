@@ -1,7 +1,7 @@
 #include "Box.h"
 
 Box::Box(float x, float y, Game* game) :
-	Actor("res/caja.png", x, y, 32, 40, game) {
+	Actor("res/caja.png", x, y, TILE_WIDTH, TILE_HEIGHT, game) {
 
 }
 

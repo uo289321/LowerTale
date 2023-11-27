@@ -98,13 +98,13 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		space->addDynamicActor(p);
 		break;
 	}
-	//case 'Y': {
-	//	Jumpboost* j = new Jumpboost(x, y, game);
-	//	j->y = j->y - j->height / 2;
-	//	jumpboosts.push_back(j);
-	//	space->addDynamicActor(j);
-	//	break;
-	//}
+			//case 'Y': {
+			//	Jumpboost* j = new Jumpboost(x, y, game);
+			//	j->y = j->y - j->height / 2;
+			//	jumpboosts.push_back(j);
+			//	space->addDynamicActor(j);
+			//	break;
+			//}
 	case 'B': {
 		Tile* tile = new Tile("res/black.png", x, y, game);
 		tile->y = tile->y - tile->height / 2;
@@ -120,13 +120,20 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		space->addStaticActor(tile);
 		break;
 	}
-	case 'W':
-		Tile * water = new Tile("res/water.png", x, y, game);
+	case 'W': {
+		Tile* water = new Tile("res/water.png", x, y, game);
 		// Tile* water = new Tile("res/water.png", x, y, game);
 		water->y = water->y - water->height / 2;
 		waters.push_back(water);
 		space->addStaticActor(water);
 		break;
+	}
+	case 'D': {
+		door = new Door("res/closed_door.png", x, y, game);
+		door->y = door->y - door->height / 2;
+		space->addStaticActor(door);
+		break;
+	}
 	}
 }
 
@@ -247,7 +254,7 @@ void GameLayer::update() {
 	buttonDelay--;
 	space->update();
 	background->update();
-	
+
 
 	player->update();
 
@@ -283,6 +290,7 @@ void GameLayer::update() {
 		}
 	}
 
+	// hacer la comprobacion dentro de pressurePlate para que se quite el estado presionada
 	for (PressurePlate* pp : pressurePlates) {
 		for (Box* box : boxes) {
 			if (box->isOnTopOf(pp) && box->vx == 0 && box->vy == 0) {
@@ -290,6 +298,24 @@ void GameLayer::update() {
 				cout << "Presionada" << endl;
 			}
 		}
+	}
+
+	int i = 0;
+	for (PressurePlate* pp : pressurePlates) {
+		if (pp->is_pressed) {
+			i++;
+		}
+	}
+
+	if (i == pressurePlates.size()) {
+		space->removeStaticActor(door);
+		door = new Door("res/open_door.png", door->x, door->y, game);
+		space->addDynamicActor(door);
+	}
+	else {
+		space->removeDynamicActor(door);
+		door = new Door("res/closed_door.png", door->x, door->y, game);
+		space->addStaticActor(door);
 	}
 
 	Item* removeItem = NULL;
@@ -407,6 +433,8 @@ void GameLayer::draw() {
 	}
 
 	player->draw(scrollX, scrollY);
+
+	door->draw(scrollX, scrollY);
 
 	for (auto const& cp : checkPoints) {
 		cp->draw(scrollX, scrollY);
