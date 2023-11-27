@@ -29,7 +29,7 @@ void GameLayer::loadMap(string name) {
 	string line;
 	ifstream streamFile(name.c_str());
 	if (!streamFile.is_open()) {
-		cout << "Falla abrir el fichero de mapa" << endl; 
+		cout << "Falla abrir el fichero de mapa" << endl;
 		return;
 	}
 	else {
@@ -85,26 +85,26 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		break;
 	}
 	case 'Q': {
-		Tile* caja = new Tile("res/caja.png", x, y, game);
-		caja->y = caja->y - caja->height / 2;
-		cajas.push_back(caja);
-		space->addDynamicActor(caja);
+		Box* box = new Box(x, y, game);
+		box->y = box->y - box->height / 2;
+		boxes.push_back(box);
+		space->addMovableActor(box);
 		break;
 	}
-	//case 'P': {
-	//	Collectable* c = new Collectable(x, y, game);
-	//	c->y = c->y - c->height / 2;
-	//	collectables.push_back(c);
-	//	space->addDynamicActor(c);
-	//	break;
-	//}
-	//case 'Y': {
-	//	Jumpboost* j = new Jumpboost(x, y, game);
-	//	j->y = j->y - j->height / 2;
-	//	jumpboosts.push_back(j);
-	//	space->addDynamicActor(j);
-	//	break;
-	//}
+			//case 'P': {
+			//	Collectable* c = new Collectable(x, y, game);
+			//	c->y = c->y - c->height / 2;
+			//	collectables.push_back(c);
+			//	space->addDynamicActor(c);
+			//	break;
+			//}
+			//case 'Y': {
+			//	Jumpboost* j = new Jumpboost(x, y, game);
+			//	j->y = j->y - j->height / 2;
+			//	jumpboosts.push_back(j);
+			//	space->addDynamicActor(j);
+			//	break;
+			//}
 	case 'B': {
 		Tile* tile = new Tile("res/black.png", x, y, game);
 		tile->y = tile->y - tile->height / 2;
@@ -247,6 +247,8 @@ void GameLayer::update() {
 	buttonDelay--;
 	space->update();
 	background->update();
+	
+
 	player->update();
 
 	if (dialogBox != NULL)
@@ -288,7 +290,7 @@ void GameLayer::update() {
 			removeItem = item;
 			player->pick(item);
 			controlInteract = false;
-			
+
 		}
 	}
 	if (removeItem != NULL) {
@@ -297,20 +299,15 @@ void GameLayer::update() {
 
 	}
 	// Caja
-	for (auto const& caja : cajas) {
-		if (caja->isOverlap(player)
-			&& ((player->orientation == game->orientationLeft && caja->x < player->x)
-				|| (player->orientation == game->orientationRight && player->x < caja->x)
-				|| (player->orientation == game->orientationUp && caja->y < player->y)
-				|| (player->orientation == game->orientationDown && player->y < caja->y))) {
-			caja->vx = player->vx;
-			caja->vy = player->vy;
+	for (auto const& box : boxes) {
+		if (player->isTouching(box)) {
+			box->vx = player->vx;
+			box->vy = player->vy;
 		}
 		else {
-			caja->vx = 0;
-			caja->vy = 0;
+			box->vx = 0;
+			box->vy = 0;
 		}
-		caja->update();
 	}
 
 	// Colisiones , Enemy - Projectile
@@ -387,35 +384,35 @@ void GameLayer::draw() {
 	background->draw(scrollX, scrollY);
 
 
-		for (auto const& tile : tiles) {
-			tile->draw(scrollX, scrollY);
-		}
-		for (auto const& water : waters) {
-			water->draw(scrollX, scrollY);
-		}
-		for (auto const& plank : planks) {
-			plank->draw(scrollX, scrollY);
-		}
-		player->draw(scrollX, scrollY);
-		
-		for (auto const& cp : checkPoints) {
-			cp->draw(scrollX, scrollY);
-		}
+	for (auto const& tile : tiles) {
+		tile->draw(scrollX, scrollY);
+	}
+	for (auto const& water : waters) {
+		water->draw(scrollX, scrollY);
+	}
+	for (auto const& plank : planks) {
+		plank->draw(scrollX, scrollY);
+	}
+	player->draw(scrollX, scrollY);
 
-		for (auto const& item : items) {
-			item->draw(scrollX, scrollY);
-		}
+	for (auto const& cp : checkPoints) {
+		cp->draw(scrollX, scrollY);
+	}
+
+	for (auto const& item : items) {
+		item->draw(scrollX, scrollY);
+	}
 
 	for (auto const& enemy : enemies) {
 		enemy->draw(scrollX, scrollY);
 	}
-	
+
 
 	if (dialogBox != NULL)
 		dialogBox->draw(scrollX, scrollY);
 
-	for (auto const& caja : cajas) {
-		caja->draw();
+	for (auto const& box : boxes) {
+		box->draw(scrollX, scrollY);
 	}
 
 
@@ -514,7 +511,7 @@ void GameLayer::keysToControls(SDL_Event event) {
 		case SDLK_p:
 			controlThrow = false;
 			break;
-		}		
+		}
 	}
 }
 

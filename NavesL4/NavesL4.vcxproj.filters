@@ -97,7 +97,10 @@
       <Filter>Archivos de origen\actores</Filter>
     </ClCompile>
     <ClCompile Include="Box.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Archivos de origen\actores</Filter>
+    </ClCompile>
+    <ClCompile Include="Plank.cpp">
+      <Filter>Archivos de origen\actores</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -168,7 +171,10 @@
       <Filter>Archivos de encabezado\actores</Filter>
     </ClInclude>
     <ClInclude Include="Box.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\actores</Filter>
+    </ClInclude>
+    <ClInclude Include="Plank.h">
+      <Filter>Archivos de encabezado\actores</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

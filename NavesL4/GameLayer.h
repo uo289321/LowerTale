@@ -18,6 +18,7 @@ class Enemy;
 class BattleMenu;
 #include "Item.h"
 #include "Plank.h"
+#include "Box.h"
 #include <list>
 
 #include <fstream> // Leer ficheros
@@ -44,7 +45,6 @@ public:
 	void showInventory();
 	void switchToBattle(Enemy* enemy);
 	void switchToBattle();
-	bool plankCanMove(Plank* plank);
 	
 	Space* space;
 	float scrollX;
@@ -75,7 +75,7 @@ public:
 	list<Item*> items;
 	list<Plank*> planks;
 
-	list<Tile*> cajas;
+	list<Box*> boxes;
 
 	bool controlInteract = false;
 	int buttonDelay = BUTTON_DELAY;
