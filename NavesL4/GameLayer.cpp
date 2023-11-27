@@ -16,7 +16,7 @@ void GameLayer::init() {
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 	checkPoints.clear();
-
+	planks.clear();
 
 	// loadMap("res/" + to_string(game->currentLevel) + ".txt");
 	loadMap("res/test0.txt");
@@ -27,7 +27,7 @@ void GameLayer::loadMap(string name) {
 	string line;
 	ifstream streamFile(name.c_str());
 	if (!streamFile.is_open()) {
-		cout << "Falla abrir el fichero de mapa" << endl;
+		cout << "Falla abrir el fichero de mapa" << endl; 
 		return;
 	}
 	else {
@@ -95,6 +95,13 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		space->addStaticActor(tile);
 		break;
 	}
+	case 'W':
+		Tile * water = new Tile("res/water.png", x, y, game);
+		// Tile* water = new Tile("res/water.png", x, y, game);
+		water->y = water->y - water->height / 2;
+		waters.push_back(water);
+		space->addStaticActor(water);
+		break;
 	}
 }
 
@@ -106,6 +113,19 @@ void GameLayer::processControls() {
 	}
 
 
+
+	if (controlThrow) {
+		Plank* newPlank = player->throwPlank();
+		bool generated = false;
+		for (Tile* water : waters) {
+			if (newPlank != NULL && player->isTouching(water) && !generated) {
+				planks.push_back(newPlank);
+				generated = true;
+			}
+		}
+	}
+
+	// Eje X
 	if (player->state == game->stateMoving) {
 		processMovingState();
 	}
@@ -159,8 +179,20 @@ void GameLayer::processMovingState() {
 
 	if (controlInventory)
 		showInventory();
-}
 
+	if (player->state == game->stateBlocked) {
+		if ((controlInteract || controlCancel) && dialogBox->finished) {
+			dialogBox = NULL;
+		}
+	}
+
+	if (player->state == game->stateInventory) {
+		if (controlCancel) {
+			inventory = NULL;
+			player->state = game->stateMoving;
+		}
+	}
+}
 
 void GameLayer::update() {
 	
@@ -184,6 +216,25 @@ void GameLayer::update() {
 		}
 	}
 
+	for (Plank* plank : planks) {
+		if (plank->canMove(waters, planks)) {
+			plank->update();
+			cout << "plankSpeed" << plank->vy << endl;
+		}
+		else {
+			plank->vx = 0;
+			plank->vy = 0;
+		}
+	}
+	for (Plank* plank : planks) {
+		for (Tile* water : waters) {
+			if (plank->isOnTopOf(water) && plank->vx == 0 && plank->vy == 0) {
+				space->removeStaticActor(water);
+				space->addDynamicActor(water);
+			}
+		}
+	}
+
 	Item* removeItem = NULL;
 	for (auto const& item : items) {
 		if (player->isInRange(item) && controlInteract && player->state == game->stateMoving) {
@@ -200,6 +251,18 @@ void GameLayer::update() {
 
 	}
 
+	if (player->state == game->stateBlocked && dialogBox == NULL) {
+		player->state = game->stateMoving;
+		SDL_Delay(100);
+
+		for (Plank* plank : planks) {
+			for (Tile* water : waters) {
+				if (plank->isOnTopOf(water) && plank->vx == 0 && plank->vy == 0) {
+					space->addDynamicActor(water);
+					space->removeStaticActor(water);
+				}
+			}
+		}
 	list<Enemy*> delEnemies;
 	for (auto const& en : enemies) {
 		if (en->isDead())
@@ -212,6 +275,22 @@ void GameLayer::update() {
 	}
 	delEnemies.clear();
 
+
+		Item* removeItem = NULL;
+		for (auto const& item : items) {
+			if (player->isInRange(item) && controlInteract && player->state == game->stateMoving) {
+				showDialog("Has recogido el siguiente objeto: " + item->name);
+				removeItem = item;
+				player->pick(item);
+
+			}
+		}
+
+		if (removeItem != NULL) {
+			items.remove(removeItem);
+			space->removeStaticActor(removeItem);
+		}
+	}
 
 	for (auto const& enemy : enemies) {
 		if (player->isInRange(enemy) && controlInteract && player->state == game->stateMoving) {
@@ -253,6 +332,12 @@ void GameLayer::draw() {
 
 		for (auto const& tile : tiles) {
 			tile->draw(scrollX, scrollY);
+		}
+		for (auto const& water : waters) {
+			water->draw(scrollX, scrollY);
+		}
+		for (auto const& plank : planks) {
+			plank->draw(scrollX, scrollY);
 		}
 		player->draw(scrollX, scrollY);
 		
@@ -324,6 +409,8 @@ void GameLayer::keysToControls(SDL_Event event) {
 				buttonDelay = BUTTON_DELAY;
 			}
 			break;
+		case SDLK_p:
+			controlThrow = true;
 		}
 
 
@@ -332,41 +419,41 @@ void GameLayer::keysToControls(SDL_Event event) {
 	if (event.type == SDL_KEYUP) {
 		int code = event.key.keysym.sym;
 		// Levantada
-			switch (code) {
-			case SDLK_d: // derecha
-				if (controlMoveX == 1) {
-					controlMoveX = 0;
-				}
-				break;
-			case SDLK_a: // izquierda
-				if (controlMoveX == -1) {
-					controlMoveX = 0;
-				}
-				break;
-			case SDLK_w: // arriba
-				if (controlMoveY == -1) {
-					controlMoveY = 0;
-				}
-				break;
-			case SDLK_s: // abajo
-				if (controlMoveY == 1) {
-					controlMoveY = 0;
-				}
-				break;
-			case SDLK_z:
-				controlInteract = false;
-				break;
-			case SDLK_x:
-				controlCancel = false;
-				break;
-			case SDLK_c:
-				controlInventory = false;
-				break;
+		switch (code) {
+		case SDLK_d: // derecha
+			if (controlMoveX == 1) {
+				controlMoveX = 0;
 			}
-			
-
-		}
-
+			break;
+		case SDLK_a: // izquierda
+			if (controlMoveX == -1) {
+				controlMoveX = 0;
+			}
+			break;
+		case SDLK_w: // arriba
+			if (controlMoveY == -1) {
+				controlMoveY = 0;
+			}
+			break;
+		case SDLK_s: // abajo
+			if (controlMoveY == 1) {
+				controlMoveY = 0;
+			}
+			break;
+		case SDLK_z:
+			controlInteract = false;
+			break;
+		case SDLK_x:
+			controlCancel = false;
+			break;
+		case SDLK_c:
+			controlInventory = false;
+			break;
+		case SDLK_p:
+			controlThrow = false;
+			break;
+		}		
+	}
 }
 
 void GameLayer::calculateScroll() {

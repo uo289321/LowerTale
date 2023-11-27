@@ -177,6 +177,7 @@
     <ClCompile Include="Shield.cpp" />
     <ClCompile Include="Switch.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Plank.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Space.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="Layer.h" />
     <ClInclude Include="Shield.h" />
     <ClInclude Include="Switch.h" />
+    <ClInclude Include="Plank.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Space.h" />

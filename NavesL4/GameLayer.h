@@ -17,6 +17,7 @@ class Enemy;
 #include "BattleMenu.h"
 class BattleMenu;
 #include "Item.h"
+#include "Plank.h"
 #include <list>
 
 #include <fstream> // Leer ficheros
@@ -65,9 +66,11 @@ public:
 
 
 	list<Tile*> tiles;
+	list<Tile*> waters;
 	list<Enemy*> enemies;
 	list<CheckPoint*> checkPoints;
 	list<Item*> items;
+	list<Plank*> planks;
 
 
 	bool controlInteract = false;
@@ -77,6 +80,7 @@ public:
 	Enemy* controlBattle = NULL;
 	int controlMoveY = 0;
 	int controlMoveX = 0;
+	bool controlThrow = false;
 
 	int spawnX = -1;
 	int spawnY = -1;
