@@ -212,6 +212,8 @@ void GameLayer::update() {
 	if (removeItem != NULL) {
 		items.remove(removeItem);
 		space->removeStaticActor(removeItem);
+
+	}
 	// Caja
 	for (auto const& caja : cajas) {
 		if (caja->isOverlap(player)
@@ -226,6 +228,7 @@ void GameLayer::update() {
 			caja->vx = 0;
 			caja->vy = 0;
 		}
+		caja->update();
 	}
 
 	// Colisiones , Enemy - Projectile
@@ -244,8 +247,6 @@ void GameLayer::update() {
 			}
 		}
 	}*/
-
-	}
 
 	if (player->state == game->stateBlocked && dialogBox == NULL) {
 		player->state = game->stateMoving;
@@ -288,6 +289,10 @@ void GameLayer::draw() {
 			item->draw(scrollX, scrollY);
 		}
 
+		for (auto const& caja : cajas) {
+			caja->draw();
+		}
+
 		if (dialogBox != NULL)
 			dialogBox->draw(scrollX, scrollY);
 
@@ -305,21 +310,6 @@ void GameLayer::switchToBattle() {
 	background = backgroundBattle;
 }
 
-	for (auto const& caja : cajas) {
-		caja->draw();
-	}
-	for (auto const& tile : tiles) {
-		tile->draw();
-	}
-	for (auto const& cp : checkPoints) {
-		cp->draw();
-	}
-
-
-	backgroundPoints->draw();
-	textPoints->draw();
-	SDL_RenderPresent(game->renderer); // Renderiza
-}
 // Si el jugador está en movimiento no permitimos acciones
 void GameLayer::keysToControls(SDL_Event event) {
 	if (event.type == SDL_KEYDOWN) {
