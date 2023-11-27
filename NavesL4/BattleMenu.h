@@ -3,22 +3,36 @@
 #include <list>
 #include "Text.h"
 #include "Item.h"
+#include "BattleLayer.h"
+#include "Enemy.h"
+#include "Animation.h"
+class Enemy;
+class BattleLayer;
+
+#define BLOCK_CD 5
+#define DEFENSE_DURATION 600 // 20 segundos (habiendo 30 iteraciones en un segundo)
+
 class BattleMenu
 {
 public:
-	BattleMenu(Game* game);
+	BattleMenu(Enemy* enemy, BattleLayer* layer, Game* game);
 	void selectNext();
 	void selectPrevious();
 	void select();
 	void draw();
-	void init();
-	void update(int health);
-	void hideOptions();
-	void showOptions();
-	void loadInventory(list<Item*> inventory);
+	void blockRight();
+	void blockLeft();
+	void blockUp();
+	void blockDown();
 
+	void attack();
+
+	Animation* slash;
+	int blockCd;
+	Enemy* enemy;
 	int selected;
 	list<Text*> options;
-	Text* health;
+	BattleLayer* layer;
+	Game* game;
 };
 

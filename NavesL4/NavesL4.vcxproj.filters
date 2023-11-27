@@ -90,7 +90,10 @@
     <ClCompile Include="Switch.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="Plank.cpp">
+    <ClCompile Include="BattleLayer.cpp">
+      <Filter>Archivos de origen\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="Shield.cpp">
       <Filter>Archivos de origen\actores</Filter>
     </ClCompile>
   </ItemGroup>
@@ -155,8 +158,11 @@
     <ClInclude Include="Switch.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="Plank.h">
-      <Filter>Archivos de encabezado</Filter>
+    <ClInclude Include="BattleLayer.h">
+      <Filter>Archivos de encabezado\layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Shield.h">
+      <Filter>Archivos de encabezado\actores</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

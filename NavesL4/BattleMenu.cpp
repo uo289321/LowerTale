@@ -1,12 +1,18 @@
 #include "BattleMenu.h"
 
-BattleMenu::BattleMenu(Game* game)
+BattleMenu::BattleMenu(Enemy* enemy, BattleLayer* layer, Game* game)
 {	
 	Text* t = new Text("Atacar", WIDTH / 3, HEIGHT * 0.8, game);
 	t->highlight();
 	this->options.push_back(t);
-	this->options.push_back(new Text("Usar objeto", WIDTH * 2 / 3, HEIGHT * 0.8, game));	
-	health = new Text("", WIDTH * 0.1 ,HEIGHT * 0.9, game);// ESCRIBIR VIDA DEL JUGADOR
+	this->options.push_back(new Text("Usar objeto", WIDTH * 2 / 3, HEIGHT * 0.8, game));
+	this->selected = 0;
+	this->layer = layer;
+	this->enemy = enemy;
+	this->game = game;
+	this->blockCd = BLOCK_CD;
+	
+	SDL_Delay(100); // para no seleccionar sin querer
 }
 
 
@@ -37,32 +43,61 @@ void BattleMenu::selectPrevious() {
 }
 
 void BattleMenu::select() {
-	
-
-
-}
-
-void BattleMenu::hideOptions() {
-	for (auto const& text : options) {
-		text->hide();
+	auto iter = options.begin();
+	std::advance(iter, selected);
+	Text* optionSelected = *iter;
+	string content = optionSelected->content;
+	if (content == "Atacar") {
+		attack();
 	}
+
+	if (content == "Usar objeto") {
+		layer->showInventory();
+	}
+
+
 }
 
-void BattleMenu::showOptions() {
-	for (auto const& text : options) {
-		text->show();
-	}
+void BattleMenu::attack() {
+	// atacar
+	// pasar a defensa
+	layer->player->state = game->stateDefending;
 }
+
 
 void BattleMenu::draw() {
-	for (auto const& text : options) {
-		text->draw();
+	if (layer->player->state == game->stateBattle) {
+		for (auto const& text : options) {
+			text->draw();
+		}
 	}
-	health->draw();
 }
 
 
-void BattleMenu::update(int health) {
+void BattleMenu::blockDown() {
+	if (blockCd <= 0) {
 
-	this->health->content = to_string(health) + " / 20";
+		blockCd = BLOCK_CD;
+	}
+}
+
+void BattleMenu::blockUp() {
+	if (blockCd <= 0) {
+
+		blockCd = BLOCK_CD;
+	}
+}
+
+void BattleMenu::blockRight() {
+	if (blockCd <= 0) {
+
+		blockCd = BLOCK_CD;
+	}
+}
+
+void BattleMenu::blockLeft() {
+	if (blockCd <= 0) {
+
+		blockCd = BLOCK_CD;
+	}
 }

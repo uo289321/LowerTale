@@ -1,5 +1,7 @@
 #pragma once
 #include "Actor.h"
+#include "Tile.h"
+
 class CheckPoint : public Actor
 {
 public:

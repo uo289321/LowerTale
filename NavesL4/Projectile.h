@@ -6,7 +6,7 @@
 class Projectile : public Actor
 {
 public:
-	Projectile(float x, float y, Game* game);
+	Projectile(string filename, int origin, float x, float y, int width, int height, Game* game);
 	void update();
 };
 

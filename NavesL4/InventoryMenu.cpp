@@ -1,7 +1,7 @@
 #include "InventoryMenu.h"
 
 InventoryMenu::InventoryMenu(Player* p, Game* game)
-	: Actor("res/inventory.png", WIDTH * 0.85, HEIGHT * 0.5, 120, 300, game)
+	: Actor("res/inventory.png", WIDTH * 0.85, HEIGHT * 0.5, INVENTORY_WIDTH, INVENTORY_HEIGHT, game)
 {
 	this->player = p;
 	this->game = game;
@@ -28,11 +28,14 @@ void InventoryMenu::loadOptions() {
 	}
 }
 
-void InventoryMenu::select() {
+bool InventoryMenu::select() {
+	if (player->inventory.size() == 0)
+		return false;
 	auto it = player->inventory.begin();
 	std::advance(it, selected);
 	Item* item = *it;
 	player->heal(item->healing);
+	return true;
 }
 
 void InventoryMenu::moveDown()

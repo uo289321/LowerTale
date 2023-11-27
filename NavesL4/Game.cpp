@@ -14,6 +14,7 @@ Game::Game() {
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
 	gameLayer = new GameLayer(this);
+	activeLayer = gameLayer;
 
 	// fuentes
 	TTF_Init();
@@ -32,11 +33,11 @@ void Game::loop() {
 		initTick = SDL_GetTicks();
 
 		// Controles
-		gameLayer->processControls();
+		activeLayer->processControls();
 		// Actualizar elementos
-		gameLayer->update();
+		activeLayer->update();
 		// Dibujar
-		gameLayer->draw();
+		activeLayer->draw();
 
 
 		endTick = SDL_GetTicks();
