@@ -84,13 +84,13 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		space->addStaticActor(item);
 		break;
 	}
-	//case 'P': {
-	//	Collectable* c = new Collectable(x, y, game);
-	//	c->y = c->y - c->height / 2;
-	//	collectables.push_back(c);
-	//	space->addDynamicActor(c);
-	//	break;
-	//}
+	case 'P': {
+		PressurePlate* p = new PressurePlate(x, y, game);
+		p->y = p->y - p->height / 2;
+		pressurePlates.push_back(p);
+		space->addDynamicActor(p);
+		break;
+	}
 	//case 'Y': {
 	//	Jumpboost* j = new Jumpboost(x, y, game);
 	//	j->y = j->y - j->height / 2;
@@ -274,6 +274,10 @@ void GameLayer::update() {
 		}
 	}
 
+	for (PressurePlate* pp : pressurePlates) {
+		
+	}
+
 	Item* removeItem = NULL;
 	for (auto const& item : items) {
 		if (player->isInRange(item) && controlInteract && player->state == game->stateMoving) {
@@ -368,6 +372,10 @@ void GameLayer::draw() {
 
 	for (auto const& enemy : enemies) {
 		enemy->draw(scrollX, scrollY);
+	}
+
+	for (auto const& pp : pressurePlates) {
+		pp->draw(scrollX, scrollY);
 	}
 	
 

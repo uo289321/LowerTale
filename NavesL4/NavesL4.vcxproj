@@ -174,6 +174,7 @@
     <ClCompile Include="InventoryMenu.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Layer.cpp" />
+    <ClCompile Include="PressurePlate.cpp" />
     <ClCompile Include="Shield.cpp" />
     <ClCompile Include="Switch.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="InventoryMenu.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Layer.h" />
+    <ClInclude Include="PressurePlate.h" />
     <ClInclude Include="Shield.h" />
     <ClInclude Include="Switch.h" />
     <ClInclude Include="Plank.h" />
