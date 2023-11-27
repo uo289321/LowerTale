@@ -265,6 +265,14 @@ void GameLayer::update() {
 			plank->vy = 0;
 		}
 	}
+	for (Plank* plank : planks) {
+		for (Tile* water : waters) {
+			if (plank->isOnTopOf(water) && plank->vx == 0 && plank->vy == 0) {
+				space->removeStaticActor(water);
+				space->addDynamicActor(water);
+			}
+		}
+	}
 
 	Item* removeItem = NULL;
 	for (auto const& item : items) {
