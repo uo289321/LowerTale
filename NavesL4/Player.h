@@ -8,6 +8,7 @@
 #include "Item.h"
 #include <list>
 class Item;
+#include "Plank.h"
 
 #define MAX_HEALTH 20
 
@@ -20,6 +21,10 @@ public:
 	void moveY(float axis);
 	void draw(float scrollX = 0, float scrollY = 0) override; // Va a sobrescribir
 	bool isInRange(Actor* actor);
+	bool isTouching(Actor* actor);
+	Plank* throwPlank();
+	int throwCadence = 5;
+	int throwTime = 0;
 	void heal(int healing);
 	void pick(Item* item);
 	int state;

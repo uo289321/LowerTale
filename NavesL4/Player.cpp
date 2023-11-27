@@ -30,6 +30,10 @@ Player::Player(float x, float y, Game* game)
 
 void Player::update() {
 
+	if (throwTime > 0) {
+		throwTime--;
+	}
+
 	bool endAnimation = animation->update();
 	
 
@@ -105,6 +109,19 @@ bool Player::isInRange(Actor* actor) {
 	}
 }
 
+bool Player::isTouching(Actor* actor) {
+	if ((actor->containsPoint(x + (TILE_WIDTH/2+1), y+1) && orientation == game->orientationRight)
+		|| (actor->containsPoint(x - (TILE_WIDTH/2+1), y+1) && orientation == game->orientationLeft)
+		|| (actor->containsPoint(x+1, y + (TILE_HEIGHT+1)/2) && orientation == game->orientationDown)
+		|| (actor->containsPoint(x+1, y - (TILE_HEIGHT+1)/2) && orientation == game->orientationUp)) {
+		return true;
+
+	}
+	else {
+		return false;
+	}
+}
+
 void Player::moveX(float axis) {
 	if (vy == 0) {
 		if (vx == 0) {
@@ -163,9 +180,38 @@ void Player::moveY(float axis) {
 
 void Player::draw(float scrollX, float scrollY) {
 
-
 	animation->draw(x - scrollX, y - scrollY);
 
+}
+
+Plank* Player::throwPlank() {
+	if (throwTime == 0) {
+		throwTime = throwCadence;
+		// Plank* plank = new Plank(x, y, game);
+		if (orientation == game->orientationRight) {
+			Plank* plank = new Plank(x + TILE_WIDTH, y, game, game->orientationRight);
+			plank->vx = 4;
+			plank->vy = 0;
+		}
+		else if (orientation == game->orientationLeft) {
+			Plank* plank = new Plank(x - TILE_WIDTH, y, game, game->orientationLeft);
+			plank->vx = -4; // Invertir
+			plank->vy = 0;
+		}
+		else if (orientation == game->orientationDown) {
+			Plank* plank = new Plank(x, y + TILE_HEIGHT, game, game->orientationDown);
+			plank->vx = 0; 
+			plank->vy = 4;
+		}
+		else if (orientation == game->orientationUp) {
+			Plank* plank = new Plank(x, y - TILE_HEIGHT, game, game->orientationUp);
+			plank->vx = 0;
+			plank->vy = -4; // Invertir
+		}
+	}
+	else {
+		return NULL;
+	}
 }
 
 

@@ -4,12 +4,15 @@
 #include "Text.h"
 #include "Item.h"
 
+#define INVENTORY_WIDTH 120
+#define INVENTORY_HEIGHT 300
+
 class InventoryMenu :
     public Actor
 {
 public:
     InventoryMenu(Player* player, Game* game);
-    void select();
+    bool select();
     void moveUp();
     void moveDown();
     void loadOptions();

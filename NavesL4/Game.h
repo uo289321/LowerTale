@@ -32,6 +32,8 @@ public:
 	SDL_Renderer* renderer; // renderizador
 	bool loopActive; // Juego activo
 	Layer* gameLayer;
+	Layer* battleLayer;
+	Layer* activeLayer;
 
 	int const stateMoving = 1;
 	int const stateJumping = 2;
@@ -40,6 +42,8 @@ public:
 	int const stateBlocked = 5;
 	int const stateBattle = 6;
 	int const stateInventory = 7;
+	int const stateDefending = 8;
+
 	int const orientationUp = 1;
 	int const orientationRight = 2;
 	int const orientationDown = 3;

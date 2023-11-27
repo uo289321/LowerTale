@@ -164,6 +164,7 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Background.cpp" />
+    <ClCompile Include="BattleLayer.cpp" />
     <ClCompile Include="BattleMenu.cpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="CheckPoint.cpp" />
@@ -174,8 +175,10 @@
     <ClCompile Include="InventoryMenu.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Layer.cpp" />
+    <ClCompile Include="Shield.cpp" />
     <ClCompile Include="Switch.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Plank.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Space.cpp" />
@@ -188,6 +191,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Background.h" />
+    <ClInclude Include="BattleLayer.h" />
     <ClInclude Include="BattleMenu.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="CheckPoint.h" />
@@ -198,7 +202,9 @@
     <ClInclude Include="InventoryMenu.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Layer.h" />
+    <ClInclude Include="Shield.h" />
     <ClInclude Include="Switch.h" />
+    <ClInclude Include="Plank.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Space.h" />
