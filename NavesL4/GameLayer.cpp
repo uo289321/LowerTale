@@ -140,6 +140,11 @@ void GameLayer::processControls() {
 	}
 
 	if (player->state == game->stateInventory) {
+		if (controlMoveY < 0)
+			inventory->moveDown();
+		else if (controlMoveY > 0)
+			inventory->moveUp();
+
 		if (controlCancel) {
 			inventory = NULL;
 			player->state = game->stateMoving;

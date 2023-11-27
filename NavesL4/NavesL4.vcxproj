@@ -167,6 +167,7 @@
     <ClCompile Include="BattleLayer.cpp" />
     <ClCompile Include="BattleMenu.cpp" />
     <ClCompile Include="CheckPoint.cpp" />
+    <ClCompile Include="DeadLayer.cpp" />
     <ClCompile Include="DialogBox.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="BattleLayer.h" />
     <ClInclude Include="BattleMenu.h" />
     <ClInclude Include="CheckPoint.h" />
+    <ClInclude Include="DeadLayer.h" />
     <ClInclude Include="DialogBox.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
