@@ -1,10 +1,13 @@
 #include "Enemy.h"
 
-Enemy::Enemy(string filename, int fireRate, float x, float y, Game* game)
+Enemy::Enemy(string filename, int hp, int damage, int fireRate, float x, float y, Game* game)
 	: Actor("res/" + filename + ".png", x, y, TILE_WIDTH, TILE_HEIGHT, game) {
 	this->fireRate = fireRate;
 	this->animation = new Animation("res/" + filename + "battle.png", 21, 19, 42, 19, 5, 2, true, game);
 	this->counter = 0;
+	this->damage = damage;
+	this->maxHp = hp;
+	this->hp = hp;
 }
 
 Projectile* Enemy::update() {
@@ -47,5 +50,17 @@ Projectile* Enemy::generateProjectile() {
 
 void Enemy::drawAnim() {
 	animation->draw(WIDTH / 2, HEIGHT / 2);
+}
+
+void Enemy::restore() {
+	this->hp = this->maxHp;
+}
+
+void Enemy::receiveDamage(int dmg) {
+	this->hp -= dmg;
+}
+
+bool Enemy::isDead() {
+	return this->hp <= 0;
 }
 

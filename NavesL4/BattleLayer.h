@@ -25,6 +25,7 @@ public:
 	void draw() override;
 	void processControls() override;
 	void keysToControls(SDL_Event event);
+	void attack();
 	void showInventory();
 	void switchToAttack();
 	void switchToDefense();

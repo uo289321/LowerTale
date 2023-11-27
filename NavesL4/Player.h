@@ -21,6 +21,7 @@ public:
 	void draw(float scrollX = 0, float scrollY = 0) override; // Va a sobrescribir
 	bool isInRange(Actor* actor);
 	void heal(int healing);
+	bool hurt(int dmg);
 	void pick(Item* item);
 	int state;
 	int orientation;

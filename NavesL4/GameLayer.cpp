@@ -12,9 +12,7 @@ void GameLayer::init() {
 	// audioBackground->play();
 
 	player = new Player(50, 50, game);
-	backgroundMoving = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
-	// backgroundBattle = new Background("res/backgroundbattle.png", WIDTH * 0.5, HEIGHT * 0.5, game);
-	background = backgroundMoving;
+	background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 	checkPoints.clear();
@@ -56,7 +54,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 {
 	switch (character) {
 	case 'E': {
-		Enemy* enemy = new Enemy("enemy1", 15, x, y, game);
+		Enemy* enemy = new Enemy("enemy1", 20, 4, 15, x, y, game);
 		// modificación para empezar a contar desde el suelo.
 		enemy->y = enemy->y - enemy->height / 2;
 		enemies.push_back(enemy);
@@ -84,20 +82,6 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		space->addStaticActor(item);
 		break;
 	}
-	//case 'P': {
-	//	Collectable* c = new Collectable(x, y, game);
-	//	c->y = c->y - c->height / 2;
-	//	collectables.push_back(c);
-	//	space->addDynamicActor(c);
-	//	break;
-	//}
-	//case 'Y': {
-	//	Jumpboost* j = new Jumpboost(x, y, game);
-	//	j->y = j->y - j->height / 2;
-	//	jumpboosts.push_back(j);
-	//	space->addDynamicActor(j);
-	//	break;
-	//}
 	case 'B': {
 		Tile* tile = new Tile("res/black.png", x, y, game);
 		tile->y = tile->y - tile->height / 2;
@@ -127,31 +111,6 @@ void GameLayer::processControls() {
 	if (player->state == game->stateMoving) {
 		processMovingState();
 	}
-
-	/*if (player->state == game->stateBattle) {
-		if (controlMoveX > 0)
-			battleMenu->selectNext();
-		else if (controlMoveX < 0)
-			battleMenu->selectPrevious();
-		if (controlInteract)
-			battleMenu->select();
-	}*/
-
-	/*if (player->state == game->stateDefending) {
-		if (controlMoveX > 0) {
-			battleMenu->blockRight();
-		}
-		else if (controlMoveX < 0) {
-			battleMenu->blockLeft();
-		}
-		else if (controlMoveY > 0) {
-			battleMenu->blockDown();
-		}
-		else if (controlMoveY < 0) {
-			battleMenu->blockUp();
-		}
-
-	}*/
 
 	if (player->state == game->stateBlocked) {
 		if ((controlInteract || controlCancel) && dialogBox->finished) {

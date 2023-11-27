@@ -57,8 +57,6 @@ public:
 	int points;
 	Player* player;
 	Background* background;
-	Background* backgroundMoving;
-	Background* backgroundBattle;
 	DialogBox* dialogBox;
 	// BattleMenu* battleMenu;
 	InventoryMenu* inventory;

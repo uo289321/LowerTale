@@ -48,7 +48,7 @@ void BattleMenu::select() {
 	Text* optionSelected = *iter;
 	string content = optionSelected->content;
 	if (content == "Atacar") {
-		attack();
+		layer->attack();
 	}
 
 	if (content == "Usar objeto") {
@@ -58,11 +58,6 @@ void BattleMenu::select() {
 
 }
 
-void BattleMenu::attack() {
-	// atacar
-	// pasar a defensa
-	layer->player->state = game->stateDefending;
-}
 
 
 void BattleMenu::draw() {

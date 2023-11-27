@@ -88,6 +88,11 @@ void Player::heal(int healing) {
 	this->health = this->health + healing > MAX_HEALTH ? MAX_HEALTH : this->health + healing;
 }
 
+bool Player::hurt(int dmg) {
+	this->health -= dmg;
+	return health <= 0;
+}
+
 void Player::pick(Item* item) {
 	this->inventory.push_back(item);
 }

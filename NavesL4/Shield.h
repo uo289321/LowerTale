@@ -10,9 +10,9 @@ public:
 	void moveX(int axis);
 	void moveY(int axis);
 
-	int leftX = WIDTH * 0.48;
-	int rightX = WIDTH * 0.52;
-	int topY = HEIGHT * 0.48;
-	int bottomY = HEIGHT * 0.52;
+	int leftX = WIDTH / 2 - WIDTH * 0.05;
+	int rightX = WIDTH / 2 + WIDTH * 0.05;
+	int topY = HEIGHT / 2 - WIDTH * 0.05;
+	int bottomY = HEIGHT / 2 + WIDTH * 0.05;
 };
 

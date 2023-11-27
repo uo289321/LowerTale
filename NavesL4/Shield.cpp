@@ -1,7 +1,7 @@
 #include "Shield.h"
 
 Shield::Shield(Game* game)
-	: Actor("res/shieldX.png", 0, 0, 0, 0, game) {}
+	: Actor("res/shieldX.png", rightX, HEIGHT * 0.5 , SHORT_SIDE, LONG_SIDE, game) {}
 
 void Shield::moveX(int axis) {
 	
@@ -24,9 +24,9 @@ void Shield::moveY(int axis) {
 	this->x = WIDTH * 0.5;
 
 	if (axis == -1) {
-		this->y = bottomY;
+		this->y = topY;
 	}
 	else if (axis == 1) {
-		this->y = topY;
+		this->y = bottomY;
 	}
 }

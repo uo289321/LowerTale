@@ -25,6 +25,9 @@ void BattleLayer::processControls()
 		if (controlInteract) {
 			battleMenu->select();
 			controlInteract = false;
+			if (enemy->isDead()) {
+				game->activeLayer = game->gameLayer;
+			}
 		}
 	}
 
@@ -146,6 +149,8 @@ void BattleLayer::keysToControls(SDL_Event event)
 }
 
 void BattleLayer::update() {
+
+	bool dead = false;
 	buttonDelay--;
 
 	if(player->state == game->stateBattle || player->state == game->stateInventory)
@@ -168,15 +173,8 @@ void BattleLayer::update() {
 
 
 			list<Projectile*> deleteProjectiles;
-
 			for (auto const& projectile : projectiles) {
-				
-				if (playerModel->isOverlap(projectile)) {
-
-					// restar vida al jugador
-
-
-
+				if (shield->isOverlap(projectile)) {
 					bool pInList = std::find(deleteProjectiles.begin(),
 						deleteProjectiles.end(),
 						projectile) != deleteProjectiles.end();
@@ -185,6 +183,23 @@ void BattleLayer::update() {
 						deleteProjectiles.push_back(projectile);
 					}
 				}
+				else if (playerModel->isOverlap(projectile)) 
+				{
+
+					dead = player->hurt(enemy->damage);// restar vida al jugador
+
+					bool pInList = std::find(deleteProjectiles.begin(),
+						deleteProjectiles.end(),
+						projectile) != deleteProjectiles.end();
+
+					if (!pInList) {
+						deleteProjectiles.push_back(projectile);
+					}
+
+
+				}
+
+				
 			}
 
 			for (auto const& delProjectile : deleteProjectiles) {
@@ -198,18 +213,31 @@ void BattleLayer::update() {
 		
 		
 	}
+
+	if (dead) {
+		health->content = "0 / 20";
+		enemy->restore();
+	}
+	else {
+		health->content = to_string(player->health) + " / 20";
+	}
 	
 }
 
 void BattleLayer::switchToDefense() {
 	defenseTimer = DEFENSE_TIMER;
 	player->state = game->stateDefending;
-	shield->moveX(1);
 }
 
 void BattleLayer::switchToAttack() {
 	player->state = game->stateBattle;
 	projectiles.clear();
+}
+
+void BattleLayer::attack() {
+	int damageDone = 10;
+	enemy->receiveDamage(damageDone);
+	switchToDefense();
 }
 
 void BattleLayer::changeEnemy(Enemy* enemy) {

@@ -25,8 +25,6 @@ public:
 	void blockUp();
 	void blockDown();
 
-	void attack();
-
 	Animation* slash;
 	int blockCd;
 	Enemy* enemy;
