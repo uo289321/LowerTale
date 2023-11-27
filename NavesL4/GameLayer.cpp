@@ -43,8 +43,6 @@ void GameLayer::loadMap(string name) {
 				float y = TILE_HEIGHT + i * TILE_HEIGHT; // y suelo
 				loadMapObject(character, x, y);
 			}
-
-			cout << character << endl;
 		}
 	}
 	streamFile.close();
@@ -117,6 +115,7 @@ void GameLayer::processControls() {
 			dialogBox = NULL;
 			controlInteract = false;
 			controlCancel = false;
+			player->state = game->stateMoving;
 		}
 	}
 
@@ -164,6 +163,9 @@ void GameLayer::processMovingState() {
 
 
 void GameLayer::update() {
+	
+
+
 	buttonDelay--;
 	space->update();
 	background->update();
@@ -175,7 +177,7 @@ void GameLayer::update() {
 	for (auto const& cp : checkPoints) {
 		if (player->isInRange(cp) && controlInteract && player->state == game->stateMoving) {
 			showDialog("Tus fuerzas se han renovado.");
-
+			player->heal(MAX_HEALTH);
 			spawnY = player->y;
 			spawnX = player->x;
 			controlInteract = false;
@@ -198,10 +200,18 @@ void GameLayer::update() {
 
 	}
 
-	if (player->state == game->stateBlocked && dialogBox == NULL) {
-		player->state = game->stateMoving;
-		SDL_Delay(100);
+	list<Enemy*> delEnemies;
+	for (auto const& en : enemies) {
+		if (en->isDead())
+			delEnemies.push_back(en);
 	}
+
+	for (Enemy* en : delEnemies) {
+		enemies.remove(en);
+		space->removeStaticActor(en);
+	}
+	delEnemies.clear();
+
 
 	for (auto const& enemy : enemies) {
 		if (player->isInRange(enemy) && controlInteract && player->state == game->stateMoving) {
@@ -213,17 +223,27 @@ void GameLayer::update() {
 }
 
 void GameLayer::showDialog(string content) {
-	this->lastState = player->state;
-	player->state = game->stateBlocked;
+	// this->lastState = player->state;
+	switchToBlock();
 	dialogBox = new DialogBox(content, game);
 }
 
+void GameLayer::switchToBlock() {
+	player->state = game->stateBlocked;
+	player->vx = 0;
+	player->vy = 0;
+	
+	player->moveX(0);
+	player->moveY(0);
+}
+
 void GameLayer::showInventory() {
-	this->lastState = player->state;
+	// this->lastState = player->state;
 	player->state = game->stateInventory;
 	inventory = new InventoryMenu(player, game);
 	controlInventory = false;
 }
+
 
 void GameLayer::draw() {
 	calculateScroll();

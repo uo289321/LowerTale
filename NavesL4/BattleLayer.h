@@ -9,9 +9,11 @@ class BattleMenu;
 #include "Projectile.h"
 #include <list>
 #include "Shield.h"
+#include "DialogBox.h"
 
 #define BUTTON_DELAY 10
-#define DEFENSE_TIMER 600
+// #define DEFENSE_TIMER 600
+#define DEFENSE_TIMER 30
 #define PLAYERMODEL_WIDTH 24
 #define PLAYERMODEL_HEIGHT 24
 
@@ -29,7 +31,10 @@ public:
 	void showInventory();
 	void switchToAttack();
 	void switchToDefense();
+	void finishCombat();
+	void showDialog(string content);
 
+	DialogBox* dialogBox;
 	Actor* playerModel;
 	InventoryMenu* inventory;
 	BattleMenu* battleMenu;
@@ -43,6 +48,7 @@ public:
 	list<Projectile*> projectiles;
 
 	Text* health;
+	Text* enemyHealth;
 	int controlMoveY = 0;
 	int controlMoveX = 0;
 	bool controlInteract;

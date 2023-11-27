@@ -29,6 +29,7 @@ public:
 	int blockCd;
 	Enemy* enemy;
 	int selected;
+	Actor* square;
 	list<Text*> options;
 	BattleLayer* layer;
 	Game* game;

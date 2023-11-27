@@ -8,7 +8,9 @@ BattleLayer::BattleLayer(Enemy* enemy, Player* player, Game* game)
 	this->enemy = enemy;
 	this->shield = new Shield(game);
 	init();
-	health = new Text("vida del jugador", WIDTH * 0.15, HEIGHT * 0.92, game);// ESCRIBIR VIDA DEL JUGADOR
+	health = new Text("vida del jugador", WIDTH * 0.15, HEIGHT * 0.92, game);
+	enemyHealth = new Text(to_string(enemy->hp), WIDTH * 0.1, HEIGHT * 0.1, game);
+
 }
 
 void BattleLayer::processControls()
@@ -17,6 +19,16 @@ void BattleLayer::processControls()
 	while (SDL_PollEvent(&event)) {
 		keysToControls(event);
 	}
+
+	if (player->state == game->stateBlocked && enemy->isDead())
+		if (controlInteract || controlCancel) {
+			finishCombat();
+			controlInteract = false;
+			controlCancel = false;
+		}
+
+
+
 	if (player->state == game->stateBattle) {
 		if (controlMoveX > 0)
 			battleMenu->selectNext();
@@ -26,7 +38,11 @@ void BattleLayer::processControls()
 			battleMenu->select();
 			controlInteract = false;
 			if (enemy->isDead()) {
-				game->activeLayer = game->gameLayer;
+				this->enemyHealth->content = "0";
+				showDialog("El enemigo ha sido derrotado.");
+			}
+			else {
+				this->enemyHealth->content = to_string(enemy->hp);
 			}
 		}
 	}
@@ -59,11 +75,22 @@ void BattleLayer::processControls()
 		}
 		else if (controlInteract) {
 			inventory->select();
-			player->state = game->stateDefending;
+			inventory = NULL;
+			player->state = game->stateBattle;
 		}
 	}
 
 	
+}
+
+void BattleLayer::showDialog(string content) {
+	player->state = game->stateBlocked;
+	dialogBox = new DialogBox(content, game);
+}
+
+void BattleLayer::finishCombat() {
+	game->activeLayer = game->gameLayer;
+	player->state = game->stateMoving;
 }
 
 void BattleLayer::showInventory() {
@@ -153,6 +180,9 @@ void BattleLayer::update() {
 	bool dead = false;
 	buttonDelay--;
 
+	if (dialogBox != NULL)
+		dialogBox->update();
+
 	if(player->state == game->stateBattle || player->state == game->stateInventory)
 		enemy->animation->update();
 
@@ -215,11 +245,11 @@ void BattleLayer::update() {
 	}
 
 	if (dead) {
-		health->content = "0 / 20";
+		health->content = "HP: 0 / 20";
 		enemy->restore();
 	}
 	else {
-		health->content = to_string(player->health) + " / 20";
+		health->content = "HP: " + to_string(player->health) + " / 20";
 	}
 	
 }
@@ -252,8 +282,13 @@ void BattleLayer::init()
 void BattleLayer::draw()
 {
 	background->draw(0,0);
-	health->draw();
 	battleMenu->draw();
+	health->draw();
+	enemyHealth->draw();
+	
+	
+	if (dialogBox != NULL)
+		dialogBox->draw();
 
 	if (inventory != NULL)
 		inventory->draw();

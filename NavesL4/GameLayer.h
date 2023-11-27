@@ -42,6 +42,7 @@ public:
 	void showDialog(string text);
 	void showInventory();
 	void switchToBattle(Enemy* enemy);
+	void switchToBlock();
 	
 	Space* space;
 	float scrollX;

@@ -11,6 +11,7 @@ BattleMenu::BattleMenu(Enemy* enemy, BattleLayer* layer, Game* game)
 	this->enemy = enemy;
 	this->game = game;
 	this->blockCd = BLOCK_CD;
+	this->square = new Actor("res/dialogBox.png", WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT, game);
 	
 	SDL_Delay(100); // para no seleccionar sin querer
 }
@@ -59,9 +60,11 @@ void BattleMenu::select() {
 }
 
 
-
 void BattleMenu::draw() {
-	if (layer->player->state == game->stateBattle) {
+
+	if (layer->player->state == game->stateBattle || layer->player->state == game->stateInventory) {
+		square->draw();
+		
 		for (auto const& text : options) {
 			text->draw();
 		}

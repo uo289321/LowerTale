@@ -11,14 +11,11 @@ InventoryMenu::InventoryMenu(Player* p, Game* game)
 
 void InventoryMenu::loadOptions() {
 	list<Item*> pInv = player->inventory;
-	float yBaseLine = this->y - this->height / 2;
-	int index = 1.1;
+	int index = 0.2;
 	for (Item* it : pInv) {
-		float y = this->y + index;
-		Text* opt = new Text(it->name, this->x, yBaseLine * index, game);
-		opt->y = opt->y + opt->height / 2;
+		Text* opt = new Text(it->name, this->x, HEIGHT * index, game);
 		this->options.push_back(opt);
-		index += 0.1;
+		index += 0.2;
 	}
 
 	if (options.size() > 0) {
@@ -35,6 +32,9 @@ bool InventoryMenu::select() {
 	std::advance(it, selected);
 	Item* item = *it;
 	player->heal(item->healing);
+	player->inventory.remove(item);
+	loadOptions();
+
 	return true;
 }
 
