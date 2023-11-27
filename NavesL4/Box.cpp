@@ -10,5 +10,14 @@ void Box::update() {
 	y = y + vy;
 }
 
+bool Box::isOnTopOf(Actor* actor) {
+	if (actor->containsPoint(x, y)) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 
 

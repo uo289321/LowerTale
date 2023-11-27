@@ -88,7 +88,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		Box* box = new Box(x, y, game);
 		box->y = box->y - box->height / 2;
 		boxes.push_back(box);
-		space->addMovableActor(box);
+		space->addDynamicActor(box);
 		break;
 	}
 	case 'P': {
@@ -284,7 +284,12 @@ void GameLayer::update() {
 	}
 
 	for (PressurePlate* pp : pressurePlates) {
-		
+		for (Box* box : boxes) {
+			if (box->isOnTopOf(pp) && box->vx == 0 && box->vy == 0) {
+				pp->is_pressed = true;
+				cout << "Presionada" << endl;
+			}
+		}
 	}
 
 	Item* removeItem = NULL;
@@ -397,6 +402,10 @@ void GameLayer::draw() {
 	for (auto const& plank : planks) {
 		plank->draw(scrollX, scrollY);
 	}
+	for (auto const& pp : pressurePlates) {
+		pp->draw(scrollX, scrollY);
+	}
+
 	player->draw(scrollX, scrollY);
 
 	for (auto const& cp : checkPoints) {
@@ -410,11 +419,6 @@ void GameLayer::draw() {
 	for (auto const& enemy : enemies) {
 		enemy->draw(scrollX, scrollY);
 	}
-
-	for (auto const& pp : pressurePlates) {
-		pp->draw(scrollX, scrollY);
-	}
-	
 
 	if (dialogBox != NULL)
 		dialogBox->draw(scrollX, scrollY);

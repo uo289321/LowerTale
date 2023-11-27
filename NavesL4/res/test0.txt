@@ -5,5 +5,5 @@ B..............A...............BBBBBBBB..............B
 B........E.........WWWWW.......BBBBBBBBB.............B
 B....1.....S.......WWWWW.......BBBBBBBBB.............B
 B.......Q..........WWWWW.......BBBBBBBBB.............B
-B..............................BBBBBBBBB.............B
+B............P.................BBBBBBBBB.............B
 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
