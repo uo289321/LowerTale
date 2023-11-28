@@ -76,7 +76,8 @@ void BattleLayer::processControls()
 		else if (controlInteract) {
 			inventory->select();
 			inventory = NULL;
-			player->state = game->stateBattle;
+			controlInteract = false;
+			player->state = game->stateDefending;
 		}
 	}
 
