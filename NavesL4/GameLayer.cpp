@@ -21,7 +21,7 @@ void GameLayer::init() {
 	planks.clear();
 
 	// loadMap("res/" + to_string(game->currentLevel) + ".txt");
-	loadMap("res/test0.txt");
+	loadMap("res/test2.txt");
 }
 
 void GameLayer::loadMap(string name) {
@@ -290,13 +290,13 @@ void GameLayer::update() {
 		}
 	}
 
-	// hacer la comprobacion dentro de pressurePlate para que se quite el estado presionada
 	for (PressurePlate* pp : pressurePlates) {
-		for (Box* box : boxes) {
-			if (box->isOnTopOf(pp) && box->vx == 0 && box->vy == 0) {
-				pp->is_pressed = true;
-				cout << "Presionada" << endl;
-			}
+		if (pp->isPressed(boxes)) {
+			pp->is_pressed = true;
+			cout << "Presionada" << endl;
+		}
+		else {
+			pp->is_pressed = false;
 		}
 	}
 
@@ -307,16 +307,27 @@ void GameLayer::update() {
 		}
 	}
 
+	cout << i << endl;
+	cout << pressurePlates.size() << endl;
+
 	if (i == pressurePlates.size()) {
-		space->removeStaticActor(door);
-		door = new Door("res/open_door.png", door->x, door->y, game);
-		space->addDynamicActor(door);
+		if (!door->is_open) {
+			space->removeStaticActor(door);
+			door = new Door("res/open_door.png", door->x, door->y, game);
+			door->is_open = true;
+			space->addDynamicActor(door);
+		}
 	}
-	else {
-		space->removeDynamicActor(door);
-		door = new Door("res/closed_door.png", door->x, door->y, game);
-		space->addStaticActor(door);
+
+	if (i < pressurePlates.size()) {
+		if (door->is_open) {
+			space->removeDynamicActor(door);
+			door = new Door("res/closed_door.png", door->x, door->y, game);
+			door->is_open = false;
+			space->addStaticActor(door);
+		}
 	}
+	
 
 	Item* removeItem = NULL;
 	for (auto const& item : items) {
