@@ -307,9 +307,6 @@ void GameLayer::update() {
 		}
 	}
 
-	cout << i << endl;
-	cout << pressurePlates.size() << endl;
-
 	if (i == pressurePlates.size()) {
 		if (!door->is_open) {
 			space->removeStaticActor(door);
