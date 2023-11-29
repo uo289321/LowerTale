@@ -44,6 +44,7 @@ void Space::update() {
 void Space::updateMoveRight(Actor* dynamicAct) {
 	if (dynamicAct->vx > 0) {
 		int possibleMovement = dynamicAct->vx;
+		dynamicAct->possibleMovementX = 4;
 		// El mejor "idealmente" vx partimos de ese
 
 		for (auto const& staticAct : staticActors) {
@@ -71,8 +72,10 @@ void Space::updateMoveRight(Actor* dynamicAct) {
 			}
 		}
 
+		
+
 		for (auto const& movableAct : movableActors) {
-			if (movableAct != dynamicAct && movableAct -> vx == 0) {
+			if (movableAct != dynamicAct && movableAct -> possibleMovementX == 0) {
 				int rightDynamic = dynamicAct->x + dynamicAct->width / 2;
 				int topDynamic = dynamicAct->y - dynamicAct->height / 2;
 				int downDynamic = dynamicAct->y + dynamicAct->height / 2;
@@ -100,6 +103,7 @@ void Space::updateMoveRight(Actor* dynamicAct) {
 
 		// Ya se han comprobado todos los estáticos
 		dynamicAct->x = dynamicAct->x + possibleMovement;
+		dynamicAct->possibleMovementX = possibleMovement;
 		// Restringir la velocidad actual (opcional)
 		dynamicAct->vx = possibleMovement;
 	}
@@ -109,6 +113,7 @@ void Space::updateMoveRight(Actor* dynamicAct) {
 void Space::updateMoveLeft(Actor* dynamicAct) {
 	if (dynamicAct->vx < 0) {
 		int possibleMovement = dynamicAct->vx;
+		dynamicAct->possibleMovementX = possibleMovement;
 		// El mejor "idealmente" vx partimos de ese
 
 		for (auto const& staticAct : staticActors) {
@@ -139,7 +144,7 @@ void Space::updateMoveLeft(Actor* dynamicAct) {
 		}
 
 		for (auto const& movableAct : movableActors) {
-			if (movableAct != dynamicAct) {
+			if (movableAct != dynamicAct && movableAct->possibleMovementX == 0) {
 				int leftDynamic = dynamicAct->x - dynamicAct->width / 2;
 				int topDynamic = dynamicAct->y - dynamicAct->height / 2;
 				int downDynamic = dynamicAct->y + dynamicAct->height / 2;
@@ -167,6 +172,7 @@ void Space::updateMoveLeft(Actor* dynamicAct) {
 		}
 		// Ya se han comprobado todos los estáticos
 		dynamicAct->x = dynamicAct->x + possibleMovement;
+		dynamicAct->possibleMovementX = possibleMovement;
 		// Restringir la velocidad actual (opcional)
 		dynamicAct->vx = possibleMovement;
 	}
@@ -176,6 +182,7 @@ void Space::updateMoveLeft(Actor* dynamicAct) {
 void Space::updateMoveTop(Actor* dynamicAct) {
 	if (dynamicAct->vy < 0) {
 		int possibleMovement = dynamicAct->vy;
+		dynamicAct->possibleMovementY = possibleMovement;
 		// El mejor "idealmente" vy partimos de ese
 
 		for (auto const& staticAct : staticActors) {
@@ -214,7 +221,7 @@ void Space::updateMoveTop(Actor* dynamicAct) {
 		}
 
 		for (auto const& movableAct : movableActors) {
-			if (movableAct != dynamicAct) {
+			if (movableAct != dynamicAct && movableAct->possibleMovementY == 0) {
 				int topDynamic = dynamicAct->y - dynamicAct->height / 2;
 				int downDynamic = dynamicAct->y + dynamicAct->height / 2;
 				int rightDynamic = dynamicAct->x + dynamicAct->width / 2;
@@ -252,6 +259,7 @@ void Space::updateMoveTop(Actor* dynamicAct) {
 
 		// Ya se han comprobado todos los estáticos
 		dynamicAct->y = dynamicAct->y + possibleMovement;
+		dynamicAct->possibleMovementY = possibleMovement;
 		// Restringir la velocidad actual (opcional)
 		dynamicAct->vy = possibleMovement;
 	}
@@ -262,6 +270,7 @@ void Space::updateMoveTop(Actor* dynamicAct) {
 void Space::updateMoveDown(Actor* dynamicAct) {
 	if (dynamicAct->vy > 0) {
 		int possibleMovement = dynamicAct->vy;
+		dynamicAct->possibleMovementY = possibleMovement;
 		// El mejor "idealmente" vy partimos de ese
 
 		for (auto const& staticAct : staticActors) {
@@ -301,7 +310,7 @@ void Space::updateMoveDown(Actor* dynamicAct) {
 		}
 
 		for (auto const& movableAct : movableActors) {
-			if (movableAct != dynamicAct) {
+			if (movableAct != dynamicAct && movableAct->possibleMovementY == 0) {
 				int topDynamic = dynamicAct->y - dynamicAct->height / 2;
 				int downDynamic = dynamicAct->y + dynamicAct->height / 2;
 				int rightDynamic = dynamicAct->x + dynamicAct->width / 2;
@@ -340,6 +349,7 @@ void Space::updateMoveDown(Actor* dynamicAct) {
 
 		// Ya se han comprobado todos los estáticos
 		dynamicAct->y = dynamicAct->y + possibleMovement;
+		dynamicAct->possibleMovementY = possibleMovement;
 		// Restringir la velocidad actual (opcional)
 		dynamicAct->vy = possibleMovement;
 	}

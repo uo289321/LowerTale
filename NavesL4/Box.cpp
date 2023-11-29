@@ -2,7 +2,8 @@
 
 Box::Box(float x, float y, Game* game) :
 	Actor("res/caja.png", x, y, 32, 40, game) {
-
+	possibleMovementX = 4;
+	possibleMovementY = 4;
 }
 
 void Box::update() {

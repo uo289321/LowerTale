@@ -245,7 +245,7 @@ void GameLayer::processMovingState() {
 
 void GameLayer::update() {
 	buttonDelay--;
-	
+
 	space->update();
 	background->update();
 	player->update();
