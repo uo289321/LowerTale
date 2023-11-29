@@ -19,7 +19,7 @@ void GameLayer::init() {
 	planks.clear();
 
 	// loadMap("res/" + to_string(game->currentLevel) + ".txt");
-	loadMap("res/test0.txt");
+	loadMap("res/test2.txt");
 }
 
 void GameLayer::loadMap(string name) {
@@ -27,7 +27,7 @@ void GameLayer::loadMap(string name) {
 	string line;
 	ifstream streamFile(name.c_str());
 	if (!streamFile.is_open()) {
-		cout << "Falla abrir el fichero de mapa" << endl; 
+		cout << "Falla abrir el fichero de mapa" << endl;
 		return;
 	}
 	else {
@@ -80,6 +80,27 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		space->addStaticActor(item);
 		break;
 	}
+	case 'Q': {
+		Box* box = new Box(x, y, game);
+		box->y = box->y - box->height / 2;
+		boxes.push_back(box);
+		space->addDynamicActor(box);
+		break;
+	}
+	case 'P': {
+		PressurePlate* p = new PressurePlate(x, y, game);
+		p->y = p->y - p->height / 2;
+		pressurePlates.push_back(p);
+		space->addDynamicActor(p);
+		break;
+	}
+			//case 'Y': {
+			//	Jumpboost* j = new Jumpboost(x, y, game);
+			//	j->y = j->y - j->height / 2;
+			//	jumpboosts.push_back(j);
+			//	space->addDynamicActor(j);
+			//	break;
+			//}
 	case 'B': {
 		Tile* tile = new Tile("res/black.png", x, y, game);
 		tile->y = tile->y - tile->height / 2;
@@ -95,13 +116,20 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		space->addStaticActor(tile);
 		break;
 	}
-	case 'W':
-		Tile * water = new Tile("res/water.png", x, y, game);
+	case 'W': {
+		Tile* water = new Tile("res/water.png", x, y, game);
 		// Tile* water = new Tile("res/water.png", x, y, game);
 		water->y = water->y - water->height / 2;
 		waters.push_back(water);
 		space->addStaticActor(water);
 		break;
+	}
+	case 'D': {
+		door = new Door("res/closed_door.png", x, y, game);
+		door->y = door->y - door->height / 2;
+		space->addStaticActor(door);
+		break;
+	}
 	}
 }
 
@@ -203,6 +231,8 @@ void GameLayer::update() {
 	buttonDelay--;
 	space->update();
 	background->update();
+
+
 	player->update();
 
 	if (dialogBox != NULL)
@@ -237,6 +267,42 @@ void GameLayer::update() {
 		}
 	}
 
+	for (PressurePlate* pp : pressurePlates) {
+		if (pp->isPressed(boxes)) {
+			pp->is_pressed = true;
+			cout << "Presionada" << endl;
+		}
+		else {
+			pp->is_pressed = false;
+		}
+	}
+
+	int i = 0;
+	for (PressurePlate* pp : pressurePlates) {
+		if (pp->is_pressed) {
+			i++;
+		}
+	}
+
+	if (i == pressurePlates.size()) {
+		if (!door->is_open) {
+			space->removeStaticActor(door);
+			door = new Door("res/open_door.png", door->x, door->y, game);
+			door->is_open = true;
+			space->addDynamicActor(door);
+		}
+	}
+
+	if (i < pressurePlates.size()) {
+		if (door->is_open) {
+			space->removeDynamicActor(door);
+			door = new Door("res/closed_door.png", door->x, door->y, game);
+			door->is_open = false;
+			space->addStaticActor(door);
+		}
+	}
+	
+
 	Item* removeItem = NULL;
 	for (auto const& item : items) {
 		if (player->isInRange(item) && controlInteract && player->state == game->stateMoving) {
@@ -244,7 +310,7 @@ void GameLayer::update() {
 			removeItem = item;
 			player->pick(item);
 			controlInteract = false;
-			
+
 		}
 	}
 	if (removeItem != NULL) {
@@ -252,6 +318,34 @@ void GameLayer::update() {
 		space->removeStaticActor(removeItem);
 
 	}
+	// Caja
+	for (auto const& box : boxes) {
+		if (player->isTouching(box)) {
+			box->vx = player->vx;
+			box->vy = player->vy;
+		}
+		else {
+			box->vx = 0;
+			box->vy = 0;
+		}
+	}
+
+	// Colisiones , Enemy - Projectile
+
+	/*list<Enemy*> deleteEnemies;
+	list<Projectile*> deleteProjectiles;
+	for (auto const& projectile : projectiles) {
+		if (projectile->isInRender() == false) {
+
+			bool pInList = std::find(deleteProjectiles.begin(),
+				deleteProjectiles.end(),
+				projectile) != deleteProjectiles.end();
+
+			if (!pInList) {
+				deleteProjectiles.push_back(projectile);
+			}
+		}
+	}*/
 
 	if (player->state == game->stateBlocked && dialogBox == NULL) {
 		player->state = game->stateMoving;
@@ -316,32 +410,42 @@ void GameLayer::draw() {
 	background->draw(scrollX, scrollY);
 
 
-		for (auto const& tile : tiles) {
-			tile->draw(scrollX, scrollY);
-		}
-		for (auto const& water : waters) {
-			water->draw(scrollX, scrollY);
-		}
-		for (auto const& plank : planks) {
-			plank->draw(scrollX, scrollY);
-		}
-		player->draw(scrollX, scrollY);
-		
-		for (auto const& cp : checkPoints) {
-			cp->draw(scrollX, scrollY);
-		}
+	for (auto const& tile : tiles) {
+		tile->draw(scrollX, scrollY);
+	}
+	for (auto const& water : waters) {
+		water->draw(scrollX, scrollY);
+	}
+	for (auto const& plank : planks) {
+		plank->draw(scrollX, scrollY);
+	}
+	for (auto const& pp : pressurePlates) {
+		pp->draw(scrollX, scrollY);
+	}
 
-		for (auto const& item : items) {
-			item->draw(scrollX, scrollY);
-		}
+	player->draw(scrollX, scrollY);
+
+	door->draw(scrollX, scrollY);
+
+	for (auto const& cp : checkPoints) {
+		cp->draw(scrollX, scrollY);
+	}
+
+	for (auto const& item : items) {
+		item->draw(scrollX, scrollY);
+	}
 
 	for (auto const& enemy : enemies) {
 		enemy->draw(scrollX, scrollY);
 	}
-	
 
 	if (dialogBox != NULL)
 		dialogBox->draw(scrollX, scrollY);
+
+	for (auto const& box : boxes) {
+		box->draw(scrollX, scrollY);
+	}
+
 
 	if (inventory != NULL)
 		inventory->draw(scrollX, scrollY);
@@ -439,7 +543,7 @@ void GameLayer::keysToControls(SDL_Event event) {
 		case SDLK_p:
 			controlThrow = false;
 			break;
-		}		
+		}
 	}
 }
 
