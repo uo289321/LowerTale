@@ -11,7 +11,7 @@ void GameLayer::init() {
 	audioBackground = new Audio("res/musica_ambiente.mp3", true);
 	// audioBackground->play();
 
-	player = new Player(spawnX, spawnY, game);
+	player = new Player(50, 50, game);
 	background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
@@ -60,7 +60,10 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		break;
 	}
 	case '1': {
-		player = new Player(x, y, game);
+		if (spawnX != -1)
+			player = new Player(spawnX, spawnY, game);
+		else
+			player = new Player(x, y, game);
 		// modificación para empezar a contar desde el suelo.
 		player->y = player->y - player->height / 2;
 		space->addDynamicActor(player);

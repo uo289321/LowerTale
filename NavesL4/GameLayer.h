@@ -82,8 +82,8 @@ public:
 	int controlMoveX = 0;
 	bool controlThrow = false;
 
-	int spawnX = 50;
-	int spawnY = 50;
+	int spawnX = -1;
+	int spawnY = -1;
 
 
 };
