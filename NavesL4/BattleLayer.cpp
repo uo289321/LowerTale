@@ -4,7 +4,7 @@ BattleLayer::BattleLayer(Enemy* enemy, Player* player, Game* game)
 	: Layer(game) {
 	background = new Background("res/backgroundbattle.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 	this->player = player;
-	this->playerModel = new Actor("res/icono_puntos.png", WIDTH * 0.5, HEIGHT * 0.5, PLAYERMODEL_WIDTH, PLAYERMODEL_HEIGHT, game);
+	this->playerModel = new Actor("res/playerModel.png", WIDTH * 0.5, HEIGHT * 0.5, PLAYERMODEL_WIDTH, PLAYERMODEL_HEIGHT, game);
 	this->enemy = enemy;
 	this->shield = new Shield(game);
 	init();
