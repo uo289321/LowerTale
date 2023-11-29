@@ -20,9 +20,9 @@ Player::Player(float x, float y, Game* game)
 	aMovingLeft = new Animation("res/player_moving_left.png", width, height,
 		128, 40, 6, 4, true, game);
 	aMovingUp = new Animation("res/player_moving_up.png", width, height,
-		66, 32, 8, 3, true, game);
+		96, 40, 8, 3, true, game);
 	aMovingDown = new Animation("res/player_moving_down.png", width, height,
-		66, 32, 8, 3, true, game);
+		96, 40, 8, 3, true, game);
 
 	animation = aIdleDown;
 
@@ -114,6 +114,18 @@ bool Player::isTouching(Actor* actor) {
 		|| (actor->containsPoint(x - (TILE_WIDTH / 2.0 + 1), y) && orientation == game->orientationLeft)
 		|| (actor->containsPoint(x, y + (TILE_HEIGHT / 2.0 + 1)) && orientation == game->orientationDown)
 		|| (actor->containsPoint(x, y - (TILE_HEIGHT / 2.0 + 1)) && orientation == game->orientationUp)) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool Player::canMoveActor(Actor* actor) {
+	if ((actor->containsPoint(x + (TILE_WIDTH / 2.0 -1), y) && orientation == game->orientationRight)
+		|| (actor->containsPoint(x - (TILE_WIDTH / 2.0 -1), y) && orientation == game->orientationLeft)
+		|| (actor->containsPoint(x, y + (TILE_HEIGHT / 2.0 -1)) && orientation == game->orientationDown)
+		|| (actor->containsPoint(x, y - (TILE_HEIGHT / 2.0 -1)) && orientation == game->orientationUp)) {
 		return true;
 	}
 	else {

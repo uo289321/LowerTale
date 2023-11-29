@@ -72,7 +72,7 @@ void Space::updateMoveRight(Actor* dynamicAct) {
 		}
 
 		for (auto const& movableAct : movableActors) {
-			if (movableAct != dynamicAct) {
+			if (movableAct != dynamicAct && movableAct -> vx == 0) {
 				int rightDynamic = dynamicAct->x + dynamicAct->width / 2;
 				int topDynamic = dynamicAct->y - dynamicAct->height / 2;
 				int downDynamic = dynamicAct->y + dynamicAct->height / 2;
