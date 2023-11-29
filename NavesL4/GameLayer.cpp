@@ -18,8 +18,8 @@ void GameLayer::init() {
 	checkPoints.clear();
 	planks.clear();
 
-	// loadMap("res/" + to_string(game->currentLevel) + ".txt");
-	loadMap("res/test2.txt");
+	loadMap("res/" + to_string(game->currentLevel) + ".txt");
+	// loadMap("res/test2.txt");
 }
 
 void GameLayer::loadMap(string name) {
