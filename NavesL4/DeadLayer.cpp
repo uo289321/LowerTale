@@ -7,6 +7,7 @@ DeadLayer::DeadLayer(Game* game)
 	options.push_back(t);
 	options.push_back(new Text("Salir", WIDTH * 0.66, HEIGHT * 0.8, game));
 	this->selected = 0;
+	background = new Background("res/backgroundDead.png", WIDTH / 2, HEIGHT / 2, game);
 }
 
 
@@ -118,7 +119,10 @@ void DeadLayer::select() {
 void DeadLayer::update() {}
 
 void DeadLayer::draw() {
+	background->draw();
 	for (auto const& text : options) {
 		text->draw();
 	}
+
+	SDL_RenderPresent(game->renderer); // Renderiza
 }

@@ -33,6 +33,7 @@ public:
 	bool loopActive; // Juego activo
 	Layer* gameLayer;
 	Layer* battleLayer;
+	Layer* deadLayer;
 	Layer* activeLayer;
 
 	int const stateMoving = 1;

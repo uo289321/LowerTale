@@ -11,7 +11,7 @@ void GameLayer::init() {
 	audioBackground = new Audio("res/musica_ambiente.mp3", true);
 	// audioBackground->play();
 
-	player = new Player(50, 50, game);
+	player = new Player(spawnX, spawnY, game);
 	background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
@@ -52,7 +52,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 {
 	switch (character) {
 	case 'E': {
-		Enemy* enemy = new Enemy("enemy1", 20, 4, 15, x, y, game);
+		Enemy* enemy = new Enemy("enemy1", 20, 2389, 15, x, y, game);
 		// modificación para empezar a contar desde el suelo.
 		enemy->y = enemy->y - enemy->height / 2;
 		enemies.push_back(enemy);
@@ -200,9 +200,6 @@ void GameLayer::processMovingState() {
 }
 
 void GameLayer::update() {
-	
-
-
 	buttonDelay--;
 	space->update();
 	background->update();
@@ -259,15 +256,16 @@ void GameLayer::update() {
 	if (player->state == game->stateBlocked && dialogBox == NULL) {
 		player->state = game->stateMoving;
 		SDL_Delay(100);
+	}
 
-		for (Plank* plank : planks) {
-			for (Tile* water : waters) {
-				if (plank->isOnTopOf(water) && plank->vx == 0 && plank->vy == 0) {
-					space->addDynamicActor(water);
-					space->removeStaticActor(water);
-				}
+	for (Plank* plank : planks) {
+		for (Tile* water : waters) {
+			if (plank->isOnTopOf(water) && plank->vx == 0 && plank->vy == 0) {
+				space->addDynamicActor(water);
+				space->removeStaticActor(water);
 			}
 		}
+	}
 	list<Enemy*> delEnemies;
 	for (auto const& en : enemies) {
 		if (en->isDead())
@@ -278,24 +276,7 @@ void GameLayer::update() {
 		enemies.remove(en);
 		space->removeStaticActor(en);
 	}
-	delEnemies.clear();
-
-
-		Item* removeItem = NULL;
-		for (auto const& item : items) {
-			if (player->isInRange(item) && controlInteract && player->state == game->stateMoving) {
-				showDialog("Has recogido el siguiente objeto: " + item->name);
-				removeItem = item;
-				player->pick(item);
-
-			}
-		}
-
-		if (removeItem != NULL) {
-			items.remove(removeItem);
-			space->removeStaticActor(removeItem);
-		}
-	}
+	delEnemies.clear();	
 
 	for (auto const& enemy : enemies) {
 		if (player->isInRange(enemy) && controlInteract && player->state == game->stateMoving) {
@@ -370,6 +351,7 @@ void GameLayer::draw() {
 
 void GameLayer::switchToBattle(Enemy* enemy) {
 	controlBattle = enemy;
+	controlInteract = false;
 }
 
 // Si el jugador está en movimiento no permitimos acciones

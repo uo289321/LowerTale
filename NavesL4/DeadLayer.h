@@ -16,11 +16,11 @@ public:
 	void selectPrevious();
 	void select();
 
-
+	Background* background;
 	int selected;
 	list<Text*> options;
-	int controlMoveX;
-	bool controlInteract;
+	int controlMoveX = 0;
+	bool controlInteract = false;
 
 
 

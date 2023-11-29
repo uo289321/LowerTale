@@ -81,6 +81,9 @@ void BattleLayer::processControls()
 		}
 	}
 
+	if (player->health <= 0)
+		game->activeLayer = game->deadLayer;
+
 	
 }
 
@@ -306,10 +309,5 @@ void BattleLayer::draw()
 		}
 		shield->draw();
 	}
-
-
-	
-
-
 	SDL_RenderPresent(game->renderer); // Renderiza
 }

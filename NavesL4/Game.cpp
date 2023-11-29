@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "GameLayer.h"
+#include "DeadLayer.h"
 
 Game::Game() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -14,6 +15,7 @@ Game::Game() {
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
 	gameLayer = new GameLayer(this);
+	deadLayer = new DeadLayer(this);
 	activeLayer = gameLayer;
 
 	// fuentes
