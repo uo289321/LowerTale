@@ -19,6 +19,9 @@ void GameLayer::init() {
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 	checkPoints.clear();
 	planks.clear();
+	boxes.clear();
+	pressurePlates.clear();
+	switches.clear();
 
 	// loadMap("res/" + to_string(game->currentLevel) + ".txt");
 	loadMap("res/test2.txt");
@@ -77,7 +80,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		space->addDynamicActor(cp);
 		break;
 	}
-	case 'S': {
+	case 'F': {
 		Item* item = new Item("Filete", x, y, 5, game);
 		item->y = item->y - item->height / 2;
 		items.push_back(item);
@@ -134,6 +137,14 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		space->addStaticActor(door);
 		break;
 	}
+	case 'S': {
+		Switch* sw = new Switch(nOfSwitch, x, y, game);
+		sw->y = sw->y - sw->height / 2;
+		switches.push_back(sw);
+		space->addDynamicActor(sw);
+		nOfSwitch++;
+		break;
+	}
 	}
 }
 
@@ -143,8 +154,6 @@ void GameLayer::processControls() {
 	while (SDL_PollEvent(&event)) {
 		keysToControls(event);
 	}
-
-
 
 	if (controlThrow) {
 		Plank* newPlank = player->throwPlank();
@@ -307,7 +316,14 @@ void GameLayer::update() {
 		}
 	}
 
-	if (i == pressurePlates.size()) {
+	int j = 0;
+	for (Switch* sw : switches) {
+		if (sw->active) {
+			j++;
+		}
+	}
+
+	if (i == pressurePlates.size() && j == switches.size()) {
 		if (!door->is_open) {
 			space->removeStaticActor(door);
 			door = new Door("res/open_door.png", door->x, door->y, game);
@@ -316,7 +332,7 @@ void GameLayer::update() {
 		}
 	}
 
-	if (i < pressurePlates.size()) {
+	if (i < pressurePlates.size() && j < switches.size()) {
 		if (door->is_open) {
 			space->removeDynamicActor(door);
 			door = new Door("res/closed_door.png", door->x, door->y, game);
@@ -324,7 +340,6 @@ void GameLayer::update() {
 			space->addStaticActor(door);
 		}
 	}
-	
 
 	Item* removeItem = NULL;
 	for (auto const& item : items) {
@@ -353,6 +368,18 @@ void GameLayer::update() {
 		}
 	}
 
+	for (auto const& sw : switches) {
+		if (player->isInRange(sw) && controlInteract && player->state == game->stateMoving) {
+			if (sw->active) {
+				showDialog("Boton desactivado");
+			}
+			else {
+				showDialog("Boton activado");
+			}
+			sw->flick();
+		}
+	}
+
 	// Colisiones , Enemy - Projectile
 
 	/*list<Enemy*> deleteEnemies;
@@ -373,15 +400,6 @@ void GameLayer::update() {
 	if (player->state == game->stateBlocked && dialogBox == NULL) {
 		player->state = game->stateMoving;
 		SDL_Delay(100);
-
-		for (Plank* plank : planks) {
-			for (Tile* water : waters) {
-				if (plank->isOnTopOf(water) && plank->vx == 0 && plank->vy == 0) {
-					space->addDynamicActor(water);
-					space->removeStaticActor(water);
-				}
-			}
-		}
 
 		Item* removeItem = NULL;
 		for (auto const& item : items) {
@@ -439,6 +457,9 @@ void GameLayer::draw() {
 	for (auto const& pp : pressurePlates) {
 		pp->draw(scrollX, scrollY);
 	}
+	for (auto const& sw : switches) {
+		sw->draw(scrollX, scrollY);
+	}
 
 	player->draw(scrollX, scrollY);
 
@@ -456,12 +477,13 @@ void GameLayer::draw() {
 		enemy->draw(scrollX, scrollY);
 	}
 
-	if (dialogBox != NULL)
-		dialogBox->draw(scrollX, scrollY);
-
 	for (auto const& box : boxes) {
 		box->draw(scrollX, scrollY);
 	}
+
+	if (dialogBox != NULL)
+		dialogBox->draw(scrollX, scrollY);
+
 
 
 	if (inventory != NULL)
