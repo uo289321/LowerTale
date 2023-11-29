@@ -18,8 +18,8 @@ void GameLayer::init() {
 	checkPoints.clear();
 	planks.clear();
 
-	loadMap("res/" + to_string(game->currentLevel) + ".txt");
-	// loadMap("res/test2.txt");
+	// loadMap("res/" + to_string(game->currentLevel) + ".txt");
+	loadMap("res/test0.txt");
 }
 
 void GameLayer::loadMap(string name) {
@@ -442,12 +442,14 @@ void GameLayer::draw() {
 		enemy->draw(scrollX, scrollY);
 	}
 
-	if (dialogBox != NULL)
-		dialogBox->draw(scrollX, scrollY);
-
 	for (auto const& box : boxes) {
 		box->draw(scrollX, scrollY);
 	}
+
+	if (dialogBox != NULL)
+		dialogBox->draw(scrollX, scrollY);
+
+	
 
 
 	if (inventory != NULL)
