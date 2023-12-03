@@ -8,8 +8,8 @@ GameLayer::GameLayer(Game* game)
 
 void GameLayer::init() {
 	space = new Space(0);
-	audioBackground = new Audio("res/musica_ambiente.mp3", true);
-	// audioBackground->play();
+	audioBackground = new Audio("res/game.wav", true);
+	audioBackground->play();
 
 	player = new Player(50, 50, game);
 	background = new Background("res/background0.png", WIDTH * 0.5, HEIGHT * 0.5, game);
@@ -522,6 +522,7 @@ void GameLayer::draw() {
 void GameLayer::switchToBattle(Enemy* enemy) {
 	controlBattle = enemy;
 	controlInteract = false;
+
 }
 
 // Si el jugador está en movimiento no permitimos acciones

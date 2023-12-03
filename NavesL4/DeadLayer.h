@@ -15,7 +15,9 @@ public:
 	void selectNext();
 	void selectPrevious();
 	void select();
+	void init() override;
 
+	Audio* bgMusic;
 	Background* background;
 	int selected;
 	list<Text*> options;

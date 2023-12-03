@@ -284,6 +284,8 @@ void BattleLayer::changeEnemy(Enemy* enemy) {
 void BattleLayer::init()
 {
 	this->battleMenu = new BattleMenu(this->enemy, this, game);
+	this->bgMusic = new Audio("res/battleMusic.wav", true);
+	bgMusic->play();
 }
 
 void BattleLayer::draw()

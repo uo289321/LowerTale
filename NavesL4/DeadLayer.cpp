@@ -2,12 +2,22 @@
 
 DeadLayer::DeadLayer(Game* game)
 	: Layer(game) {
+	background = new Background("res/backgroundDead.png", WIDTH / 2, HEIGHT / 2, game);
+	
+}
+
+void DeadLayer::init() {
+
+	options.clear();
+
 	Text* t = new Text("Continuar", WIDTH * 0.33, HEIGHT * 0.8, game);
 	t->highlight();
 	options.push_back(t);
 	options.push_back(new Text("Salir", WIDTH * 0.66, HEIGHT * 0.8, game));
 	this->selected = 0;
-	background = new Background("res/backgroundDead.png", WIDTH / 2, HEIGHT / 2, game);
+	
+	bgMusic = new Audio("res/dead.wav", true);
+	bgMusic->play();
 }
 
 
