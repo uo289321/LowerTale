@@ -49,6 +49,8 @@ public:
 	void showInventory();
 	void switchToBattle(Enemy* enemy);
 	void switchToBlock();
+	Actor* message;
+	bool pause;
 
 	
 	Space* space;
@@ -93,6 +95,7 @@ public:
 	int controlMoveY = 0;
 	int controlMoveX = 0;
 	bool controlThrow = false;
+	bool controlContinue = false;
 
 	int spawnX = -1;
 	int spawnY = -1;
