@@ -21,6 +21,11 @@ void GameLayer::init() {
 	pressurePlates.clear();
 	switches.clear();
 	xos.clear();
+	tiles.clear();
+	waters.clear();
+	items.clear();
+	floorPlanks.clear();
+	door = NULL;
 
 	loadMap("res/" + to_string(game->currentLevel) + ".txt");
 }
