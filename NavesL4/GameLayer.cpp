@@ -566,19 +566,19 @@ void GameLayer::keysToControls(SDL_Event event) {
 			controlMoveY = 1;
 			break;
 		case SDLK_z: // interaccion
-			if (buttonDelay <= 0) {
+			if (buttonDelay <= 0 && controlMoveX == 0 && controlMoveY == 0) {
 				controlInteract = true;
 				buttonDelay = BUTTON_DELAY;
 			}
 			break;
 		case SDLK_x:
-			if (buttonDelay <= 0) {
+			if (buttonDelay <= 0 && controlMoveX == 0 && controlMoveY == 0) {
 				controlCancel = true;
 				buttonDelay = BUTTON_DELAY;
 			}
 			break;
 		case SDLK_c:
-			if (buttonDelay <= 0) {
+			if (buttonDelay <= 0 && controlMoveX == 0 && controlMoveY == 0) {
 				controlInventory = true;
 				buttonDelay = BUTTON_DELAY;
 			}
