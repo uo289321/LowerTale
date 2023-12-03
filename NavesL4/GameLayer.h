@@ -21,6 +21,7 @@ class BattleMenu;
 #include "Box.h"
 #include "PressurePlate.h"
 #include "Door.h"
+#include "Switch.h"
 #include <list>
 #include "XO.h"
 
@@ -57,6 +58,7 @@ public:
 	int mapHeight;
 
 	int lastState;
+	int nOfSwitch = 0;
 
 
 	Audio* audioBackground;
@@ -78,6 +80,7 @@ public:
 	list<Plank*> planks;
 	list<PressurePlate*> pressurePlates;
 	list<Box*> boxes;
+	list<Switch*> switches;
 	Door* door;
 	list<XO*> xos;
 
