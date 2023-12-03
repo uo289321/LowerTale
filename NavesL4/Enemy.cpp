@@ -7,6 +7,8 @@ Enemy::Enemy(string filename, int hp, int damage, int fireRate, float x, float y
 		this->animation = new Animation("res/" + filename + "battle.png", 110, 103, 880, 103, 5, 8, true, game);
 	if(filename == "enemyG")
 		this->animation = new Animation("res/" + filename + "battle.png", 115, 112, 230, 112, 10, 2, true, game);
+	if (filename == "enemyH")
+		this->animation = new Animation("res/" + filename + "battle.png", 111, 184, 222, 184, 6, 2, true, game);
 	this->damage = damage;
 	this->maxHp = hp;
 	this->hp = hp;
