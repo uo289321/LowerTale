@@ -122,6 +122,22 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		space->addStaticActor(tile);
 		break;
 	}
+	case 'R': {
+		Tile* tile = new Tile("res/paredDerecha.png", x, y, game);
+		// modificación para empezar a contar desde el suelo.
+		tile->y = tile->y - tile->height / 2;
+		tiles.push_back(tile);
+		space->addStaticActor(tile);
+		break;
+	}
+	case 'L': {
+		Tile* tile = new Tile("res/paredIzquierda.png", x, y, game);
+		// modificación para empezar a contar desde el suelo.
+		tile->y = tile->y - tile->height / 2;
+		tiles.push_back(tile);
+		space->addStaticActor(tile);
+		break;
+	}
 	case 'W': {
 		Tile* water = new Tile("res/water.png", x, y, game);
 		// Tile* water = new Tile("res/water.png", x, y, game);
@@ -145,7 +161,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		break;
 	}
 	case 'T': {
-		Plank* pl = new Plank(x, y, game, game->orientationRight);
+		Plank* pl = new Plank("res/plankItem.png", x, y, game, game->orientationRight);
 		pl->y = pl->y - pl->height / 2;
 		floorPlanks.push_back(pl);
 		space->addDynamicActor(pl);

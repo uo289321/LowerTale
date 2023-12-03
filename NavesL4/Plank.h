@@ -7,7 +7,7 @@ class Plank :
     public Actor
 {
 public:
-	Plank(float x, float y, Game* game, int orientation);
+	Plank(string fileName, float x, float y, Game* game, int orientation);
 	void update();
 	bool hasActorNext(Actor* actor);
 	bool isOnTopOf(Actor* actor);
