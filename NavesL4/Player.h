@@ -33,6 +33,7 @@ public:
 	int state;
 	int orientation;
 	bool moving = false;
+	bool hasPlank = false;
 	int movingCd = 0;
 	Audio* audioShoot;
 
