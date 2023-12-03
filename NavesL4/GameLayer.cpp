@@ -161,10 +161,10 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		break;
 	}
 	case 'T': {
-		Plank* pl = new Plank("res/plankItem.png", x, y, game, game->orientationRight);
+		Plank* pl = new Plank("res/plank.png", x, y, game, game->orientationRight);
 		pl->y = pl->y - pl->height / 2;
 		floorPlanks.push_back(pl);
-		space->addDynamicActor(pl);
+		space->addStaticActor(pl);
 		break;
 	}
 	}
