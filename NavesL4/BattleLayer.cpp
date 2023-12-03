@@ -93,7 +93,10 @@ void BattleLayer::showDialog(string content) {
 }
 
 void BattleLayer::finishCombat() {
+	game->currentLevel++;
 	game->activeLayer = game->gameLayer;
+	game->gameLayer->init();
+	
 	player->state = game->stateMoving;
 }
 

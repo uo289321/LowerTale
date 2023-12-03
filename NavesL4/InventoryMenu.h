@@ -5,7 +5,7 @@
 #include "Item.h"
 
 #define INVENTORY_WIDTH 120
-#define INVENTORY_HEIGHT 300
+#define INVENTORY_HEIGHT 240
 
 class InventoryMenu :
     public Actor

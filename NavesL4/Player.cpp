@@ -20,9 +20,9 @@ Player::Player(float x, float y, Game* game)
 	aMovingLeft = new Animation("res/player_moving_left.png", width, height,
 		128, 40, 6, 4, true, game);
 	aMovingUp = new Animation("res/player_moving_up.png", width, height,
-		66, 32, 8, 3, true, game);
+		128, 40, 6, 4, true, game);
 	aMovingDown = new Animation("res/player_moving_down.png", width, height,
-		66, 32, 8, 3, true, game);
+		128, 40, 6, 4, true, game);
 
 	animation = aIdleDown;
 

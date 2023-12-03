@@ -11,7 +11,7 @@ InventoryMenu::InventoryMenu(Player* p, Game* game)
 
 void InventoryMenu::loadOptions() {
 	list<Item*> pInv = player->inventory;
-	int index = 0.2;
+	float index = 0.1;
 	for (Item* it : pInv) {
 		Text* opt = new Text(it->name, this->x, HEIGHT * index, game);
 		this->options.push_back(opt);

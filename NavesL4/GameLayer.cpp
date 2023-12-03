@@ -12,14 +12,14 @@ void GameLayer::init() {
 	// audioBackground->play();
 
 	player = new Player(50, 50, game);
-	background = new Background("res/background.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	background = new Background("res/background0.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 	checkPoints.clear();
 	planks.clear();
+	xos.clear();
 
-	// loadMap("res/" + to_string(game->currentLevel) + ".txt");
-	loadMap("res/test0.txt");
+	loadMap("res/" + to_string(game->currentLevel) + ".txt");
 }
 
 void GameLayer::loadMap(string name) {
@@ -73,7 +73,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		CheckPoint* cp = new CheckPoint(x, y, game);
 		cp->y = cp->y - cp->height / 2;
 		checkPoints.push_back(cp);
-		space->addDynamicActor(cp);
+		space->addStaticActor(cp);
 		break;
 	}
 	case 'S': {
@@ -381,6 +381,17 @@ void GameLayer::update() {
 		}
 	}
 
+	for (auto const& xo : xos)
+	{
+		if (player->isOverlap(xo) && !xo->playerStanding) {	// pisa el tile por primera vez
+			xo->change();
+			xo->playerStanding = true;
+		}
+		else if(!player->isOverlap(xo)) {
+			xo->playerStanding = false;
+		}
+	}
+
 	// cout << "update GameLayer" << endl;
 }
 
@@ -424,6 +435,9 @@ void GameLayer::draw() {
 	}
 	for (auto const& pp : pressurePlates) {
 		pp->draw(scrollX, scrollY);
+	}
+	for (auto const& xo : xos) {
+		xo->draw(scrollX, scrollY);
 	}
 
 	player->draw(scrollX, scrollY);

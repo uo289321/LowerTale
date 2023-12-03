@@ -22,6 +22,7 @@ class BattleMenu;
 #include "PressurePlate.h"
 #include "Door.h"
 #include <list>
+#include "XO.h"
 
 #include <fstream> // Leer ficheros
 #include <sstream> // Leer líneas / String
@@ -47,6 +48,7 @@ public:
 	void showInventory();
 	void switchToBattle(Enemy* enemy);
 	void switchToBlock();
+
 	
 	Space* space;
 	float scrollX;
@@ -77,6 +79,7 @@ public:
 	list<PressurePlate*> pressurePlates;
 	list<Box*> boxes;
 	Door* door;
+	list<XO*> xos;
 
 	bool controlInteract = false;
 	int buttonDelay = BUTTON_DELAY;

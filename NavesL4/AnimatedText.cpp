@@ -7,13 +7,16 @@ AnimatedText::AnimatedText(string content, float x, float y, Game* game) {
 	this->y = y;
 	this->game = game;
 	this->shown = content.substr(0, n);
+	this->textSFX = new Audio("res/textSFX.wav", false);
 }
 
 bool AnimatedText::update() {
 	this->n++;
 	this->shown = content.substr(0, n);
+	
 	if (n >= content.length())
 		return true;
+	this->textSFX->play();
 	return false;
 }
 
