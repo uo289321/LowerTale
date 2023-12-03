@@ -184,7 +184,13 @@ void GameLayer::processControls() {
 			inventory->moveDown();
 		else if (controlMoveY > 0)
 			inventory->moveUp();
-
+		if (controlInteract) {
+			int beforeHP = player->health;
+			if (inventory->select()) {
+				showDialog("Has recuperado " + to_string(player->health - beforeHP) + "HP!");
+			}
+			inventory = NULL;
+		}
 		if (controlCancel) {
 			inventory = NULL;
 			player->state = game->stateMoving;
@@ -225,18 +231,7 @@ void GameLayer::processMovingState() {
 	if (controlInventory)
 		showInventory();
 
-	if (player->state == game->stateBlocked) {
-		if ((controlInteract || controlCancel) && dialogBox->finished) {
-			dialogBox = NULL;
-		}
-	}
-
-	if (player->state == game->stateInventory) {
-		if (controlCancel) {
-			inventory = NULL;
-			player->state = game->stateMoving;
-		}
-	}
+	
 }
 
 void GameLayer::update() {
@@ -375,11 +370,6 @@ void GameLayer::update() {
 			}
 		}
 	}*/
-
-	if (player->state == game->stateBlocked && dialogBox == NULL) {
-		player->state = game->stateMoving;
-		SDL_Delay(100);
-	}
 
 	for (Plank* plank : planks) {
 		for (Tile* water : waters) {
