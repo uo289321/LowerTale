@@ -55,7 +55,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 {
 	switch (character) {
 	case 'E': {
-		Enemy* enemy = new Enemy("enemy1", 20, 2389, 15, x, y, game);
+		Enemy* enemy = new Enemy("enemyE", 20, 2389, 15, x, y, game);
 		// modificación para empezar a contar desde el suelo.
 		enemy->y = enemy->y - enemy->height / 2;
 		enemies.push_back(enemy);

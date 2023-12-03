@@ -3,7 +3,7 @@
 Enemy::Enemy(string filename, int hp, int damage, int fireRate, float x, float y, Game* game)
 	: Actor("res/" + filename + ".png", x, y, TILE_WIDTH, TILE_HEIGHT, game) {
 	this->counter = 10;
-	this->animation = new Animation("res/" + filename + "battle.png", 21, 19, 42, 19, 5, 2, true, game);
+	this->animation = new Animation("res/" + filename + "battle.png", 110, 103, 880, 103, 5, 8, true, game);
 	this->damage = damage;
 	this->maxHp = hp;
 	this->hp = hp;
