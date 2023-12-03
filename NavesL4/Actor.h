@@ -23,6 +23,8 @@ public:
 	int y;
 	float vx;
 	float vy;
+	float possibleMovementX;
+	float possibleMovementY;
 	int width;
 	int height;
 	int fileWidth;

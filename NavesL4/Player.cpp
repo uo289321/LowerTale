@@ -126,6 +126,18 @@ bool Player::isTouching(Actor* actor) {
 	}
 }
 
+bool Player::canMoveActor(Actor* actor) {
+	if ((actor->containsPoint(x + (TILE_WIDTH / 2.0 -1), y) && orientation == game->orientationRight)
+		|| (actor->containsPoint(x - (TILE_WIDTH / 2.0 -1), y) && orientation == game->orientationLeft)
+		|| (actor->containsPoint(x, y + (TILE_HEIGHT / 2.0 -1)) && orientation == game->orientationDown)
+		|| (actor->containsPoint(x, y - (TILE_HEIGHT / 2.0 -1)) && orientation == game->orientationUp)) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 void Player::moveX(float axis) {
 	if (vy == 0) {
 		if (vx == 0) {

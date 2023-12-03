@@ -232,14 +232,24 @@ void GameLayer::processMovingState() {
 
 void GameLayer::update() {
 	buttonDelay--;
+
 	space->update();
 	background->update();
-
-
 	player->update();
 
 	if (dialogBox != NULL)
 		dialogBox->update();
+
+	for (auto const& box : boxes) {
+		if (player->canMoveActor(box)) {
+			box->vx = player->vx;
+			box->vy = player->vy;
+		}
+		else {
+			box->vx = 0;
+			box->vy = 0;
+		}
+	}
 
 	for (auto const& cp : checkPoints) {
 		if (player->isInRange(cp) && controlInteract && player->state == game->stateMoving) {
@@ -254,7 +264,6 @@ void GameLayer::update() {
 	for (Plank* plank : planks) {
 		if (plank->canMove(waters, planks)) {
 			plank->update();
-			cout << "plankSpeed" << plank->vy << endl;
 		}
 		else {
 			plank->vx = 0;
@@ -322,16 +331,7 @@ void GameLayer::update() {
 
 	}
 	// Caja
-	for (auto const& box : boxes) {
-		if (player->isTouching(box)) {
-			box->vx = player->vx;
-			box->vy = player->vy;
-		}
-		else {
-			box->vx = 0;
-			box->vy = 0;
-		}
-	}
+	
 
 	// Colisiones , Enemy - Projectile
 
