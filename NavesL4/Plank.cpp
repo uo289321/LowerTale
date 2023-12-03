@@ -1,7 +1,7 @@
 #include "Plank.h"
 
-Plank::Plank(float x, float y, Game* game, int orientation) :
-	Actor("res/plankoutline.png", x, y, 32, 40, game) {
+Plank::Plank(string filename, float x, float y, Game* game, int orientation) :
+	Actor(filename, x, y, 32, 40, game) {
 
 	this->orientation = orientation;
 }

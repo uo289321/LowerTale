@@ -204,22 +204,22 @@ Plank* Player::throwPlank() {
 	if (throwTime == 0) {
 		// Plank* plank = new Plank(x, y, game);
 		if (orientation == game->orientationRight) {
-			Plank* plank = new Plank(x + TILE_WIDTH, y, game, game->orientationRight);
+			Plank* plank = new Plank("res/plank.png", x + TILE_WIDTH, y, game, game->orientationRight);
 			plank->vx = 4;
 			plank->vy = 0;
 		}
 		else if (orientation == game->orientationLeft) {
-			Plank* plank = new Plank(x - TILE_WIDTH, y, game, game->orientationLeft);
+			Plank* plank = new Plank("res/plank.png", x - TILE_WIDTH, y, game, game->orientationLeft);
 			plank->vx = -4; // Invertir
 			plank->vy = 0;
 		}
 		else if (orientation == game->orientationDown) {
-			Plank* plank = new Plank(x, y + TILE_HEIGHT, game, game->orientationDown);
+			Plank* plank = new Plank("res/plank.png", x, y + TILE_HEIGHT, game, game->orientationDown);
 			plank->vx = 0; 
 			plank->vy = 4;
 		}
 		else if (orientation == game->orientationUp) {
-			Plank* plank = new Plank(x, y - TILE_HEIGHT, game, game->orientationUp);
+			Plank* plank = new Plank("res/plank.png", x, y - TILE_HEIGHT, game, game->orientationUp);
 			plank->vx = 0;
 			plank->vy = -4; // Invertir
 		}
