@@ -3,8 +3,12 @@
 GameLayer::GameLayer(Game* game)
 	: Layer(game) {
 	//llama al constructor del padre : Layer(renderer)
+	pause = true;
+	message = new Actor("res/como_jugar.png", WIDTH * 0.5, HEIGHT * 0.5,
+		WIDTH, HEIGHT, game);
 	init();
 }
+	
 
 void GameLayer::init() {
 	space = new Space(0);
@@ -21,6 +25,11 @@ void GameLayer::init() {
 	pressurePlates.clear();
 	switches.clear();
 	xos.clear();
+	tiles.clear();
+	waters.clear();
+	items.clear();
+	floorPlanks.clear();
+	door = NULL;
 
 	loadMap("res/" + to_string(game->currentLevel) + ".txt");
 }
@@ -227,7 +236,10 @@ void GameLayer::processControls() {
 		controlBattle = NULL;
 	}
 
-
+	if (controlContinue) {
+		pause = false;
+		controlContinue = false;
+	}
 }
 
 void GameLayer::processMovingState() {
@@ -259,6 +271,10 @@ void GameLayer::processMovingState() {
 }
 
 void GameLayer::update() {
+	if (pause) {
+		return;
+	}
+
 	buttonDelay--;
 
 	space->update();
@@ -532,6 +548,10 @@ void GameLayer::draw() {
 	if (inventory != NULL)
 		inventory->draw(scrollX, scrollY);
 
+	if (pause) {
+		message->draw();
+	}
+
 	SDL_RenderPresent(game->renderer); // Renderiza
 }
 
@@ -583,10 +603,10 @@ void GameLayer::keysToControls(SDL_Event event) {
 				buttonDelay = BUTTON_DELAY;
 			}
 			break;
-		case SDLK_p:
+		case SDLK_q:
 			controlThrow = true;
 		}
-
+		controlContinue = true;
 
 
 	}
@@ -623,7 +643,7 @@ void GameLayer::keysToControls(SDL_Event event) {
 		case SDLK_c:
 			controlInventory = false;
 			break;
-		case SDLK_p:
+		case SDLK_q:
 			controlThrow = false;
 			break;
 		}
