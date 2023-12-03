@@ -77,6 +77,7 @@ public:
 	list<Enemy*> enemies;
 	list<CheckPoint*> checkPoints;
 	list<Item*> items;
+	list<Plank*> floorPlanks;
 	list<Plank*> planks;
 	list<PressurePlate*> pressurePlates;
 	list<Box*> boxes;

@@ -144,6 +144,13 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		nOfSwitch++;
 		break;
 	}
+	case 'T': {
+		Plank* pl = new Plank(x, y, game, game->orientationRight);
+		pl->y = pl->y - pl->height / 2;
+		floorPlanks.push_back(pl);
+		space->addDynamicActor(pl);
+		break;
+	}
 	}
 }
 
@@ -154,13 +161,14 @@ void GameLayer::processControls() {
 		keysToControls(event);
 	}
 
-	if (controlThrow) {
+	if (controlThrow && player->hasPlank) {
 		Plank* newPlank = player->throwPlank();
 		bool generated = false;
 		for (Tile* water : waters) {
 			if (newPlank != NULL && player->isTouching(water) && !generated) {
 				planks.push_back(newPlank);
 				generated = true;
+				player->hasPlank = false;
 			}
 		}
 	}
@@ -325,6 +333,7 @@ void GameLayer::update() {
 		}
 	}
 
+	
 	Item* removeItem = NULL;
 	for (auto const& item : items) {
 		if (player->isInRange(item) && controlInteract && player->state == game->stateMoving) {
@@ -338,6 +347,22 @@ void GameLayer::update() {
 	if (removeItem != NULL) {
 		items.remove(removeItem);
 		space->removeStaticActor(removeItem);
+
+	}
+
+	Plank* removePlank = NULL;
+	for (auto const& plank : floorPlanks) {
+		if (player->isInRange(plank) && controlInteract && player->state == game->stateMoving && !player->hasPlank) {
+			showDialog("Has recogido una tabla");
+			removePlank = plank;
+			player->hasPlank = true;
+			controlInteract = false;
+
+		}
+	}
+	if (removePlank != NULL) {
+		floorPlanks.remove(removePlank);
+		space->removeDynamicActor(removePlank);
 
 	}
 	
@@ -469,6 +494,10 @@ void GameLayer::draw() {
 
 	for (auto const& item : items) {
 		item->draw(scrollX, scrollY);
+	}
+
+	for (auto const& plank : floorPlanks) {
+		plank->draw(scrollX, scrollY);
 	}
 
 	for (auto const& enemy : enemies) {

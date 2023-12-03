@@ -202,7 +202,6 @@ void Player::draw(float scrollX, float scrollY) {
 
 Plank* Player::throwPlank() {
 	if (throwTime == 0) {
-		throwTime = throwCadence;
 		// Plank* plank = new Plank(x, y, game);
 		if (orientation == game->orientationRight) {
 			Plank* plank = new Plank(x + TILE_WIDTH, y, game, game->orientationRight);
