@@ -13,8 +13,8 @@ class BattleMenu;
 #include "Audio.h"
 
 #define BUTTON_DELAY 10
-// #define DEFENSE_TIMER 600
-#define DEFENSE_TIMER 30
+#define DEFENSE_TIMER 600
+// #define DEFENSE_TIMER 30
 #define PLAYERMODEL_WIDTH 24
 #define PLAYERMODEL_HEIGHT 24
 
@@ -28,12 +28,14 @@ public:
 	void draw() override;
 	void processControls() override;
 	void keysToControls(SDL_Event event);
+	void gamePadToControls(SDL_Event event); // USO DE GAMEPAD
 	void attack();
 	void showInventory();
 	void switchToAttack();
 	void switchToDefense();
 	void finishCombat();
 	void showDialog(string content);
+	SDL_GameController* gamePad;
 
 	Audio* bgMusic;
 	Audio* blocked;
