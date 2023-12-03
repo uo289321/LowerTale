@@ -272,7 +272,7 @@ void BattleLayer::switchToAttack() {
 }
 
 void BattleLayer::attack() {
-	int damageDone = 10;
+	int damageDone = rand()%(6 - 3 + 1) + 3;
 	enemy->receiveDamage(damageDone);
 	switchToDefense();
 }
