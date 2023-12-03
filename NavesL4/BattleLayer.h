@@ -36,6 +36,7 @@ public:
 	void showDialog(string content);
 
 	Audio* bgMusic;
+	Audio* blocked;
 	DialogBox* dialogBox;
 	Actor* playerModel;
 	InventoryMenu* inventory;

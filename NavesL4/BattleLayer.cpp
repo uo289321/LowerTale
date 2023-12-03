@@ -10,6 +10,7 @@ BattleLayer::BattleLayer(Enemy* enemy, Player* player, Game* game)
 	init();
 	health = new Text("vida del jugador", WIDTH * 0.15, HEIGHT * 0.92, game);
 	enemyHealth = new Text(to_string(enemy->hp), WIDTH * 0.1, HEIGHT * 0.1, game);
+	blocked = new Audio("res/blocked.wav", false);
 
 }
 
@@ -214,6 +215,7 @@ void BattleLayer::update() {
 			list<Projectile*> deleteProjectiles;
 			for (auto const& projectile : projectiles) {
 				if (shield->isOverlap(projectile)) {
+					blocked->play();
 					bool pInList = std::find(deleteProjectiles.begin(),
 						deleteProjectiles.end(),
 						projectile) != deleteProjectiles.end();

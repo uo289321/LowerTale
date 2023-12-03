@@ -52,7 +52,7 @@ Projectile* Enemy::generateProjectile() {
 
 
 void Enemy::drawAnim() {
-	animation->draw(WIDTH / 2, HEIGHT / 2);
+	animation->draw(WIDTH * 0.5, HEIGHT * 0.4);
 }
 
 void Enemy::restore() {
