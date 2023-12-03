@@ -88,7 +88,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		Box* box = new Box(x, y, game);
 		box->y = box->y - box->height / 2;
 		boxes.push_back(box);
-		space->addMovableActor(box);
+		space->addDynamicActor(box);
 		break;
 	}
 			//case 'P': {
@@ -262,7 +262,6 @@ void GameLayer::update() {
 			box->vx = 0;
 			box->vy = 0;
 		}
-		cout << "boxSpeed" << box->vx << endl;
 	}
 
 	for (auto const& cp : checkPoints) {
@@ -278,7 +277,6 @@ void GameLayer::update() {
 	for (Plank* plank : planks) {
 		if (plank->canMove(waters, planks)) {
 			plank->update();
-			cout << "plankSpeed" << plank->vy << endl;
 		}
 		else {
 			plank->vx = 0;
