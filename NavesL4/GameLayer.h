@@ -44,6 +44,7 @@ public:
 	void loadMap(string level);
 	void loadMapObject(char character, float x, float y);
 	void keysToControls(SDL_Event event);
+	void gamePadToControls(SDL_Event event); // USO DE GAMEPAD
 	void calculateScroll();
 	void showDialog(string text);
 	void showInventory();
@@ -51,7 +52,7 @@ public:
 	void switchToBlock();
 	Actor* message;
 	bool pause;
-
+	SDL_GameController* gamePad;
 	
 	Space* space;
 	float scrollX;

@@ -3,6 +3,7 @@
 DeadLayer::DeadLayer(Game* game)
 	: Layer(game) {
 	background = new Background("res/backgroundDead.png", WIDTH / 2, HEIGHT / 2, game);
+	gamePad = SDL_GameControllerOpen(0);
 	
 }
 
@@ -25,7 +26,32 @@ void DeadLayer::init() {
 void DeadLayer::processControls() {
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
-		keysToControls(event);
+		if (event.type == SDL_CONTROLLERDEVICEADDED) {
+			gamePad = SDL_GameControllerOpen(0);
+			if (gamePad == NULL) {
+				cout << "error en GamePad" << endl;
+			}
+			else {
+				cout << "GamePad conectado" << endl;
+			}
+		}
+
+		// Cambio automático de input
+		// PONER el GamePad
+		if (event.type == SDL_CONTROLLERBUTTONDOWN || event.type == SDL_CONTROLLERAXISMOTION) {
+			game->input = game->inputGamePad;
+		}
+		if (event.type == SDL_KEYDOWN) {
+			game->input = game->inputKeyboard;
+		}
+		// Procesar teclas
+		if (game->input == game->inputKeyboard) {
+			keysToControls(event);
+		}
+		// Procesar Mando
+		if (game->input == game->inputGamePad) {  // gamePAD
+			gamePadToControls(event);
+		}
 	}
 
 	if (controlMoveX > 0)
@@ -80,6 +106,38 @@ void DeadLayer::keysToControls(SDL_Event event) {
 				break;
 			}
 		}
+	}
+}
+
+void DeadLayer::gamePadToControls(SDL_Event event) {
+
+	// Leer los botones
+	bool buttonLeft = SDL_GameControllerGetButton(gamePad, SDL_CONTROLLER_BUTTON_DPAD_LEFT);
+	bool buttonRight = SDL_GameControllerGetButton(gamePad, SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
+	bool buttonA = SDL_GameControllerGetButton(gamePad, SDL_CONTROLLER_BUTTON_A);
+	// SDL_CONTROLLER_BUTTON_A, SDL_CONTROLLER_BUTTON_B
+	// SDL_CONTROLLER_BUTTON_X, SDL_CONTROLLER_BUTTON_Y
+	cout << "botones:" << buttonA << endl;
+	int stickX = SDL_GameControllerGetAxis(gamePad, SDL_CONTROLLER_AXIS_LEFTX);
+	cout << "stickX" << stickX << endl;
+
+	// Retorna aproximadamente entre [-32800, 32800], el centro debería estar en 0
+	// Si el mando tiene "holgura" el centro varia [-4000 , 4000]
+	if (buttonRight) {
+		controlMoveX = 1;
+	}
+	else if (buttonLeft) {
+		controlMoveX = -1;
+	}
+	else {
+		controlMoveX = 0;
+	}
+
+	if (buttonA) {
+		controlInteract = true;
+	}
+	else {
+		controlInteract = false;
 	}
 }
 

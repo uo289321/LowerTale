@@ -36,6 +36,10 @@ public:
 	Layer* deadLayer;
 	Layer* activeLayer;
 
+	int input;
+	int const inputKeyboard = 1;
+	int const inputGamePad = 3;
+
 	int const stateMoving = 1;
 	int const stateJumping = 2;
 	int const stateDying = 3;
