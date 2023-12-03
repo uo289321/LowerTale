@@ -7,6 +7,7 @@ Enemy::Enemy(string filename, int hp, int damage, int fireRate, float x, float y
 	this->damage = damage;
 	this->maxHp = hp;
 	this->hp = hp;
+	this->fireRate = fireRate;
 }
 
 Projectile* Enemy::update() {
