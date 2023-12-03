@@ -31,6 +31,7 @@ void GameLayer::init() {
 	floorPlanks.clear();
 	door = NULL;
 
+	game->currentLevel = game->savedLevel;
 	loadMap("res/" + to_string(game->currentLevel) + ".txt");
 }
 
@@ -301,6 +302,7 @@ void GameLayer::update() {
 			player->heal(MAX_HEALTH);
 			spawnY = player->y;
 			spawnX = player->x;
+			game->savedLevel = game->currentLevel;
 			controlInteract = false;
 		}
 	}
