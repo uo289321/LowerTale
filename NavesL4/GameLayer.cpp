@@ -6,6 +6,7 @@ GameLayer::GameLayer(Game* game)
 	pause = true;
 	message = new Actor("res/como_jugar.png", WIDTH * 0.5, HEIGHT * 0.5,
 		WIDTH, HEIGHT, game);
+	gamePad = SDL_GameControllerOpen(0);
 	init();
 }
 	
@@ -193,7 +194,32 @@ void GameLayer::processControls() {
 	// obtener controles
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
-		keysToControls(event);
+		if (event.type == SDL_CONTROLLERDEVICEADDED) {
+			gamePad = SDL_GameControllerOpen(0);
+			if (gamePad == NULL) {
+				cout << "error en GamePad" << endl;
+			}
+			else {
+				cout << "GamePad conectado" << endl;
+			}
+		}
+
+		// Cambio automático de input
+		// PONER el GamePad
+		if (event.type == SDL_CONTROLLERBUTTONDOWN || event.type == SDL_CONTROLLERAXISMOTION) {
+			game->input = game->inputGamePad;
+		}
+		if (event.type == SDL_KEYDOWN) {
+			game->input = game->inputKeyboard;
+		}
+		// Procesar teclas
+		if (game->input == game->inputKeyboard) {
+			keysToControls(event);
+		}
+		// Procesar Mando
+		if (game->input == game->inputGamePad) {  // gamePAD
+			gamePadToControls(event);
+		}
 	}
 
 	if (controlThrow && player->hasPlank) {
@@ -659,6 +685,75 @@ void GameLayer::keysToControls(SDL_Event event) {
 			break;
 		}
 	}
+}
+
+void GameLayer::gamePadToControls(SDL_Event event) {
+
+	// Leer los botones
+	bool buttonLeft = SDL_GameControllerGetButton(gamePad, SDL_CONTROLLER_BUTTON_DPAD_LEFT);
+	bool buttonRight = SDL_GameControllerGetButton(gamePad, SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
+	bool buttonUp = SDL_GameControllerGetButton(gamePad, SDL_CONTROLLER_BUTTON_DPAD_UP);
+	bool buttonDown = SDL_GameControllerGetButton(gamePad, SDL_CONTROLLER_BUTTON_DPAD_DOWN);
+	bool buttonA = SDL_GameControllerGetButton(gamePad, SDL_CONTROLLER_BUTTON_A);
+	bool buttonB = SDL_GameControllerGetButton(gamePad, SDL_CONTROLLER_BUTTON_B);
+	bool buttonX = SDL_GameControllerGetButton(gamePad, SDL_CONTROLLER_BUTTON_X);
+	bool buttonY = SDL_GameControllerGetButton(gamePad, SDL_CONTROLLER_BUTTON_Y);
+	// SDL_CONTROLLER_BUTTON_A, SDL_CONTROLLER_BUTTON_B
+	// SDL_CONTROLLER_BUTTON_X, SDL_CONTROLLER_BUTTON_Y
+	cout << "botones:" << buttonA << "," << buttonB << endl;
+	int stickX = SDL_GameControllerGetAxis(gamePad, SDL_CONTROLLER_AXIS_LEFTX);
+	cout << "stickX" << stickX << endl;
+
+	// Retorna aproximadamente entre [-32800, 32800], el centro debería estar en 0
+	// Si el mando tiene "holgura" el centro varia [-4000 , 4000]
+	if (buttonRight) {
+		controlMoveX = 1;
+	}
+	else if (buttonLeft) {
+		controlMoveX = -1;
+	}
+	else {
+		controlMoveX = 0;
+	}
+
+	if (buttonUp) {
+		controlMoveY = -1;
+	}
+	else if (buttonDown) {
+		controlMoveY = 1;
+	}
+	else {
+		controlMoveY = 0;
+	}
+
+	if (buttonA) {
+		controlInteract = true;
+	}
+	else {
+		controlInteract = false;
+	}
+
+	if (buttonB) {
+		controlCancel = true;
+	}
+	else {
+		controlCancel = false;
+	}
+
+	if (buttonX) {
+		controlInventory = true;
+	}
+	else {
+		controlInventory = false;
+	}
+
+	if (buttonY) {
+		controlThrow = true;
+	}
+	else {
+		controlThrow = false;
+	}
+	controlContinue = true;
 }
 
 void GameLayer::calculateScroll() {
