@@ -10,6 +10,7 @@ class BattleMenu;
 #include <list>
 #include "Shield.h"
 #include "DialogBox.h"
+#include "Audio.h"
 
 #define BUTTON_DELAY 10
 // #define DEFENSE_TIMER 600
@@ -34,6 +35,7 @@ public:
 	void finishCombat();
 	void showDialog(string content);
 
+	Audio* bgMusic;
 	DialogBox* dialogBox;
 	Actor* playerModel;
 	InventoryMenu* inventory;

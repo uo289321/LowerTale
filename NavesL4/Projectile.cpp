@@ -5,18 +5,18 @@ Projectile::Projectile(string filename, int origin, float x, float y, int width,
 	switch (origin) {
 	case 0:
 		vx = 0;
-		vy = 9;
+		vy = 5;
 		break;
 	case 1:
-		vx = -9;
+		vx = -5;
 		vy = 0;
 		break;
 	case 2:
 		vx = 0;
-		vy = -9;
+		vy = -5;
 		break;
 	case 3:
-		vx = 9;
+		vx = 5;
 		vy = 0;
 		break;
 	}

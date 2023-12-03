@@ -38,11 +38,11 @@ void BattleLayer::processControls()
 			battleMenu->select();
 			controlInteract = false;
 			if (enemy->isDead()) {
-				this->enemyHealth->content = "0";
+				this->enemyHealth->content = "HP: 0";
 				showDialog("El enemigo ha sido derrotado.");
 			}
 			else {
-				this->enemyHealth->content = to_string(enemy->hp);
+				this->enemyHealth->content = "HP: " + to_string(enemy->hp);
 			}
 		}
 	}
@@ -81,8 +81,10 @@ void BattleLayer::processControls()
 		}
 	}
 
-	if (player->health <= 0)
+	if (player->health <= 0) {
 		game->activeLayer = game->deadLayer;
+		game->deadLayer->init();
+	}
 
 	
 }
@@ -284,6 +286,8 @@ void BattleLayer::changeEnemy(Enemy* enemy) {
 void BattleLayer::init()
 {
 	this->battleMenu = new BattleMenu(this->enemy, this, game);
+	this->bgMusic = new Audio("res/battleMusic.wav", true);
+	bgMusic->play();
 }
 
 void BattleLayer::draw()
