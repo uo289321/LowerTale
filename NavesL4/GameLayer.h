@@ -65,6 +65,7 @@ public:
 
 
 	Audio* audioBackground;
+	Audio* audioOpenDoor;
 	Text* textPoints;
 	int points;
 	Player* player;

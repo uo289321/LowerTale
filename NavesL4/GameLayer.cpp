@@ -177,6 +177,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 	}
 	case 'D': {
 		door = new Door("res/closed_door.png", x, y, game);
+		audioOpenDoor = new Audio("res/open_door_aud.wav", false);
 		door->y = door->y - door->height / 2;
 		space->addStaticActor(door);
 		break;
@@ -194,6 +195,14 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		pl->y = pl->y - pl->height / 2;
 		floorPlanks.push_back(pl);
 		space->addStaticActor(pl);
+		break;
+	}
+	case 'U': {
+		Tile* tile = new Tile("res/paredArriba.png", x, y, game);
+		// modificación para empezar a contar desde el suelo.
+		tile->y = tile->y - tile->height / 2;
+		tiles.push_back(tile);
+		space->addStaticActor(tile);
 		break;
 	}
 	}
@@ -396,6 +405,7 @@ void GameLayer::update() {
 	if (i == pressurePlates.size() && j == switches.size()) {
 		if (!door->is_open) {
 			space->removeStaticActor(door);
+			audioOpenDoor->play();
 			door = new Door("res/open_door.png", door->x, door->y, game);
 			door->is_open = true;
 			space->addDynamicActor(door);
@@ -405,6 +415,7 @@ void GameLayer::update() {
 	if (i < pressurePlates.size() && j < switches.size()) {
 		if (door->is_open) {
 			space->removeDynamicActor(door);
+			audioOpenDoor->play();
 			door = new Door("res/closed_door.png", door->x, door->y, game);
 			door->is_open = false;
 			space->addStaticActor(door);
