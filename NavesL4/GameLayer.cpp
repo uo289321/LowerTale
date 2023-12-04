@@ -185,7 +185,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		Switch* sw = new Switch(nOfSwitch, x, y, game);
 		sw->y = sw->y - sw->height / 2;
 		switches.push_back(sw);
-		space->addDynamicActor(sw);
+		space->addStaticActor(sw);
 		nOfSwitch++;
 		break;
 	}
