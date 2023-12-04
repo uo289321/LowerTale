@@ -32,7 +32,9 @@ void GameLayer::init() {
 	floorPlanks.clear();
 	door = NULL;
 
-	game->currentLevel = game->savedLevel;
+	if(game->savedLevel != 0)
+		game->currentLevel = game->savedLevel;
+	// loadMap("res/test0.txt");
 	loadMap("res/" + to_string(game->currentLevel) + ".txt");
 }
 
@@ -66,7 +68,23 @@ void GameLayer::loadMapObject(char character, float x, float y)
 {
 	switch (character) {
 	case 'E': {
-		Enemy* enemy = new Enemy("enemyE", 20, 2389, 15, x, y, game);
+		Enemy* enemy = new Enemy("enemyE", 20, 5, 15, x, y, game);
+		// modificación para empezar a contar desde el suelo.
+		enemy->y = enemy->y - enemy->height / 2;
+		enemies.push_back(enemy);
+		space->addStaticActor(enemy);
+		break;
+	}
+	case 'G': {
+		Enemy* enemy = new Enemy("enemyG", 20, 6, 13, x, y, game);
+		// modificación para empezar a contar desde el suelo.
+		enemy->y = enemy->y - enemy->height / 2;
+		enemies.push_back(enemy);
+		space->addStaticActor(enemy);
+		break;
+	}
+	case 'H': {
+		Enemy* enemy = new Enemy("enemyH", 20, 8, 11, x, y, game);
 		// modificación para empezar a contar desde el suelo.
 		enemy->y = enemy->y - enemy->height / 2;
 		enemies.push_back(enemy);

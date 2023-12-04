@@ -379,21 +379,23 @@ void BattleLayer::init()
 void BattleLayer::draw()
 {
 	background->draw(0,0);
-	battleMenu->draw();
-	health->draw();
-	enemyHealth->draw();
 	
-	
-	if (dialogBox != NULL)
-		dialogBox->draw();
-
-	if (inventory != NULL)
-		inventory->draw();
 
 	if (player->state == game->stateBattle || player->state == game->stateInventory) {
 		enemy->drawAnim();
 		
 	}
+
+	battleMenu->draw();
+	health->draw();
+	enemyHealth->draw();
+
+
+	if (dialogBox != NULL)
+		dialogBox->draw();
+
+	if (inventory != NULL)
+		inventory->draw();
 	
 	if (player->state == game->stateDefending) {
 		playerModel->draw();
