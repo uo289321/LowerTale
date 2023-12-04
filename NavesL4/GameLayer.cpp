@@ -32,8 +32,13 @@ void GameLayer::init() {
 	floorPlanks.clear();
 	door = NULL;
 
-	if(game->savedLevel != 0)
+	if (game->currentLevel >= game->nLevels) {
+		game->currentLevel = 0;
+	}
+	
+	if (game->savedLevel != 0)
 		game->currentLevel = game->savedLevel;
+	
 	// loadMap("res/test0.txt");
 	loadMap("res/" + to_string(game->currentLevel) + ".txt");
 }
@@ -575,7 +580,9 @@ void GameLayer::draw() {
 
 	player->draw(scrollX, scrollY);
 
-	door->draw(scrollX, scrollY);
+	if (door != NULL) {
+		door->draw(scrollX, scrollY);
+	}
 
 	for (auto const& cp : checkPoints) {
 		cp->draw(scrollX, scrollY);

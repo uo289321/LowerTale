@@ -29,6 +29,7 @@ public:
 	float scaleLower = 1;
 	int currentLevel = 0;
 	int savedLevel = 0;
+	int nLevels = 3;
 	SDL_Window* window; // ventana
 	SDL_Renderer* renderer; // renderizador
 	bool loopActive; // Juego activo
