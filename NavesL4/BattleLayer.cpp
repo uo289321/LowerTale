@@ -11,7 +11,6 @@ BattleLayer::BattleLayer(Enemy* enemy, Player* player, Game* game)
 	init();
 	health = new Text("vida del jugador", WIDTH * 0.15, HEIGHT * 0.92, game);
 	enemyHealth = new Text(to_string(enemy->hp), WIDTH * 0.1, HEIGHT * 0.1, game);
-	blocked = new Audio("res/blocked.wav", false);
 
 }
 
@@ -372,6 +371,7 @@ void BattleLayer::changeEnemy(Enemy* enemy) {
 void BattleLayer::init()
 {
 	this->battleMenu = new BattleMenu(this->enemy, this, game);
+	this->blocked = new Audio("res/blocked.wav", false);
 	this->bgMusic = new Audio("res/battleMusic.wav", true);
 	bgMusic->play();
 }

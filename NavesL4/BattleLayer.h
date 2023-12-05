@@ -13,7 +13,7 @@ class BattleMenu;
 #include "Audio.h"
 
 #define BUTTON_DELAY 10
-#define DEFENSE_TIMER 600
+#define DEFENSE_TIMER 360
 // #define DEFENSE_TIMER 30
 #define PLAYERMODEL_WIDTH 24
 #define PLAYERMODEL_HEIGHT 24

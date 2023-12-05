@@ -18,6 +18,7 @@ void GameLayer::init() {
 
 	player = new Player(50, 50, game);
 	background = new Background("res/background0.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	audioOpenDoor = new Audio("res/open_door_aud.wav", false);
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 	checkPoints.clear();
@@ -35,12 +36,16 @@ void GameLayer::init() {
 	if (game->currentLevel >= game->nLevels) {
 		game->currentLevel = 0;
 	}
-	
-	if (game->savedLevel != 0)
-		game->currentLevel = game->savedLevel;
+
+
 	
 	// loadMap("res/test0.txt");
 	loadMap("res/" + to_string(game->currentLevel) + ".txt");
+}
+
+void GameLayer::respawn() {
+	game->currentLevel = game->savedLevel;
+	init();
 }
 
 void GameLayer::loadMap(string name) {
@@ -97,7 +102,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		break;
 	}
 	case '1': {
-		if (spawnX != -1)
+		if (spawnX != -1 && game->savedLevel == game->currentLevel)	// si hay un guardado en este nivel
 			player = new Player(spawnX, spawnY, game);
 		else
 			player = new Player(x, y, game);
@@ -110,7 +115,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		CheckPoint* cp = new CheckPoint(x, y, game);
 		cp->y = cp->y - cp->height / 2;
 		checkPoints.push_back(cp);
-		space->addStaticActor(cp);
+		space->addDynamicActor(cp);
 		break;
 	}
 	case 'F': {
@@ -182,7 +187,6 @@ void GameLayer::loadMapObject(char character, float x, float y)
 	}
 	case 'D': {
 		door = new Door("res/closed_door.png", x, y, game);
-		audioOpenDoor = new Audio("res/open_door_aud.wav", false);
 		door->y = door->y - door->height / 2;
 		space->addStaticActor(door);
 		break;
@@ -358,7 +362,7 @@ void GameLayer::update() {
 		if (player->isInRange(cp) && controlInteract && player->state == game->stateMoving) {
 			showDialog("Tus fuerzas se han renovado.");
 			player->heal(MAX_HEALTH);
-			spawnY = player->y;
+			spawnY = player->y + player->height / 2;
 			spawnX = player->x;
 			game->savedLevel = game->currentLevel;
 			controlInteract = false;
@@ -408,7 +412,7 @@ void GameLayer::update() {
 	}
 
 	if (i == pressurePlates.size() && j == switches.size()) {
-		if (!door->is_open) {
+		if (door != NULL && !door->is_open) {
 			space->removeStaticActor(door);
 			audioOpenDoor->play();
 			door = new Door("res/open_door.png", door->x, door->y, game);
@@ -417,8 +421,8 @@ void GameLayer::update() {
 		}
 	}
 
-	if (i < pressurePlates.size() && j < switches.size()) {
-		if (door->is_open) {
+	if (i < pressurePlates.size() || j < switches.size()) {
+		if (door != NULL && door->is_open) {
 			space->removeDynamicActor(door);
 			audioOpenDoor->play();
 			door = new Door("res/closed_door.png", door->x, door->y, game);
@@ -456,7 +460,7 @@ void GameLayer::update() {
 	}
 	if (removePlank != NULL) {
 		floorPlanks.remove(removePlank);
-		space->removeDynamicActor(removePlank);
+		space->removeStaticActor(removePlank);
 
 	}
 	
@@ -577,17 +581,15 @@ void GameLayer::draw() {
 	for (auto const& sw : switches) {
 		sw->draw(scrollX, scrollY);
 	}
+	for (auto const& cp : checkPoints) {
+		cp->draw(scrollX, scrollY);
+	}
 
 	player->draw(scrollX, scrollY);
 
 	if (door != NULL) {
 		door->draw(scrollX, scrollY);
 	}
-
-	for (auto const& cp : checkPoints) {
-		cp->draw(scrollX, scrollY);
-	}
-
 	for (auto const& item : items) {
 		item->draw(scrollX, scrollY);
 	}

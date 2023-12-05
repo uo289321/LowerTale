@@ -174,8 +174,7 @@ void DeadLayer::select() {
 	Text* optionSelected = *iter;
 	string content = optionSelected->content;
 	if (content == "Continuar") {
-		GameLayer* gL = (GameLayer*) game->gameLayer;
-		gL->init();
+		((GameLayer*) game->gameLayer)->respawn();
 		game->activeLayer = game->gameLayer;
 	}
 

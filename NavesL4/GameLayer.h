@@ -50,6 +50,7 @@ public:
 	void showInventory();
 	void switchToBattle(Enemy* enemy);
 	void switchToBlock();
+	void respawn();
 	Actor* message;
 	bool pause;
 	SDL_GameController* gamePad;
