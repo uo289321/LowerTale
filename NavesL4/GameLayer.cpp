@@ -672,8 +672,10 @@ void GameLayer::keysToControls(SDL_Event event) {
 		case SDLK_q:
 			controlThrow = true;
 		}
-		controlContinue = true;
 
+		if (code != SDLK_1) {
+			controlContinue = true;
+		}
 
 	}
 	if (event.type == SDL_KEYUP) {
