@@ -370,6 +370,9 @@ void BattleLayer::changeEnemy(Enemy* enemy) {
 
 void BattleLayer::init()
 {
+	if (this->blocked != NULL) {
+		blocked->~Audio();
+	}
 	this->battleMenu = new BattleMenu(this->enemy, this, game);
 	this->blocked = new Audio("res/blocked.wav", false);
 	this->bgMusic = new Audio("res/battleMusic.wav", true);
