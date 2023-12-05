@@ -14,8 +14,10 @@ bool AnimatedText::update() {
 	this->n++;
 	this->shown = content.substr(0, n);
 	
-	if (n >= content.length())
+	if (n >= content.length()) {
+		this->textSFX->~Audio();
 		return true;
+	}
 	this->textSFX->play();
 	return false;
 }
