@@ -115,7 +115,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		CheckPoint* cp = new CheckPoint(x, y, game);
 		cp->y = cp->y - cp->height / 2;
 		checkPoints.push_back(cp);
-		space->addDynamicActor(cp);
+		space->addStaticActor(cp);
 		break;
 	}
 	case 'F': {
